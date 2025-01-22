@@ -68,15 +68,16 @@ void led_task_create(void)
 osThreadId_t WIFI_Task_ID; //任务ID
 
 
-#define WIFI_SSID "普中科技"
-#define WIFI_PAWD "88888888.@"
+#define WIFI_SSID "duki"
+#define WIFI_PAWD "12345678"
 
 void WIFI_Task(void)
 {
     WifiErrorCode result;
-    WiFi_connectHotspots(WIFI_SSID, WIFI_PAWD);
+    WiFi_connectHotspots(WIFI_SSID, WIFI_PAWD); 
     while (1) 
     {
+        printf("try to connect to %s\n",WIFI_SSID);
         sleep(1); // 1s
     }
 }

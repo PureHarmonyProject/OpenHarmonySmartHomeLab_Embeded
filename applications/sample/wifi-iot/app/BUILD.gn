@@ -17,6 +17,7 @@ lite_component("app") {
     features = [
         # "//vendor/hqyj/fs_hi3861/demo:demo",
         "//vendor/pzkj/pz_hi3861/demo:demo",
+        #"//vendor/dukiya/dukiya_hi3861/demo:demo",
     ]
 }
 import("//build/lite/config/component/lite_component.gni")

@@ -41,18 +41,18 @@
 
 
 //WIFI连接热点和密码
-#define WIFI_SSID "普中科技"
-#define WIFI_PAWD "88888888.@"
+#define WIFI_SSID "duki"
+#define WIFI_PAWD "12345678"
 
 //注册华为云后需要更新的信息
 // 设备ID
-#define DEVICE_ID "66a1f950a559ef62266a19c3"
+#define DEVICE_ID "678c85feef99673c8ae15f52"
 // MQTT客户端ID
-#define MQTT_CLIENT_ID "66a1f950a559ef62266a19c3_hi3861_led_0_0_2024072507" 
+#define MQTT_CLIENT_ID "678c85feef99673c8ae15f52_hi3861_led_0_0_2025011905" 
 // MQTT用户名
-#define MQTT_USER_NAME "66a1f950a559ef62266a19c3_hi3861_led"
+#define MQTT_USER_NAME "678c85feef99673c8ae15f52_hi3861_led"
 // MQTT密码
-#define MQTT_PASS_WORD "50518dcd2eb6c22e11190dee757a076fd81b92772fcabadc99b9143b5a13d5a5"
+#define MQTT_PASS_WORD "21b5d6cd1b9014de84ffa1a0cbdb2ceef51236a4535515004e98673becbafef9"
 // 华为云平台的IP地址
 #define SERVER_IP_ADDR "117.78.5.125"
 // 华为云平台的IP端口号

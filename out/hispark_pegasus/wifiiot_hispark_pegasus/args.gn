@@ -1,7 +1,6 @@
 ohos_build_compiler_specified = "gcc"
-product_path =
-    "D:\hi3861_hdu_iot_application\src\vendor\hisilicon\hispark_pegasus"
-device_path = "D:\hi3861_hdu_iot_application\src\device\hisilicon\hispark_pegasus\sdk_liteos"
+product_path = "D:\IntelliHome\src\vendor\hisilicon\hispark_pegasus"
+device_path = "D:\IntelliHome\src\device\hisilicon\hispark_pegasus\sdk_liteos"
 ohos_kernel_type = "liteos_m"
 disable_huks_binary = false
 disable_authenticate = false
@@ -12,6 +11,6 @@ huks_mbedtls_path =
     "//device/hisilicon/hispark_pegasus/sdk_liteos/third_party/mbedtls/include/"
 enable_ohos_startup_syspara_lite_use_thirdparty_mbedtls = false
 ohos_build_type = "debug"
-ohos_build_time = "1737184597050"
-ohos_build_datetime = "2025-01-18 23:16:37"
+ohos_build_time = "1737538960763"
+ohos_build_datetime = "2025-01-23 01:42:40"
 ohos_full_compile = true

@@ -1,8 +1,8 @@
 {
-  "root_path": "D:\\hi3861_hdu_iot_application\\src",
+  "root_path": "D:\\IntelliHome\\src",
   "product": "wifiiot_hispark_pegasus",
-  "product_path": "D:\\hi3861_hdu_iot_application\\src\\vendor\\hisilicon\\hispark_pegasus",
+  "product_path": "D:\\IntelliHome\\src\\vendor\\hisilicon\\hispark_pegasus",
   "board": "hispark_pegasus",
   "kernel": "liteos_m",
-  "device_path": "D:\\hi3861_hdu_iot_application\\src\\device\\hisilicon\\hispark_pegasus\\sdk_liteos"
+  "device_path": "D:\\IntelliHome\\src\\device\\hisilicon\\hispark_pegasus\\sdk_liteos"
 }
