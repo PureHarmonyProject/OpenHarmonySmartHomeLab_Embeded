@@ -1,8 +1,0 @@
-{
-  "root_path": "D:\\IntelliHome\\src",
-  "product": "wifiiot_hispark_pegasus",
-  "product_path": "D:\\IntelliHome\\src\\vendor\\hisilicon\\hispark_pegasus",
-  "board": "hispark_pegasus",
-  "kernel": "liteos_m",
-  "device_path": "D:\\IntelliHome\\src\\device\\hisilicon\\hispark_pegasus\\sdk_liteos"
-}

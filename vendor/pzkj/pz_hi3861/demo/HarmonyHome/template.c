@@ -12,10 +12,10 @@
 #include "bsp_key.h"
 #include "bsp_dc_motor.h"
 #include "bsp_sg90.h"
-#include "bsp_adc.h"
+#include "bsp_smoke.h"
 #include "bsp_ina219.h"
 
-#define TASKDLYTICK    1000
+#define TASKDLYTICK    500
 //LED任务 io2
 osThreadId_t LED_Task_ID; //led任务ID
 
@@ -208,17 +208,18 @@ osThreadId_t HC_SR501_Task_ID; //任务ID
 void HC_SR501_Task(void)
 {
     sr501_init();
-    
+    led_init();//LED初始化
     while (1) 
     {       
         printf("[SR501 PRI = %d]",osPriorityBelowNormal5);
-        if(1 == sr501_read())
+        if(1 == sr501_check())
         {
             printf("有人来了\n");
+            led_warning();
         }else {
             printf("没有检测到人\n");
         }
-        osDelay(TASKDLYTICK); //500ms
+        // osDelay(TASKDLYTICK); //500ms
     }
 }
 //任务创建
@@ -252,10 +253,10 @@ void DC_MOTOR_Task(void)
 
     while (1) 
     {
-        DC_MOTOR(1);
-        osDelay(TASKDLYTICK); //500ms
+        usleep(10*1000);
     }
 }
+
 //任务创建
 void dc_motor_task_create(void)
 {
@@ -266,12 +267,12 @@ void dc_motor_task_create(void)
     taskOptions.cb_size = 0;                 // 堆空间大小
     taskOptions.stack_mem = NULL;            // 栈空间地址
     taskOptions.stack_size = 1024;           // 栈空间大小 单位:字节
-    taskOptions.priority = osPriorityBelowNormal6; // 任务的优先级
+    taskOptions.priority = osPriorityNormal; // 任务的优先级
 
     DC_MOTOR_Task_ID = osThreadNew((osThreadFunc_t)DC_MOTOR_Task, NULL, &taskOptions); // 创建任务1
     if (DC_MOTOR_Task_ID != NULL)
     {
-        printf("ID = %d, DC_MOTOR_Task Create OK!\n", DC_MOTOR_Task_ID);
+        printf("ID = %d, Task Create OK!\n", DC_MOTOR_Task_ID);
     }
 }
 
@@ -287,18 +288,21 @@ void SG90_Task(void)
 
     while (1) 
     {       
-        if(dir==0)
-        {
-            ang+=10;
-            if(ang>180)dir=1;
-        }
-        else
-        {
-            ang-=10;
-            if(ang<0)dir=0;            
-        }
-        printf("[SG90 PRI = %d]\n",osPriorityBelowNormal7);
-        set_sg90_angle(ang);
+        // if(dir==0)
+        // {
+        //     ang+=10;
+        //     if(ang>180)dir=1;
+        // }
+        // else
+        // {
+        //     ang-=10;
+        //     if(ang<0)dir=0;            
+        // }
+        // printf("[SG90 PRI = %d]\n",osPriorityBelowNormal7);
+        // set_sg90_angle(ang);
+        door_open();
+        osDelay(TASKDLYTICK); //500ms
+        door_close();
         osDelay(TASKDLYTICK); //500ms
     }
 }
@@ -330,12 +334,16 @@ void SMOKE_Task(void)
     uint16_t adc_value=0;
 
     led_init();//LED初始化
-    adc5_init();
+    smoke_init();
 
     while (1) 
     {
-        adc_value=get_adc5_value();
-        printf("[SMOKE PRI = %d]adc_value=%d\r\n",osPriorityNormal,adc_value);
+        if(smoke_check()) {
+            printf("[SMOKE]检测到烟雾\n");
+        }else {
+            printf("[SMOKE]未检测到烟雾\n");
+        }
+        
         osDelay(TASKDLYTICK); //500ms
     }
 }
@@ -484,12 +492,12 @@ static void template_demo(void)
     // beep_task_create();// 蜂鸣器任务
     // oledtask_create();// oled任务
     // dht11_task_create();// 温湿度传感器任务
-    step_motor_task_create();// 步进电机任务
+    // step_motor_task_create();// 步进电机任务
     // sr501_task_create();// 人体传感器任务
     // dc_motor_task_create();// 直流电机任务
     // sg90_task_create();// 舵机控制任务
     // smoke_task_create();// 烟雾传感器任务
-    // // ina219_task_create();// INA219传感器任务
+    // ina219_task_create();// INA219传感器任务
     // idle_task_create();
 }
 SYS_RUN(template_demo);

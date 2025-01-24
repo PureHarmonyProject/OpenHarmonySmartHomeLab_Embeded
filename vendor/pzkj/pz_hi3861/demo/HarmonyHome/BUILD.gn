@@ -23,7 +23,7 @@ static_library("template") {
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_dc_motor.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_key.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_sg90.c",
-        "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_adc.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_smoke.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_ina219.c",
         # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_relay.c",
        

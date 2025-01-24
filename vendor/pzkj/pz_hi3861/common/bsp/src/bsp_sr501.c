@@ -21,10 +21,14 @@ void sr501_init(void)
 }
 
 // 读取 HC-SR501 状态
-int sr501_read(void) {
+static int sr501_read(void) {
     hi_gpio_value gpio_value;
     hi_gpio_get_input_val(SR_501_PIN, &gpio_value);
 
     // 返回传感器状态
     return (gpio_value == HI_GPIO_VALUE1); // 检测到人体时返回 HI_TRUE
+}
+
+int sr501_check(void) {
+    return sr501_read();
 }

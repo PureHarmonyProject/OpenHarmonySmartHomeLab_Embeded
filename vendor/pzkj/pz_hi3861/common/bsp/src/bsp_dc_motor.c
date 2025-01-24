@@ -28,3 +28,10 @@ void dc_motor_init(void)
     hi_gpio_set_dir(DC_MOTOR_PIN, HI_GPIO_DIR_OUT);            // 设置GPIO为输出模式
 }
 
+//用pwm实现
+// void dc_motor_run(uint32_t count, int type)
+// {
+//     switch(type) {
+//         case DC_MOTOR_LOW :
+//     }
+// }

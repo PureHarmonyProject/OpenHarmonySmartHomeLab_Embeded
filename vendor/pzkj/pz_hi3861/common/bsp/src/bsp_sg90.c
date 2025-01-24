@@ -20,7 +20,6 @@
 #include <unistd.h>
 #include "hi_time.h"
 
-
 //SG90初始化
 void sg90_init(void)
 {
@@ -35,8 +34,8 @@ void set_sg90_angle(uint16_t angle)
     uint8_t i=20;
     uint16_t time=0;
 
-    time=(angle-0)*(2500-500)/(180-0)+500;
-
+    time=(angle-0)*(2500-500)/(180-0)+500;// (占空比 = (angle - 0) / 180 * (12.5%  - 2.5%) + 2.5%)
+                                          // 0°：2.5%   180°：12.5%  频率50hz
     while(i--)
     {
         IoTGpioSetOutputVal(SG90_PIN,HI_GPIO_VALUE1);
@@ -46,3 +45,12 @@ void set_sg90_angle(uint16_t angle)
     }
 }
 
+void door_open(void) 
+{
+    set_sg90_angle(DOOR_OPEN_ANGLE);
+}
+
+void door_close(void)
+{
+    set_sg90_angle(DOOR_CLOSE_ANGLE);
+}

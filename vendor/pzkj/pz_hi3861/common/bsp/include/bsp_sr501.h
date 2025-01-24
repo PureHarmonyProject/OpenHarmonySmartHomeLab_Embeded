@@ -21,5 +21,7 @@
 
 //函数声明
 void sr501_init(void);
-int sr501_read(void);
+// int sr501_read(void);
+
+int sr501_check(void);
 #endif

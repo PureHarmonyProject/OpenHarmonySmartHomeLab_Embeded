@@ -1,4 +1,4 @@
-#include "D:\IntelliHome\src\vendor\dukiya\dukiya_hi3861\common\bsp\include\bsp_step_motor.h"
+#include "bsp_step_motor.h"
 //步进电机初始化
 void step_motor_init(void)
 {
@@ -38,7 +38,7 @@ void step_motor_init(void)
 void step_motor_run(uint8_t step, uint8_t dir, uint8_t speed, uint16_t angle, uint8_t sta)
 {
     if (sta == 1) {
-        uint16_t total_steps = (512 * angle) / 45;
+        uint16_t total_steps = (64 * angle) / 45;
         for (uint16_t j = 0; j < total_steps; j++) {
             for (uint8_t i = 0; i < 8; i += (8 / step)) {
                 uint8_t index = dir == 0 ? i : (8 - i) % 8; // 方向选择
