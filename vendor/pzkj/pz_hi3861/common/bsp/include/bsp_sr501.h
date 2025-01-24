@@ -16,8 +16,8 @@
 #include "hi_gpio.h"
 
 //管脚定义
-#define SR_501_PIN            HI_IO_NAME_GPIO_11
-#define SR_501_GPIO_FUN       HI_IO_FUNC_GPIO_11_GPIO
+#define SR_501_PIN            HI_IO_NAME_GPIO_12
+#define SR_501_GPIO_FUN       HI_IO_FUNC_GPIO_12_GPIO
 
 //函数声明
 void sr501_init(void);

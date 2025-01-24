@@ -24,7 +24,7 @@
 #include "hi_gpio.h"
 
 //管脚定义
-#define ADC5_PIN         HI_IO_NAME_GPIO_12
+#define ADC5_PIN         HI_IO_NAME_GPIO_11
 
 //函数声明
 void adc5_init(void);
