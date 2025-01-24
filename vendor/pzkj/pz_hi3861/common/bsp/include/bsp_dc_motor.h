@@ -25,9 +25,14 @@
 
 //管脚定义
 #define DC_MOTOR_PIN         HI_IO_NAME_GPIO_6
-#define DC_MOTOR_GPIO_FUN    HI_IO_FUNC_GPIO_6_GPIO
+#define DC_MOTOR_GPIO_FUN    HI_IO_FUNC_GPIO_6_PWM3_OUT
 
-#define DC_MOTOR(a)          hi_gpio_set_ouput_val(DC_MOTOR_PIN,a)
+
+#define DC_MOTOR_LOW 0
+#define DC_MOTOR_MEDIUM 1
+#define DC_MOTOR_HIGH 2
+
+int32_t speed_array[] = {20000,30000,40000}; //速度数组
 
 //函数声明
 void dc_motor_init(void);

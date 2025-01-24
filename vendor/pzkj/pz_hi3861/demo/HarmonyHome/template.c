@@ -16,7 +16,7 @@
 #include "bsp_ina219.h"
 
 #define TASKDLYTICK    500
-//LED任务 io2
+// 1. LED任务 io2
 osThreadId_t LED_Task_ID; //led任务ID
 
 void LED_Task(void)
@@ -25,7 +25,7 @@ void LED_Task(void)
 
     while (1) 
     {       
-        LED(1); 
+        led_on(LED_HIGH);
         printf("[LED PRI = %d]\n",osPriorityBelowNormal);
         osDelay(TASKDLYTICK); //500ms
     }
@@ -49,7 +49,7 @@ void led_task_create(void)
     }
 }
 
-//蜂鸣器任务 io8
+// 2. 蜂鸣器任务 io8
 osThreadId_t BEEP_Task_ID; //beep任务ID
 
 void Beep_Task(void)
@@ -83,7 +83,7 @@ void beep_task_create(void)
     }
 }
 
-//oled任务 scl:io9 sda:io10
+// 3. oled任务 scl:io9 sda:io10
 osThreadId_t OLED_Task_ID; //beep任务ID
 
 void Oled_Task(void)
@@ -119,7 +119,7 @@ void oledtask_create(void)
     }
 }
 
-//温湿度传感器任务 io0 每次更改初始化口后都要rebuild才行
+// 4. 温湿度传感器任务 io0 每次更改初始化口后都要rebuild才行
 osThreadId_t DHT11_Task_ID; //任务ID
 
 void DHT11_Task(void)
@@ -163,7 +163,7 @@ void dht11_task_create(void)
 }
 
 
-//步进电机控制任务 io1,5,6,7
+// 5. 步进电机控制任务 io1,5,6,7
 osThreadId_t STEP_MOTOR_Task_ID; //任务ID
 
 void STEP_MOTOR_Task(void)
@@ -202,7 +202,7 @@ void step_motor_task_create(void)
     }
 }
 
-//人体传感器任务 io11
+// 6. 人体传感器任务 io11
 osThreadId_t HC_SR501_Task_ID; //任务ID
 
 void HC_SR501_Task(void)
@@ -241,7 +241,7 @@ void sr501_task_create(void)
     }
 }
 
-//直流电机任务 io12
+// 7. 直流电机任务 io12
 osThreadId_t DC_MOTOR_Task_ID; //任务ID
 
 void DC_MOTOR_Task(void)
@@ -276,7 +276,7 @@ void dc_motor_task_create(void)
     }
 }
 
-//舵机控制 io5
+// 8. 舵机控制 io5
 osThreadId_t SG90_Task_ID; //任务ID
 
 void SG90_Task(void)
@@ -325,7 +325,7 @@ void sg90_task_create(void)
     }
 }
 
-//烟雾传感器 io12
+// 9. 烟雾传感器 io12
 osThreadId_t SMOKE_Task_ID; //任务ID
 
 void SMOKE_Task(void)
@@ -366,7 +366,7 @@ void smoke_task_create(void)
     }
 }
 
-// INA219任务 scl:io9 sda:io10
+// 10. INA219任务 scl:io9 sda:io10
 osThreadId_t INA219_Task_ID; // INA219任务ID
 
 // INA219任务
@@ -441,45 +441,6 @@ void ina219_task_create(void)
     }
 }
 
-// 空闲任务
-osThreadId_t IDLE_Task_ID; // IDLE任务ID
-
-// IDLE任务
-void IDLE_Task(void)
-{
-    uint64_t i=0;
-    while (1) 
-    {
-        i++;
-        if(i%50==0)
-        {
-            i = 0;
-            printf("空闲任务运行中\n");
-        }
-    }
-}
-
-// IDLE任务创建
-void idle_task_create(void)
-{
-    osThreadAttr_t taskOptions;
-    taskOptions.name = "idleTask";           // 任务的名字
-    taskOptions.attr_bits = 0;                 // 属性位
-    taskOptions.cb_mem = NULL;                 // 堆空间地址
-    taskOptions.cb_size = 0;                   // 堆空间大小
-    taskOptions.stack_mem = NULL;              // 栈空间地址
-    taskOptions.stack_size = 1024;             // 栈空间大小 单位:字节
-    taskOptions.priority = osPriorityIdle;   // 任务的优先级
-
-    IDLE_Task_ID = osThreadNew((osThreadFunc_t)IDLE_Task, NULL, &taskOptions); // 创建INA219任务
-    if (INA219_Task_ID != NULL)
-    {
-        printf("ID = %d, Create IDLE_Task_ID is OK!\n", IDLE_Task_ID);
-    }else {
-        printf("Create IDLE_Task_ID Falied!\n");
-    }
-}
-
 /**
  * @description: 初始化并创建任务
  * @param {*}
@@ -488,16 +449,15 @@ void idle_task_create(void)
 static void template_demo(void)
 {
     printf("极个别组-基于openharmony的智能家居系统\r\n");
-    // led_task_create();// LED任务
-    // beep_task_create();// 蜂鸣器任务
-    // oledtask_create();// oled任务
-    // dht11_task_create();// 温湿度传感器任务
-    // step_motor_task_create();// 步进电机任务
-    // sr501_task_create();// 人体传感器任务
-    // dc_motor_task_create();// 直流电机任务
-    // sg90_task_create();// 舵机控制任务
-    // smoke_task_create();// 烟雾传感器任务
-    // ina219_task_create();// INA219传感器任务
-    // idle_task_create();
+    led_task_create();// LED任务
+    beep_task_create();// 蜂鸣器任务
+    oledtask_create();// oled任务
+    dht11_task_create();// 温湿度传感器任务
+    step_motor_task_create();// 步进电机任务
+    sr501_task_create();// 人体传感器任务
+    dc_motor_task_create();// 直流电机任务
+    sg90_task_create();// 舵机控制任务
+    smoke_task_create();// 烟雾传感器任务
+    ina219_task_create();// INA219传感器任务
 }
 SYS_RUN(template_demo);

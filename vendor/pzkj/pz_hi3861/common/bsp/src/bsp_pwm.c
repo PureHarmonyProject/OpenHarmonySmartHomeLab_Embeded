@@ -34,6 +34,6 @@ void pwm_init(void)
 //pwm占空比输出调节
 void pwm_set_duty(uint16_t duty)
 {
-    hi_pwm_start(HI_PWM_PORT_PWM2,duty,40000);
+    hi_pwm_start(HI_PWM_PORT_PWM2,duty,40000);//指定分频系数为40000 可认为重装载值就是40000 duty为ccr
 }
 
