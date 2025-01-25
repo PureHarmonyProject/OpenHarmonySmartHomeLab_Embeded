@@ -32,10 +32,8 @@
 #define DC_MOTOR_MEDIUM 1
 #define DC_MOTOR_HIGH 2
 
-int32_t speed_array[] = {20000,30000,40000}; //速度数组
-
 //函数声明
 void dc_motor_init(void);
-
+void dc_motor_run(int type);
 
 #endif

@@ -29,11 +29,11 @@ static_library("template") {
        
         
         
-        # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_exti.c",
-        # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_time.c",
-        # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_pwm.c",
-        # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_uart.c",
-        # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_adc.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_exti.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_time.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_pwm.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_uart.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_adc.c",
         # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_ds18b20.c",
         
         # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_sr04.c",

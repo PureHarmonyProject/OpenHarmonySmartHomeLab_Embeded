@@ -77,7 +77,7 @@ void UART_Task(void)
     
     while (1) 
     {
-        // uart0_send_data(data,strlen(data));
+        uart0_send_data(data,strlen(data));
         len=uart0_read_data(recbuf,5);
         if(len>0)uart0_send_data(recbuf,len);
     }

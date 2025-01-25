@@ -24,7 +24,7 @@ void sr501_init(void)
 static int sr501_read(void) {
     hi_gpio_value gpio_value;
     hi_gpio_get_input_val(SR_501_PIN, &gpio_value);
-
+    printf("sr501_read: %d\n",gpio_value);
     // 返回传感器状态
     return (gpio_value == HI_GPIO_VALUE1); // 检测到人体时返回 HI_TRUE
 }

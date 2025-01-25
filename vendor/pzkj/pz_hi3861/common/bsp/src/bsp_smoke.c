@@ -8,7 +8,7 @@ void smoke_init(void)
 
 int smoke_check(void)
 {
-    if(get_adc5_value() > 1000) {
+    if(get_adc5_value() > 10000) {
         return 1;
     }else {
         return 0;

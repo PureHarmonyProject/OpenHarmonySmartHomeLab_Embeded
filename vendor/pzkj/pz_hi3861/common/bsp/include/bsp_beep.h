@@ -34,5 +34,5 @@
 //函数声明
 void beep_init(void);
 void beep_alarm(uint16_t cnt,uint16_t time);
-
+void beep_warning(void);
 #endif

@@ -17,44 +17,36 @@
  */
 
 #include "bsp_led.h"
-#include "hi_pwm.h"
 
 //LED初始化
 void led_init(void)
 {
     hi_gpio_init();                                            // GPIO初始化
-    hi_io_set_func(LED_PIN, HI_IO_FUNC_GPIO_2_PWM2_OUT);       // 设置IO为pwm功能
-    hi_gpio_set_dir(LED_PIN, HI_GPIO_DIR_OUT);                 // 设置pwm为输出模式
-    hi_pwm_init(HI_PWM_PORT_PWM2);
+    hi_io_set_pull(LED_PIN, HI_IO_PULL_DOWN);                  // 设置GPIO下拉
+    hi_io_set_func(LED_PIN, LED_GPIO_FUN);                      // 设置IO为GPIO功能
+    hi_gpio_set_dir(LED_PIN, HI_GPIO_DIR_OUT);                 // 设置GPIO为输出模式
 }
 
-static void pwm_set_duty(uint16_t duty)
+void led_on() 
 {
-    hi_pwm_start(HI_PWM_PORT_PWM2,duty,40000);//指定分频系数为40000 可认为重装载值就是40000 duty为ccr
-}
-
-//三档亮度 低 中 高
-void led_on(type) 
-{
-    if(type < LED_LOW || type > LED_HIGH) {
-        return;
-    }
-    pwm_set_duty(led_array[type]);
+    LED(1);
 }
 
 void led_off(void) 
 {
-    pwm_set_duty(0);
+    LED(0);
 }
 
 void led_warning(void)
 {
+    printf("准备开始闪烁\n");
     uint32_t count = LED_WARNING_COUNT;
     while(count--)
     {
-        led_on(LED_HIGH);
+        led_on();
         usleep(LED_DELAY_TIME_MS * 1000);
         led_off();
         usleep(LED_DELAY_TIME_MS * 1000);
     }
+    printf("闪烁完毕\n");
 }

@@ -18,7 +18,6 @@
 
 #include "bsp_step_motor.h"
 
-
 void step_motor_init(void)
 {
     hi_gpio_init();                                     // GPIO初始化

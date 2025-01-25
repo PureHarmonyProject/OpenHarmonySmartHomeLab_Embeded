@@ -48,18 +48,6 @@
 #define STEP_MOTOR_START          1
 #define STEP_MOTOR_STOP           0
 
-// #define IN1_PIN             HI_IO_NAME_GPIO_14
-// #define IN1_GPIO_FUN        HI_IO_FUNC_GPIO_14_GPIO
-
-// #define IN2_PIN             HI_IO_NAME_GPIO_13
-// #define IN2_GPIO_FUN        HI_IO_FUNC_GPIO_13_GPIO
-
-// #define IN3_PIN             HI_IO_NAME_GPIO_12
-// #define IN3_GPIO_FUN        HI_IO_FUNC_GPIO_12_GPIO
-
-// #define IN4_PIN             HI_IO_NAME_GPIO_9
-// #define IN4_GPIO_FUN        HI_IO_FUNC_GPIO_9_GPIO
-
 #define MOTOR_IN1(a)        hi_gpio_set_ouput_val(IN1_PIN,a)
 #define MOTOR_IN2(a)        hi_gpio_set_ouput_val(IN2_PIN,a)
 #define MOTOR_IN3(a)        hi_gpio_set_ouput_val(IN3_PIN,a)

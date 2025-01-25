@@ -29,20 +29,13 @@
 
 #define LED(a)          hi_gpio_set_ouput_val(LED_PIN,a)
 
-#define MAX_LED_DELAY_TIME 100
 #define LED_WARNING_COUNT  15
 #define LED_DELAY_TIME_MS  100
-
-#define LED_LOW 0
-#define LED_MEDIUM 1
-#define LED_HIGH 2
-
-int32_t led_array[] = {20000,30000,40000}; //速度数组
 //照明灯引脚定义
 
 //函数声明
 void led_init(void);
-void led_on(type);
+void led_on(void);
 void led_off(void); 
 void led_warning(void);
 

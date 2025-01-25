@@ -44,21 +44,10 @@ void PWM_Task(void)
     
     while (1) 
     {
-        if(fx==0)
-		{
-			j+=10;
-			if(j==3000)
-				fx=1;
-		}
-		else
-		{
-			j-=10;
-			if(j==0)
-				fx=0;
-		}
-		pwm_set_duty(j);
-        
-        usleep(10*1000);
+		pwm_set_duty(40000);
+        usleep(500*1000);
+        pwm_set_duty(0);
+        usleep(500*1000);
     }
 }
 //任务创建
