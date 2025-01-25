@@ -9,7 +9,6 @@
 #include "bsp_oled.h"
 #include "bsp_step_motor.h"
 #include "bsp_sr501.h"
-#include "bsp_key.h"
 #include "bsp_dc_motor.h"
 #include "bsp_sg90.h"
 #include "bsp_smoke.h"
