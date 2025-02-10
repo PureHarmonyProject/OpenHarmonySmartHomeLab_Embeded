@@ -45,14 +45,14 @@
 #define WIFI_PAWD "12345678"
 
 //注册华为云后需要更新的信息
-// 设备ID
+// 产品ID
 #define DEVICE_ID "678c85feef99673c8ae15f52"
 // MQTT客户端ID
-#define MQTT_CLIENT_ID "678c85feef99673c8ae15f52_hi3861_led_0_0_2025011905" 
+#define MQTT_CLIENT_ID "678c85feef99673c8ae15f52_hi3861_led_0_0_2025021015" 
 // MQTT用户名
 #define MQTT_USER_NAME "678c85feef99673c8ae15f52_hi3861_led"
 // MQTT密码
-#define MQTT_PASS_WORD "21b5d6cd1b9014de84ffa1a0cbdb2ceef51236a4535515004e98673becbafef9"
+#define MQTT_PASS_WORD "86d7740c80ac4374cc29074fa91ecb6fb1dbd87742faad2e5f04994f3d9f9f2b"
 // 华为云平台的IP地址
 #define SERVER_IP_ADDR "117.78.5.125"
 // 华为云平台的IP端口号
