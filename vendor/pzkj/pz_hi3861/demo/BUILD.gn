@@ -43,7 +43,7 @@ lite_component("demo") {
     # "24_wifi_udp:template",
     # "25_wifi_tcp:template",
     # "26_wifi_mqtt:template",
-     "27_wifi_huawei_iotda:template",
+    # "27_wifi_huawei_iotda:template",
     # "28_dht11:template",
     # "29_hc-sr04:template",
     # "30_sg90:template",
@@ -59,6 +59,6 @@ lite_component("demo") {
     # "40_temp_sense:template",
     # "41_light_sense:template",
     # "42_ps2:template",
-    # "HarmonyHome:template",
+     "HarmonyHome:template",
   ]
 }
