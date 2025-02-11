@@ -25,6 +25,8 @@
 
 #include "cJSON.h"
 #define TASKDLYTICK    500
+#define LONGDELAYTICK  100    //100 = 1000ms 1tick = 10ms
+#define SHORTDELAYTICK 10    //10 = 100ms 1tick = 10ms
 
 osThreadId_t Test_Task_ID; //任务ID
 
@@ -197,16 +199,17 @@ void oled_init_mutex(void) {
 
 osThreadId_t Sensor_Task_ID; // INA219任务ID
 
+uint8_t temp, humi;
 // 传感器、电流电压更新
 void display_sensor_data(void)
 {
     char display_buffer[128];
-    uint8_t temp, humi;
+    
     int16_t current;
     // uint16_t bus_voltage, shunt_voltage;
     
     // 获取温湿度数据
-    dht11_read_data(&temp, &humi);
+    // dht11_read_data(&temp, &humi);
     
     // // 获取电流电压数据
     // current = ina219_read_current();
@@ -235,7 +238,7 @@ void sensor_task(void)
     {
         display_sensor_data();
         printf("更新传感器数据\n");
-        osDelay(1000);  // 每1秒更新一次数据
+        osDelay(LONGDELAYTICK);  // 每1秒更新一次数据
     }
 }
 
@@ -249,7 +252,7 @@ void sensor_task_create(void)
     taskOptions.cb_size = 1024;                   // 堆空间大小
     taskOptions.stack_mem = NULL;              // 栈空间地址
     taskOptions.stack_size = 4096;             // 栈空间大小 单位:字节
-    taskOptions.priority = osPriorityNormal;   // 任务的优先级
+    taskOptions.priority = osPriorityNormal2;   // 任务的优先级
 
     Sensor_Task_ID = osThreadNew((osThreadFunc_t)sensor_task, NULL, &taskOptions); // 创建INA219任务
     if (Sensor_Task_ID != NULL)
@@ -334,9 +337,6 @@ void uart_task_create(void)
 
 /**************************************************iotda任务******************************************************** */
 
-
-
-
 //WIFI连接热点和密码
 #define WIFI_SSID "duki"
 #define WIFI_PAWD "12345678"
@@ -368,7 +368,8 @@ void uart_task_create(void)
 #define MsgQueueObjectNumber 16 // 定义消息队列对象的个数
 typedef struct message_sensorData {
     uint8_t led;        // LED灯当前的状态
-    // float temperature;  // 当前的温度值
+    float temperature;  // 当前的温度值
+    float humidity;   // 当前的湿度值
 } msg_sensorData_t;
 msg_sensorData_t sensorData = {0}; // 传感器的数据
 osThreadId_t mqtt_send_task_id; // mqtt 发布数据任务ID
@@ -400,7 +401,8 @@ int Packaged_json_data(void)
     properties = cJSON_CreateObject();
     cJSON_AddItemToObject(array, "properties", properties);
     cJSON_AddStringToObject(properties, "led", sensorData.led ? "ON" : "OFF");
-    // cJSON_AddNumberToObject(properties, "temperature", (int)sensorData.temperature);
+    cJSON_AddNumberToObject(properties, "temperature", sensorData.temperature);
+    cJSON_AddNumberToObject(properties, "humidity", sensorData.humidity);
     cJSON_AddItemToArray(services, array);  // 将对象添加到数组中
 
     /* 格式化打印创建的带数组的JSON对象 */
@@ -483,8 +485,10 @@ void mqtt_send_task(void)
     while (1) 
     {
         // 获取传感器的数据
-        // sensorData.temperature=ds18b20_gettemperture();
-
+        dht11_read_data(&temp, &humi);
+        sensorData.temperature = temp;
+        sensorData.humidity = humi;
+        
         // 组Topic
         memset_s(publish_topic, MQTT_DATA_MAX, 0, MQTT_DATA_MAX);
         if (sprintf_s(publish_topic, MQTT_DATA_MAX, MQTT_TOPIC_PUB_PROPERTIES, DEVICE_ID) > 0) 
@@ -494,8 +498,9 @@ void mqtt_send_task(void)
             // 发布消息
             MQTTClient_pub(publish_topic, mqtt_data, strlen((char *)mqtt_data));
         }
+        osDelay(LONGDELAYTICK);
     }
-    sleep(MQTT_SEND_TASK_TIME);
+    
 }
 
 // 向云端发送返回值
@@ -563,14 +568,14 @@ void mqtt_recv_task(void)
     while (1) 
     {
         MQTTClient_sub();
-        sleep(MQTT_RECV_TASK_TIME);
+        osDelay(LONGDELAYTICK);
     }
 }
 
 //硬件初始化
 void hardware_init(void)
 {
-    led_init();//LED初始化
+    // led_init();//LED初始化
     // ds18b20_init();//DS18B20初始化
 
     p_MQTTClient_sub_callback = &mqttClient_sub_callback;
@@ -610,7 +615,7 @@ void wifi_iotda_task_create(void)
     taskOptions.cb_size = 0;                 // 堆空间大小
     taskOptions.stack_mem = NULL;            // 栈空间地址
     taskOptions.stack_size = TASK_STACK_SIZE;           // 栈空间大小 单位:字节
-    taskOptions.priority = osPriorityNormal; // 任务的优先级
+    taskOptions.priority = osPriorityNormal1; // 任务的优先级
 
     mqtt_send_task_id = osThreadNew((osThreadFunc_t)mqtt_send_task, NULL, &taskOptions); // 创建任务
     if (mqtt_send_task_id != NULL)
@@ -651,7 +656,7 @@ static bsp_init(void)
     while(dht11_init())
 	{
 		printf("DHT11检测失败,请插好!\r\n");
-		osDelay(500);; //10ms
+		osDelay(SHORTDELAYTICK); //100ms
 	}
 	printf("DHT11检测成功!\r\n");
 
@@ -675,12 +680,15 @@ static bsp_init(void)
 
     //串口接收初始化
     uart0_init(115200);
+
+    //iotda初始化
+    hardware_init();
 }
 static void template_demo(void)
 {
     printf("极个别组-基于openharmony的智能家居系统\r\n");
 
-    // bsp_init();
+    bsp_init();
     // uart0_init(115200);
 
     // test_task_create();
@@ -688,10 +696,10 @@ static void template_demo(void)
     // led_init();
     // sr501_init();
     // motion_sensor_task_create();//貌似要等一分钟才会正常
-    // sensor_task_create();
+    sensor_task_create();
     // smoke_sensor_task_create();
     // uart_task_create();
-    hardware_init();//硬件初始化
+    
     wifi_iotda_task_create();//任务创建
 
 }
