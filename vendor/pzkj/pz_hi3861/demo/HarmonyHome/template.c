@@ -25,32 +25,36 @@
 
 #include "cJSON.h"
 #define TASKDLYTICK    500
-#define LONGDELAYTICK  100    //100 = 1000ms 1tick = 10ms
-#define SHORTDELAYTICK 10    //10 = 100ms 1tick = 10ms
+#define TASK_DELAY_5000MS 500    //500 = 5000ms 1tick = 10ms
+#define TASK_DELAY_1000MS  100    //100 = 1000ms 1tick = 10ms
+#define TASK_DELAY_100MS 10    //10 = 100ms 1tick = 10ms
 
 osThreadId_t Test_Task_ID; //任务ID
 
 void test_task(void)
 {
-    step_motor_init();
-    sg90_init();
-    beep_init();
-    // led_init();
     while (1) 
     {
         // led_on();
         printf("窗帘打开\n");
-        curtain_open();
-        usleep(500 * 1000);
-        printf("门打开\n");
-        door_open();
-        usleep(500 * 1000);
-        printf("门关闭\n");
-        door_close();
-        usleep(500 * 1000);
-        printf("蜂鸣器响\n");
-        beep_warning();
-        usleep(500 * 1000);
+        curtain_open_angle(150);
+        
+        printf("门操作\n");
+        if(door_get_curstate()) 
+        {
+            door_close();
+        }else {
+            door_open();
+        }
+        
+        // usleep(500 * 1000);
+        // printf("门关闭\n");
+        // door_close();
+        // usleep(500 * 1000);
+        // printf("蜂鸣器响\n");
+        // beep_warning();
+        // usleep(500 * 1000);
+        osDelay(TASK_DELAY_5000MS);  // 每5秒更新一次数据
     }
 }
 
@@ -63,7 +67,7 @@ void test_task_create(void)
     taskOptions.cb_size = 0;                 // 堆空间大小
     taskOptions.stack_mem = NULL;            // 栈空间地址
     taskOptions.stack_size = 1024;           // 栈空间大小 单位:字节
-    taskOptions.priority = osPriorityBelowNormal5; // 任务的优先级
+    taskOptions.priority = osPriorityNormal2; // 任务的优先级
 
     Test_Task_ID = osThreadNew((osThreadFunc_t)test_task, NULL, &taskOptions); // 创建任务
     if (Test_Task_ID != NULL)
@@ -238,7 +242,7 @@ void sensor_task(void)
     {
         display_sensor_data();
         printf("更新传感器数据\n");
-        osDelay(LONGDELAYTICK);  // 每1秒更新一次数据
+        osDelay(TASK_DELAY_5000MS);  // 每5秒更新一次数据
     }
 }
 
@@ -370,6 +374,8 @@ typedef struct message_sensorData {
     uint8_t led;        // LED灯当前的状态
     float temperature;  // 当前的温度值
     float humidity;   // 当前的湿度值
+    float curtain_curState; // 窗帘的开合百分比
+    uint8_t door; //门的开闭状态
 } msg_sensorData_t;
 msg_sensorData_t sensorData = {0}; // 传感器的数据
 osThreadId_t mqtt_send_task_id; // mqtt 发布数据任务ID
@@ -403,6 +409,8 @@ int Packaged_json_data(void)
     cJSON_AddStringToObject(properties, "led", sensorData.led ? "ON" : "OFF");
     cJSON_AddNumberToObject(properties, "temperature", sensorData.temperature);
     cJSON_AddNumberToObject(properties, "humidity", sensorData.humidity);
+    cJSON_AddNumberToObject(properties, "curtain_curState", sensorData.curtain_curState);
+    cJSON_AddStringToObject(properties, "door", sensorData.door ? "ON" : "OFF");
     cJSON_AddItemToArray(services, array);  // 将对象添加到数组中
 
     /* 格式化打印创建的带数组的JSON对象 */
@@ -488,7 +496,9 @@ void mqtt_send_task(void)
         dht11_read_data(&temp, &humi);
         sensorData.temperature = temp;
         sensorData.humidity = humi;
-        
+        sensorData.curtain_curState = curtain_get_curstate();
+        sensorData.door = door_get_curstate();
+        // sensorData.door = door_get_curstate();
         // 组Topic
         memset_s(publish_topic, MQTT_DATA_MAX, 0, MQTT_DATA_MAX);
         if (sprintf_s(publish_topic, MQTT_DATA_MAX, MQTT_TOPIC_PUB_PROPERTIES, DEVICE_ID) > 0) 
@@ -498,7 +508,7 @@ void mqtt_send_task(void)
             // 发布消息
             MQTTClient_pub(publish_topic, mqtt_data, strlen((char *)mqtt_data));
         }
-        osDelay(LONGDELAYTICK);
+        osDelay(TASK_DELAY_1000MS);
     }
     
 }
@@ -568,41 +578,8 @@ void mqtt_recv_task(void)
     while (1) 
     {
         MQTTClient_sub();
-        osDelay(LONGDELAYTICK);
+        osDelay(TASK_DELAY_1000MS);
     }
-}
-
-//硬件初始化
-void hardware_init(void)
-{
-    // led_init();//LED初始化
-    // ds18b20_init();//DS18B20初始化
-
-    p_MQTTClient_sub_callback = &mqttClient_sub_callback;
-
-    // 连接WiFi
-    if (WiFi_connectHotspots(WIFI_SSID, WIFI_PAWD) != WIFI_SUCCESS) {
-        printf("[error] connectWiFiHotspots\r\n");
-    }
-    sleep(TASK_INIT_TIME);
-
-    // 连接MQTT服务器
-    if (MQTTClient_connectServer(SERVER_IP_ADDR, SERVER_IP_PORT) != WIFI_SUCCESS) {
-        printf("[error] mqttClient_connectServer\r\n");
-    }
-    sleep(TASK_INIT_TIME);
-
-    // 初始化MQTT客户端
-    if (MQTTClient_init(MQTT_CLIENT_ID, MQTT_USER_NAME, MQTT_PASS_WORD) != WIFI_SUCCESS) {
-        printf("[error] mqttClient_init\r\n");
-    }
-    sleep(TASK_INIT_TIME); 
-
-    // 订阅主题
-    if (MQTTClient_subscribe(MQTT_TOPIC_SUB_COMMANDS) != WIFI_SUCCESS) {
-        printf("[error] mqttClient_subscribe\r\n");
-    }
-    sleep(TASK_INIT_TIME);
 }
 
 //任务创建
@@ -648,15 +625,12 @@ static bsp_init(void)
     //oled初始化
     oled_init_mutex();
     oled_init();
-    // oled_clear();
-	// oled_showstring(0,0,"Hello i am Dukiya",12);
-	// oled_refresh_gram();//更新显存
 
     //温湿度传感器初始化
     while(dht11_init())
 	{
 		printf("DHT11检测失败,请插好!\r\n");
-		osDelay(SHORTDELAYTICK); //100ms
+		osDelay(TASK_DELAY_100MS); //100ms
 	}
 	printf("DHT11检测成功!\r\n");
 
@@ -682,16 +656,41 @@ static bsp_init(void)
     uart0_init(115200);
 
     //iotda初始化
-    hardware_init();
+    // 初始化MQTT回调函数
+    p_MQTTClient_sub_callback = &mqttClient_sub_callback;
+
+    // 连接WiFi
+    if (WiFi_connectHotspots(WIFI_SSID, WIFI_PAWD) != WIFI_SUCCESS) {
+        printf("[error] connectWiFiHotspots\r\n");
+    }
+    sleep(TASK_INIT_TIME);
+
+    // 连接MQTT服务器
+    if (MQTTClient_connectServer(SERVER_IP_ADDR, SERVER_IP_PORT) != WIFI_SUCCESS) {
+        printf("[error] mqttClient_connectServer\r\n");
+    }
+    sleep(TASK_INIT_TIME);
+
+    // 初始化MQTT客户端
+    if (MQTTClient_init(MQTT_CLIENT_ID, MQTT_USER_NAME, MQTT_PASS_WORD) != WIFI_SUCCESS) {
+        printf("[error] mqttClient_init\r\n");
+    }
+    sleep(TASK_INIT_TIME); 
+
+    // 订阅主题
+    if (MQTTClient_subscribe(MQTT_TOPIC_SUB_COMMANDS) != WIFI_SUCCESS) {
+        printf("[error] mqttClient_subscribe\r\n");
+    }
+    sleep(TASK_INIT_TIME);
+
 }
 static void template_demo(void)
 {
     printf("极个别组-基于openharmony的智能家居系统\r\n");
 
     bsp_init();
-    // uart0_init(115200);
 
-    // test_task_create();
+    test_task_create();
 
     // led_init();
     // sr501_init();

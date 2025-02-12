@@ -84,3 +84,24 @@ void curtain_open(void)
 	step_motor_run(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, STEP_MOTOR_ANGLE, STEP_MOTOR_START);
 	step_motor_run(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, STEP_MOTOR_ANGLE, STEP_MOTOR_STOP);
 }
+
+//旋转指定角度，角度范围0-360
+
+uint16_t cur_angle;
+void curtain_open_angle(uint16_t angle)
+{
+    cur_angle = angle;
+	step_motor_run(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, angle, STEP_MOTOR_START);
+	step_motor_run(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, angle, STEP_MOTOR_STOP);
+}
+
+uint16_t curtain_get_curangle(void)
+{
+    return cur_angle;
+}
+
+//开合百分比
+float curtain_get_curstate(void)
+{
+    return (float)curtain_get_curangle() / 360;
+}

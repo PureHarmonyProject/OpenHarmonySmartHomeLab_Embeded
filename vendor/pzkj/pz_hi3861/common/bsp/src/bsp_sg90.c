@@ -45,12 +45,20 @@ void set_sg90_angle(uint16_t angle)
     }
 }
 
+uint8_t door_state;
 void door_open(void) 
 {
+    door_state = 1;
     set_sg90_angle(DOOR_OPEN_ANGLE);
 }
 
 void door_close(void)
 {
+    door_state = 0;
     set_sg90_angle(DOOR_CLOSE_ANGLE);
+}
+
+uint8_t door_get_curstate(void)
+{
+    return door_state;
 }
