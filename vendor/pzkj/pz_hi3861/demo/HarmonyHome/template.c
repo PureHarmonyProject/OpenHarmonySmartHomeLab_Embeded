@@ -15,6 +15,7 @@
 #include "bsp_ina219.h"
 #include "bsp_uart.h"
 // #include "bsp_ds18b20.h"
+#include "bsp_pcf8575.h"
 
 #include "bsp_wifi.h"
 #include "bsp_mqtt.h"
@@ -36,16 +37,16 @@ void test_task(void)
     while (1) 
     {
         // led_on();
-        printf("窗帘打开\n");
-        curtain_open_angle(150);
+        // printf("窗帘打开\n");
+        // curtain_open_angle(150);
         
-        printf("门操作\n");
-        if(door_get_curstate()) 
-        {
-            door_close();
-        }else {
-            door_open();
-        }
+        // printf("门操作\n");
+        // if(door_get_curstate()) 
+        // {
+        //     door_close();
+        // }else {
+        //     door_open();
+        // }
         
         // usleep(500 * 1000);
         // printf("门关闭\n");
@@ -54,6 +55,7 @@ void test_task(void)
         // printf("蜂鸣器响\n");
         // beep_warning();
         // usleep(500 * 1000);
+        pcf8575_init();
         osDelay(TASK_DELAY_5000MS);  // 每5秒更新一次数据
     }
 }
@@ -688,18 +690,18 @@ static void template_demo(void)
 {
     printf("极个别组-基于openharmony的智能家居系统\r\n");
 
-    bsp_init();
+    // bsp_init();
 
     test_task_create();
 
     // led_init();
     // sr501_init();
     // motion_sensor_task_create();//貌似要等一分钟才会正常
-    sensor_task_create();
-    // smoke_sensor_task_create();
-    // uart_task_create();
+    // sensor_task_create();
+    // // smoke_sensor_task_create();
+    // // uart_task_create();
     
-    wifi_iotda_task_create();//任务创建
-
+    // wifi_iotda_task_create();//任务创建
+    // pcf8575_init();
 }
 SYS_RUN(template_demo);

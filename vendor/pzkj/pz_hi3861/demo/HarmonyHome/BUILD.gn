@@ -36,7 +36,7 @@ static_library("template") {
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_adc.c",
         # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_ds18b20.c",
         # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_ds18b20.c",
-        
+        "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_pcf8575.c",
         # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_sr04.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_wifi.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_mqtt.c",
