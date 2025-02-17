@@ -28,32 +28,11 @@ void pcf8575_init(void)
 
     usleep(100 * 1000); // 延时
 
-    // 设置 PCF8575 输出模式，可以设置哪些引脚为输出
-    // pcf8575_set_output_mode(0xFFFF); // 默认所有引脚设置为输出
-    // pcf8575_write_data(0x0000);      // 初始化时，将所有输出设置为low电平
-
-    if(!pcf8575_write(0xff0f)) {
-        printf("write success\r\n");
-    }else {
-        printf("write fail\r\n");
-    }
-
-    uint16_t data;
-    if(!pcf8575_read(&data)) {
-        printf("data = %04x, read success\r\n",data);
-    }else {
-        printf("read fail\r\n");
-    }
-    // // 尝试读取数据并确认通信
-    // uint16_t data = pcf8575_read_data();
-    // if (data == 0x0000) {
-    //     printf("I2C PCF8575 communication failed!!!\r\n");
-    // } else {
-    //     printf("I2C PCF8575 communication successful!!!\r\n");
-    // }
+    pcf8575_write_bit(8,1);
+    printf("data = %d\r\n",pcf8575_read_bit(8));
 }
 
-hi_u32 pcf8575_write(uint16_t data)
+static hi_u32 pcf8575_write(uint16_t data)
 {
     uint8_t buffer[2] = {0};
     buffer[0] = (data >> 8) & 0xff;
@@ -66,7 +45,7 @@ hi_u32 pcf8575_write(uint16_t data)
     return hi_i2c_write(PCF8575_I2C_IDX, PCF8575_I2C_ADDR << 1, &i2cData);
 }
 
-hi_u32 pcf8575_read(uint16_t *data)
+static hi_u32 pcf8575_read(uint16_t *data)
 {
     hi_i2c_data i2cData = {0};
     i2cData.receive_buf = data;
@@ -75,3 +54,32 @@ hi_u32 pcf8575_read(uint16_t *data)
     return hi_i2c_read(PCF8575_I2C_IDX, (PCF8575_I2C_ADDR << 1) | 1, &i2cData);
 }
 
+static void swap_high_low(uint16_t *data) 
+{
+    uint8_t high = *data >> 8; // 高8位
+    uint8_t low = *data & 0xff; // 低8位
+    *data = (low << 8) | high;
+}
+
+uint8_t pcf8575_read_bit(uint8_t bit)
+{
+    uint16_t all_bits;    
+    if(!pcf8575_read(&all_bits)) {
+        swap_high_low(&all_bits);
+        return (all_bits >> bit) & 0x01;
+    }
+}
+
+void pcf8575_write_bit(uint8_t bit, uint8_t value)
+{
+    uint16_t all_bits;
+    if(!pcf8575_read(&all_bits)) {
+        swap_high_low(&all_bits);
+        if(value) {
+            all_bits |= (1 << bit);
+        } else {
+            all_bits &= ~(1 << bit);
+        }
+        pcf8575_write(all_bits);
+    }
+}

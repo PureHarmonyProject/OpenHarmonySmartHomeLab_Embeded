@@ -18,6 +18,9 @@
 
 // 函数声明
 void pcf8575_init(void);                               // 初始化 PCF8575
-hi_u32 pcf8575_write(uint16_t data);
-hi_u32 pcf8575_read(uint16_t *data);
+// hi_u32 pcf8575_write(uint16_t data);
+// hi_u32 pcf8575_read(uint16_t *data);
+// void swap_high_low(uint16_t *data);
+uint8_t pcf8575_read_bit(uint8_t bit);
+void pcf8575_write_bit(uint8_t bit, uint8_t value);
 #endif
