@@ -68,7 +68,7 @@ void test_task_create(void)
     taskOptions.cb_mem = NULL;               // 堆空间地址
     taskOptions.cb_size = 0;                 // 堆空间大小
     taskOptions.stack_mem = NULL;            // 栈空间地址
-    taskOptions.stack_size = 1024;           // 栈空间大小 单位:字节
+    taskOptions.stack_size = 4096;           // 栈空间大小 单位:字节
     taskOptions.priority = osPriorityNormal2; // 任务的优先级
 
     Test_Task_ID = osThreadNew((osThreadFunc_t)test_task, NULL, &taskOptions); // 创建任务

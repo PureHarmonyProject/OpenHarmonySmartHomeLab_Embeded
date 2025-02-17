@@ -32,10 +32,17 @@ void pcf8575_init(void)
     // pcf8575_set_output_mode(0xFFFF); // 默认所有引脚设置为输出
     // pcf8575_write_data(0x0000);      // 初始化时，将所有输出设置为low电平
 
-    if(!pcf8575_write(0xf00f)) {
+    if(!pcf8575_write(0xff0f)) {
         printf("write success\r\n");
     }else {
         printf("write fail\r\n");
+    }
+
+    uint16_t data;
+    if(!pcf8575_read(&data)) {
+        printf("data = %04x, read success\r\n",data);
+    }else {
+        printf("read fail\r\n");
     }
     // // 尝试读取数据并确认通信
     // uint16_t data = pcf8575_read_data();
@@ -57,5 +64,14 @@ hi_u32 pcf8575_write(uint16_t data)
     i2cData.send_len = sizeof(buffer);
 
     return hi_i2c_write(PCF8575_I2C_IDX, PCF8575_I2C_ADDR << 1, &i2cData);
+}
+
+hi_u32 pcf8575_read(uint16_t *data)
+{
+    hi_i2c_data i2cData = {0};
+    i2cData.receive_buf = data;
+    i2cData.receive_len = sizeof(uint16_t);
+
+    return hi_i2c_read(PCF8575_I2C_IDX, (PCF8575_I2C_ADDR << 1) | 1, &i2cData);
 }
 

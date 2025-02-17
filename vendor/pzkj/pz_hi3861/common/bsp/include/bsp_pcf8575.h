@@ -19,4 +19,5 @@
 // 函数声明
 void pcf8575_init(void);                               // 初始化 PCF8575
 hi_u32 pcf8575_write(uint16_t data);
+hi_u32 pcf8575_read(uint16_t *data);
 #endif
