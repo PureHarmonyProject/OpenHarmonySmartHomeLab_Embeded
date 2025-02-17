@@ -376,7 +376,7 @@ typedef struct message_sensorData {
     uint8_t led;        // LED灯当前的状态
     float temperature;  // 当前的温度值
     float humidity;   // 当前的湿度值
-    float curtain_curState; // 窗帘的开合百分比
+    double curtain_curState; // 窗帘的开合百分比
     uint8_t door; //门的开闭状态
 } msg_sensorData_t;
 msg_sensorData_t sensorData = {0}; // 传感器的数据
@@ -438,6 +438,7 @@ int Packaged_json_data(void)
     return ret;
 }
 
+//处理on,off类命令
 int get_jsonData_value(const cJSON *const object, uint8_t *value)
 {
     cJSON *json_value = NULL;
@@ -453,6 +454,19 @@ int get_jsonData_value(const cJSON *const object, uint8_t *value)
             json_value = NULL;
             ret = 0;
         }
+    }
+    json_value = NULL;
+    return ret; // -1为失败
+}
+
+//处理窗帘开合比命令
+int curtain_get_jsonData_value(const cJSON *const object, double *value)
+{
+    cJSON *json_value = NULL;
+    int ret = -1;
+    json_value = cJSON_GetObjectItem(object, "value");
+    if (json_value) {
+        *value = json_value->valuedouble;
     }
     json_value = NULL;
     return ret; // -1为失败
@@ -477,12 +491,22 @@ int Parsing_json_data(const char *payload)
             {
                 ret_code = get_jsonData_value(paras, &sensorData.led);
             } 
+            if (!strcmp(command_name->valuestring, "door")) 
+            {
+                ret_code = get_jsonData_value(paras, &sensorData.door);
+            }
+            //窗帘的需求是什么
+            if (!strcmp(command_name->valuestring, "curtain")) 
+            {
+                ret_code = curtain_get_jsonData_value(paras, &sensorData.curtain_curState);
+            }
         }
     }
     cJSON_Delete(root);
     root = command_name = paras = value = red = green = blue = NULL;
     (sensorData.led == 1) ? LED(1) : LED(0);
-
+    (sensorData.door == 1) ? door_open() : door_close();
+    curtain_open_angle(360 * sensorData.curtain_curState);
     return ret_code;
 }
 
@@ -690,9 +714,9 @@ static void template_demo(void)
 {
     printf("极个别组-基于openharmony的智能家居系统\r\n");
 
-    // bsp_init();
+    bsp_init();
 
-    test_task_create();
+    // test_task_create();
 
     // led_init();
     // sr501_init();
@@ -701,7 +725,7 @@ static void template_demo(void)
     // // smoke_sensor_task_create();
     // // uart_task_create();
     
-    // wifi_iotda_task_create();//任务创建
+    wifi_iotda_task_create();//任务创建
     // pcf8575_init();
 }
 SYS_RUN(template_demo);
