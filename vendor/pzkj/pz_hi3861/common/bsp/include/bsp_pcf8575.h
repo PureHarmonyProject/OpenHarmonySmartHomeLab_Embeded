@@ -10,8 +10,8 @@
 #define PCF8575_I2C_IDX         0             // 使用的 I2C 总线号
 #define PCF8575_I2C_SPEED       100000        // 100KHz I2C 速度
 
-#define Max_Column              128           // 最大列数
-#define Max_Row                 64            // 最大行数
+// #define Max_Column              128           // 最大列数
+// #define Max_Row                 64            // 最大行数
 
 #define PCF8575_CMD             0             // 写命令标志
 #define PCF8575_DATA            1             // 写数据标志

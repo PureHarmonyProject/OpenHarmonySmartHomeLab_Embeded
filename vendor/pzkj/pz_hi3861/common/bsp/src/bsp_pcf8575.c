@@ -26,10 +26,6 @@ void pcf8575_init(void)
         printf("I2C PCF8575 Init success!!!\r\n");
     }
 
-    // usleep(100 * 1000); // 延时
-
-    // pcf8575_write_bit(8,1);
-    // printf("data = %d\r\n",pcf8575_read_bit(8));
 }
 
 static hi_u32 pcf8575_write(uint16_t data)

@@ -55,7 +55,8 @@ void test_task(void)
         // printf("蜂鸣器响\n");
         // beep_warning();
         // usleep(500 * 1000);
-        pcf8575_init();
+        // pcf8575_init();
+        ina219_init();
         osDelay(TASK_DELAY_5000MS);  // 每5秒更新一次数据
     }
 }
@@ -714,9 +715,9 @@ static void template_demo(void)
 {
     printf("极个别组-基于openharmony的智能家居系统\r\n");
 
-    bsp_init();
+    // bsp_init();
 
-    // test_task_create();
+    test_task_create();
 
     // led_init();
     // sr501_init();
@@ -725,7 +726,7 @@ static void template_demo(void)
     // // smoke_sensor_task_create();
     // // uart_task_create();
     
-    wifi_iotda_task_create();//任务创建
+    // wifi_iotda_task_create();//任务创建
     // pcf8575_init();
 }
 SYS_RUN(template_demo);
