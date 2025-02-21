@@ -67,7 +67,6 @@ uint8_t pcf8575_read_bit(uint8_t bit)
 {
     uint16_t all_bits;   
     if(!pcf8575_read(&all_bits)) {
-        // swap_high_low(&all_bits);
         return (all_bits >> bit) & 0x01;
     }
 }
@@ -76,7 +75,6 @@ void pcf8575_write_bit(uint8_t bit, uint8_t value)
 {
     uint16_t all_bits;
     if(!pcf8575_read(&all_bits)) {
-        // swap_high_low(&all_bits);
         if(value) {
             all_bits |= (1 << bit);
         } else {

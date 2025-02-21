@@ -37,11 +37,21 @@
 #define MOTOR_IN3(a)        hi_gpio_set_ouput_val(IN3_PIN,a)
 #define MOTOR_IN4(a)        hi_gpio_set_ouput_val(IN4_PIN,a)
 
-#define PF_MOTOR_IN1(a)        pcf8575_write_bit()
+#define PF_MOTOR_IN1_INDEX     7
+#define PF_MOTOR_IN2_INDEX     6
+#define PF_MOTOR_IN3_INDEX     5
+#define PF_MOTOR_IN4_INDEX     4
+#define PF_MOTOR_IN1(a)        pcf8575_write_bit(PF_MOTOR_IN1_INDEX,a)
+#define PF_MOTOR_IN2(a)        pcf8575_write_bit(PF_MOTOR_IN2_INDEX,a)
+#define PF_MOTOR_IN3(a)        pcf8575_write_bit(PF_MOTOR_IN3_INDEX,a)
+#define PF_MOTOR_IN4(a)        pcf8575_write_bit(PF_MOTOR_IN4_INDEX,a)
+
 //函数声明
 void curtain_open(void);
+void curtain_open_by_pcf8575(void);
 void step_motor_init(void);
 void step_motor_run(uint8_t step,uint8_t dir,uint8_t speed,uint16_t angle,uint8_t sta);
+void step_motor_run_by_pcf8575(uint8_t step, uint8_t dir, uint8_t speed, uint16_t angle, uint8_t sta);
 void curtain_open_angle(uint16_t angle);
 
 uint16_t curtain_get_curangle(void);

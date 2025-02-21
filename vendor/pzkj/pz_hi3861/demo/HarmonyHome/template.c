@@ -35,7 +35,7 @@ osThreadId_t Test_Task_ID; //任务ID
 void test_task(void)
 {
     pcf8575_init();
-    step_motor_init();
+    // step_motor_init();
     while (1) 
     {
         // led_on();
@@ -70,7 +70,8 @@ void test_task(void)
         // printf("bit = %d\r\n", pcf8575_read_bit(1));
         // printf("bit = %d\r\n", pcf8575_read_bit(2));
         // printf("bit = %d\r\n", pcf8575_read_bit(3));
-        curtain_test();
+        // curtain_test();
+        curtain_open_by_pcf8575();
         osDelay(TASK_DELAY_5000MS);  // 每5秒更新一次数据
     }
 }

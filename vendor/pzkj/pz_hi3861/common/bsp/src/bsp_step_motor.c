@@ -87,21 +87,21 @@ void step_motor_run_by_pcf8575(uint8_t step, uint8_t dir, uint8_t speed, uint16_
             for (uint8_t i = 0; i < 8; i += (8 / step)) {
                 uint8_t index = dir == 0 ? i : (8 - i) % 8; // 方向选择
                 switch (index) {
-                    case 0: MOTOR_IN1(1); MOTOR_IN2(0); MOTOR_IN3(0); MOTOR_IN4(0); break;
-                    case 1: MOTOR_IN1(1); MOTOR_IN2(1); MOTOR_IN3(0); MOTOR_IN4(0); break;
-                    case 2: MOTOR_IN1(0); MOTOR_IN2(1); MOTOR_IN3(0); MOTOR_IN4(0); break;
-                    case 3: MOTOR_IN1(0); MOTOR_IN2(1); MOTOR_IN3(1); MOTOR_IN4(0); break;
-                    case 4: MOTOR_IN1(0); MOTOR_IN2(0); MOTOR_IN3(1); MOTOR_IN4(0); break;
-                    case 5: MOTOR_IN1(0); MOTOR_IN2(0); MOTOR_IN3(1); MOTOR_IN4(1); break;
-                    case 6: MOTOR_IN1(0); MOTOR_IN2(0); MOTOR_IN3(0); MOTOR_IN4(1); break;
-                    case 7: MOTOR_IN1(1); MOTOR_IN2(0); MOTOR_IN3(0); MOTOR_IN4(1); break;
+                    case 0: PF_MOTOR_IN1(1); PF_MOTOR_IN2(0); PF_MOTOR_IN3(0); PF_MOTOR_IN4(0); break;
+                    case 1: PF_MOTOR_IN1(1); PF_MOTOR_IN2(1); PF_MOTOR_IN3(0); PF_MOTOR_IN4(0); break;
+                    case 2: PF_MOTOR_IN1(0); PF_MOTOR_IN2(1); PF_MOTOR_IN3(0); PF_MOTOR_IN4(0); break;
+                    case 3: PF_MOTOR_IN1(0); PF_MOTOR_IN2(1); PF_MOTOR_IN3(1); PF_MOTOR_IN4(0); break;
+                    case 4: PF_MOTOR_IN1(0); PF_MOTOR_IN2(0); PF_MOTOR_IN3(1); PF_MOTOR_IN4(0); break;
+                    case 5: PF_MOTOR_IN1(0); PF_MOTOR_IN2(0); PF_MOTOR_IN3(1); PF_MOTOR_IN4(1); break;
+                    case 6: PF_MOTOR_IN1(0); PF_MOTOR_IN2(0); PF_MOTOR_IN3(0); PF_MOTOR_IN4(1); break;
+                    case 7: PF_MOTOR_IN1(1); PF_MOTOR_IN2(0); PF_MOTOR_IN3(0); PF_MOTOR_IN4(1); break;
                 }
 				//驱动要求大于1.8ms = 1800us 但是实测延时1000us也可以
                 usleep(speed * 1000);
             }
         }
     } else {
-        MOTOR_IN1(0); MOTOR_IN2(0); MOTOR_IN3(0); MOTOR_IN4(0);
+        PF_MOTOR_IN1(0); PF_MOTOR_IN2(0); PF_MOTOR_IN3(0); PF_MOTOR_IN4(0);
     }
 }
 
@@ -132,8 +132,12 @@ float curtain_get_curstate(void)
     return (float)curtain_get_curangle() / 360;
 }
 
+void curtain_open_by_pcf8575(void)
+{
+	step_motor_run_by_pcf8575(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, STEP_MOTOR_ANGLE, STEP_MOTOR_START);
+	step_motor_run_by_pcf8575(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, STEP_MOTOR_ANGLE, STEP_MOTOR_STOP);
+}
 void curtain_test(void)
 {
-    MOTOR_IN1(1); 
-    MOTOR_IN2(0);
+    
 }
