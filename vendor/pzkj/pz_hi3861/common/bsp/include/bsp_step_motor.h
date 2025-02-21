@@ -4,6 +4,8 @@
 #include "cmsis_os2.h"
 #include "hi_io.h"
 #include "hi_gpio.h"
+#include "bsp_pcf8575.h"
+
 
 // 定义步进电机速度，值越小，速度越快
 // 最小不能小于1
@@ -35,6 +37,7 @@
 #define MOTOR_IN3(a)        hi_gpio_set_ouput_val(IN3_PIN,a)
 #define MOTOR_IN4(a)        hi_gpio_set_ouput_val(IN4_PIN,a)
 
+#define PF_MOTOR_IN1(a)        pcf8575_write_bit()
 //函数声明
 void curtain_open(void);
 void step_motor_init(void);
@@ -43,4 +46,6 @@ void curtain_open_angle(uint16_t angle);
 
 uint16_t curtain_get_curangle(void);
 float curtain_get_curstate(void);
+
+void curtain_test(void);
 #endif

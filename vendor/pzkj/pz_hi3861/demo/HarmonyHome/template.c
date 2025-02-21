@@ -34,6 +34,8 @@ osThreadId_t Test_Task_ID; //任务ID
 
 void test_task(void)
 {
+    pcf8575_init();
+    step_motor_init();
     while (1) 
     {
         // led_on();
@@ -55,8 +57,20 @@ void test_task(void)
         // printf("蜂鸣器响\n");
         // beep_warning();
         // usleep(500 * 1000);
-        // pcf8575_init();
-        ina219_init();
+        
+        // ina219_init();
+        // pcf8575_write_bit(1,1);
+        // pcf8575_write_bit(2,1);
+        // pcf8575_write_bit(3,1);
+
+        // // pcf8575_write(0xff);
+        // // uint16_t data;
+        // // pcf8575_read(&data);
+        // // printf("data = %04x\r\n",data);  
+        // printf("bit = %d\r\n", pcf8575_read_bit(1));
+        // printf("bit = %d\r\n", pcf8575_read_bit(2));
+        // printf("bit = %d\r\n", pcf8575_read_bit(3));
+        curtain_test();
         osDelay(TASK_DELAY_5000MS);  // 每5秒更新一次数据
     }
 }
@@ -271,54 +285,46 @@ void sensor_task_create(void)
 
 /**************************************************串口控制任务******************************************************** */
 //根据串口命令控制步进电机、直流电机、舵机
+void handle_uart_command(char *command)
+{
+    printf("处理指令中\n");
+    if (strcmp(command, "CURTAIN ON") == 0) {
+        printf("窗帘打开\n");
+        curtain_open();
+    } else if (strcmp(command, "CURTAIN OFF") == 0) {
+        printf("窗帘关闭\n");
+        curtain_open();
+    } else if (strcmp(command, "DOOR ON") == 0) {
+        printf("门打开\n");
+        door_open();
+    } else if (strcmp(command, "DOOR OFF") == 0) {
+        printf("门关闭\n");
+        door_close();
+    } else if (strcmp(command, "LED ON") == 0) {
+        printf("灯打开\n");
+        led_on();
+    } else if (strcmp(command, "LED OFF") == 0) {
+        printf("灯关闭\n");
+        led_off();
+    } else {
+        printf("未知指令: %s\n", command);
+    }
+}
+
 osThreadId_t Uart_Task_ID;
 void uart_task(void)
 {
     char buffer[128];
     int len;
-    
+    uart1_init(115200);
     while (1)
     {
-        len = uart0_read_data(buffer, sizeof(buffer));  // 接收串口数据
+        len = uart1_read_data(buffer, sizeof(buffer));  // 接收串口数据
         if (len > 0) {
             buffer[len] = '\0';
             handle_uart_command(buffer);  // 处理串口指令
         }
-        osDelay(100);
-    }
-}
 
-void handle_uart_command(char *command)
-{
-    if (strcmp(command, "OPEN CURTAIN") == 0) {
-        printf("窗帘打开\n");
-        // curtain_open();
-    } else if (strcmp(command, "CLOSE CURTAIN") == 0) {
-        printf("窗帘关闭\n");
-        // curtain_open();
-    } else if (strcmp(command, "TURN ON DC MOTOR LOW") == 0) {
-        printf("低档位电机启动\n");
-        // dc_motor_run(DC_MOTOR_LOW);
-    } else if (strcmp(command, "TURN OFF DC MOTOR MEDIUM") == 0) {
-        printf("中档位电机启动\n");
-        // dc_motor_run(DC_MOTOR_MEDIUM);
-    } else if (strcmp(command, "TURN OFF DC MOTOR HIGH") == 0) {
-        printf("高档位电机启动\n");
-        // dc_motor_run(DC_MOTOR_HIGH);
-    } else if (strcmp(command, "OPEN DOOR") == 0) {
-        printf("门打开\n");
-        // door_open();
-    } else if (strcmp(command, "CLOSE DOOR") == 0) {
-        printf("门关闭\n");
-        // door_close();
-    } else if (strcmp(command, "TURN ON LIGHT") == 0) {
-        printf("灯打开\n");
-        // led_on();
-    } else if (strcmp(command, "TURN OFF LIGHT") == 0) {
-        printf("灯关闭\n");
-        // led_off();
-    } else {
-        printf("未知指令: %s\n", command);
     }
 }
 
@@ -716,17 +722,18 @@ static void template_demo(void)
     printf("极个别组-基于openharmony的智能家居系统\r\n");
 
     // bsp_init();
-
+    // pcf8575_init();
+    // led_init();
     test_task_create();
 
-    // led_init();
+    
     // sr501_init();
     // motion_sensor_task_create();//貌似要等一分钟才会正常
     // sensor_task_create();
     // // smoke_sensor_task_create();
-    // // uart_task_create();
+    // uart_task_create();
     
     // wifi_iotda_task_create();//任务创建
-    // pcf8575_init();
+    
 }
 SYS_RUN(template_demo);

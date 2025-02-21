@@ -2,6 +2,35 @@
 #include "hi_i2c.h"
 #include <unistd.h>
 
+hi_u32 pcf8575_write(uint16_t data)
+{
+    uint8_t buffer[2] = {0};
+    /*低位先行，如传入0x00ff,则p0到p7被设置为高电平*/
+    buffer[0] = data & 0xff;
+    buffer[1] = (data >> 8) & 0xff;
+    
+    hi_i2c_data i2cData = {0};
+    i2cData.send_buf = buffer;
+    i2cData.send_len = sizeof(buffer);
+
+    return hi_i2c_write(PCF8575_I2C_IDX, PCF8575_I2C_ADDR << 1, &i2cData);
+}
+hi_u32 pcf8575_read(uint16_t *data)
+{
+    hi_i2c_data i2cData = {0};
+    i2cData.receive_buf = data;
+    i2cData.receive_len = sizeof(uint16_t);
+
+    return hi_i2c_read(PCF8575_I2C_IDX, (PCF8575_I2C_ADDR << 1) | 1, &i2cData);
+}
+
+void swap_high_low(uint16_t *data) 
+{
+    uint8_t high = *data >> 8; // 高8位
+    uint8_t low = *data & 0xff; // 低8位
+    *data = (low << 8) | high;
+}
+
 // 初始化 PCF8575
 void pcf8575_init(void)
 {
@@ -26,42 +55,19 @@ void pcf8575_init(void)
         printf("I2C PCF8575 Init success!!!\r\n");
     }
 
+    pcf8575_write(0x0000);  //其输入输出方向是自动设置的，读的时候就输入，写的时候就输出
+    // pcf8575_write_bit(1,1); // 设置第1位为高电平
+    // pcf8575_write_bit(2,1); // 设置第1位为高电平
+    // pcf8575_write_bit(3,1); // 设置第1位为高电平
 }
 
-static hi_u32 pcf8575_write(uint16_t data)
-{
-    uint8_t buffer[2] = {0};
-    buffer[0] = (data >> 8) & 0xff;
-    buffer[1] = data & 0xff;
 
-    hi_i2c_data i2cData = {0};
-    i2cData.send_buf = buffer;
-    i2cData.send_len = sizeof(buffer);
-
-    return hi_i2c_write(PCF8575_I2C_IDX, PCF8575_I2C_ADDR << 1, &i2cData);
-}
-
-static hi_u32 pcf8575_read(uint16_t *data)
-{
-    hi_i2c_data i2cData = {0};
-    i2cData.receive_buf = data;
-    i2cData.receive_len = sizeof(uint16_t);
-
-    return hi_i2c_read(PCF8575_I2C_IDX, (PCF8575_I2C_ADDR << 1) | 1, &i2cData);
-}
-
-static void swap_high_low(uint16_t *data) 
-{
-    uint8_t high = *data >> 8; // 高8位
-    uint8_t low = *data & 0xff; // 低8位
-    *data = (low << 8) | high;
-}
 
 uint8_t pcf8575_read_bit(uint8_t bit)
 {
-    uint16_t all_bits;    
+    uint16_t all_bits;   
     if(!pcf8575_read(&all_bits)) {
-        swap_high_low(&all_bits);
+        // swap_high_low(&all_bits);
         return (all_bits >> bit) & 0x01;
     }
 }
@@ -70,7 +76,7 @@ void pcf8575_write_bit(uint8_t bit, uint8_t value)
 {
     uint16_t all_bits;
     if(!pcf8575_read(&all_bits)) {
-        swap_high_low(&all_bits);
+        // swap_high_low(&all_bits);
         if(value) {
             all_bits |= (1 << bit);
         } else {

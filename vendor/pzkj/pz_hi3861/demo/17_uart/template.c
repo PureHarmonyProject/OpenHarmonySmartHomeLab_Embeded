@@ -69,17 +69,26 @@ osThreadId_t UART_Task_ID; //任务ID
 
 void UART_Task(void)
 {
-    static const char *data = "Hello,PRECHIN!\r\n";
-    uint8_t recbuf[5];
-    uint8_t len=0;
+    uint8_t recbuf[128]; // 接收缓冲区，大小调整为128字节
+    uint32_t len = 0;
 
-    uart0_init(115200);
-    
+    // 初始化UART
+    uart1_init(115200);
+
     while (1) 
     {
-        uart0_send_data(data,strlen(data));
-        len=uart0_read_data(recbuf,5);
-        if(len>0)uart0_send_data(recbuf,len);
+         // 接收数据
+        len = uart1_read_data(recbuf, sizeof(recbuf));
+        if (len > 0) 
+        {
+            if(!strcmp(recbuf,"LED ON")) {
+                printf("正在开灯\n");  
+            }   
+
+            // 将接收到的数据原样发送回去
+            uart1_send_data(recbuf, len);
+            printf("接收到的数据为:%s\n", recbuf);
+        }
     }
 }
 //任务创建
