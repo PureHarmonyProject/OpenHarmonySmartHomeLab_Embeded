@@ -71,7 +71,8 @@ void test_task(void)
         // printf("bit = %d\r\n", pcf8575_read_bit(2));
         // printf("bit = %d\r\n", pcf8575_read_bit(3));
         // curtain_test();
-        curtain_open_by_pcf8575();
+        // curtain_open_by_pcf8575();
+        // beep_warning_by_pcf8575();
         osDelay(TASK_DELAY_5000MS);  // 每5秒更新一次数据
     }
 }

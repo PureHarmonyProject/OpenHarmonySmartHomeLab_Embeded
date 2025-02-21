@@ -28,3 +28,21 @@ void beep_warning(void)
 {
     beep_alarm(BEEP_WARNING_COUNT,BEEP_WARNING_TIME);
 }
+
+void beep_alarm_by_pcf8575(uint16_t cnt,uint16_t time)
+{
+    //占空比为0.5
+    //cnt决定频率 1.5k到5k最优 cnt决定响的时间，time决定频率 2khz说明500us一个周期 各一半则为250us
+    while(cnt--)
+    {
+        PF_BEEP(1); 
+        usleep(time); 
+        PF_BEEP(0);
+        usleep(time); 
+    }
+}
+
+void beep_warning_by_pcf8575(void)
+{
+    beep_alarm_by_pcf8575(BEEP_WARNING_COUNT,BEEP_WARNING_TIME);
+}
