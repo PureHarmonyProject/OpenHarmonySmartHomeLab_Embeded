@@ -11,6 +11,9 @@
 
 #define LED(a)          hi_gpio_set_ouput_val(LED_PIN,a)
 
+#define PF_LED_INDEX    14
+#define PF_LED(a)         pcf8575_write_bit(PF_LED_INDEX,a)
+
 #define LED_WARNING_COUNT  15
 #define LED_DELAY_TIME_MS  100
 //照明灯引脚定义

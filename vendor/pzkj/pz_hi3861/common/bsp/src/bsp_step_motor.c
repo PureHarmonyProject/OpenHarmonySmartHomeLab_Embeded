@@ -134,6 +134,7 @@ float curtain_get_curstate(void)
 
 void curtain_open_by_pcf8575(void)
 {
+    printf("窗帘打开\n");
 	step_motor_run_by_pcf8575(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, STEP_MOTOR_ANGLE, STEP_MOTOR_START);
 	step_motor_run_by_pcf8575(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, STEP_MOTOR_ANGLE, STEP_MOTOR_STOP);
 }

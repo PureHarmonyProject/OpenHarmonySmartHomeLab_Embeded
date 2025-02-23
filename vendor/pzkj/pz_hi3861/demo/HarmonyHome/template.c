@@ -34,7 +34,7 @@ osThreadId_t Test_Task_ID; //任务ID
 
 void test_task(void)
 {
-    pcf8575_init();
+    // pcf8575_init();
     // step_motor_init();
     while (1) 
     {
@@ -54,8 +54,8 @@ void test_task(void)
         // printf("门关闭\n");
         // door_close();
         // usleep(500 * 1000);
-        // printf("蜂鸣器响\n");
-        // beep_warning();
+        printf("蜂鸣器响\n");
+        beep_warning_by_pcf8575();
         // usleep(500 * 1000);
         
         // ina219_init();
@@ -64,13 +64,14 @@ void test_task(void)
         // pcf8575_write_bit(3,1);
 
         // // pcf8575_write(0xff);
-        // // uint16_t data;
-        // // pcf8575_read(&data);
-        // // printf("data = %04x\r\n",data);  
+        // uint16_t data;
+        // pcf8575_read(&data);
+        // printf("data = %04x\r\n",data);  
         // printf("bit = %d\r\n", pcf8575_read_bit(1));
         // printf("bit = %d\r\n", pcf8575_read_bit(2));
         // printf("bit = %d\r\n", pcf8575_read_bit(3));
         // curtain_test();
+        // door_open();
         // curtain_open_by_pcf8575();
         // beep_warning_by_pcf8575();
         osDelay(TASK_DELAY_5000MS);  // 每5秒更新一次数据
@@ -291,23 +292,21 @@ void handle_uart_command(char *command)
 {
     printf("处理指令中\n");
     if (strcmp(command, "CURTAIN ON") == 0) {
-        printf("窗帘打开\n");
-        curtain_open();
+        
+        curtain_open_by_pcf8575();
     } else if (strcmp(command, "CURTAIN OFF") == 0) {
         printf("窗帘关闭\n");
-        curtain_open();
+        // curtain_open_by_pcf8575();
     } else if (strcmp(command, "DOOR ON") == 0) {
-        printf("门打开\n");
         door_open();
     } else if (strcmp(command, "DOOR OFF") == 0) {
-        printf("门关闭\n");
         door_close();
     } else if (strcmp(command, "LED ON") == 0) {
         printf("灯打开\n");
-        led_on();
+        led_on_by_pcf8575();
     } else if (strcmp(command, "LED OFF") == 0) {
         printf("灯关闭\n");
-        led_off();
+        led_off_by_pcf8575();
     } else {
         printf("未知指令: %s\n", command);
     }
@@ -338,7 +337,7 @@ void uart_task_create(void)
     taskOptions.cb_mem = NULL;                 // 堆空间地址
     taskOptions.cb_size = 0;                   // 堆空间大小
     taskOptions.stack_mem = NULL;              // 栈空间地址
-    taskOptions.stack_size = 1024;             // 栈空间大小 单位:字节
+    taskOptions.stack_size = 4096;             // 栈空间大小 单位:字节
     taskOptions.priority = osPriorityNormal1;   // 任务的优先级
 
     Uart_Task_ID = osThreadNew((osThreadFunc_t)uart_task, NULL, &taskOptions); // 创建INA219任务
@@ -651,17 +650,17 @@ void wifi_iotda_task_create(void)
  */
 static bsp_init(void)
 {
-    //LED初始化
-    led_init();
+    // //LED初始化
+    // led_init();
 
-    //蜂鸣器初始化
-    beep_init();
+    // //蜂鸣器初始化
+    // beep_init();
 
     //oled初始化
     oled_init_mutex();
     oled_init();
 
-    //温湿度传感器初始化
+    // 温湿度传感器初始化
     while(dht11_init())
 	{
 		printf("DHT11检测失败,请插好!\r\n");
@@ -669,26 +668,24 @@ static bsp_init(void)
 	}
 	printf("DHT11检测成功!\r\n");
 
-    //电流电压传感器初始化 也需要做初始化检测处理
-    ina219_init();
+    // //电流电压传感器初始化 也需要做初始化检测处理
+    // // ina219_init();
 
-    //步进电机初始化
-    step_motor_init();
+    // //步进电机初始化
+    // // step_motor_init();
 
-    //直流电机初始化
-    dc_motor_init();
+    // //直流电机初始化
+    // // dc_motor_init();
 
-    //舵机初始化
+    pcf8575_init();
+    // //舵机初始化
     sg90_init();
 
-    //人体感应初始化
+    // //人体感应初始化
     sr501_init();
 
-    //烟雾传感器初始化
+    // //烟雾传感器初始化
     smoke_init();
-
-    //串口接收初始化
-    uart0_init(115200);
 
     //iotda初始化
     // 初始化MQTT回调函数
@@ -723,19 +720,20 @@ static void template_demo(void)
 {
     printf("极个别组-基于openharmony的智能家居系统\r\n");
 
-    // bsp_init();
+    bsp_init();
+    // sg90_init();
     // pcf8575_init();
     // led_init();
     test_task_create();
 
     
     // sr501_init();
-    // motion_sensor_task_create();//貌似要等一分钟才会正常
-    // sensor_task_create();
-    // // smoke_sensor_task_create();
-    // uart_task_create();
+    motion_sensor_task_create();//貌似要等一分钟才会正常
+    sensor_task_create();
+    smoke_sensor_task_create();
+    uart_task_create();
     
-    // wifi_iotda_task_create();//任务创建
+    wifi_iotda_task_create();//任务创建
     
 }
 SYS_RUN(template_demo);

@@ -50,3 +50,13 @@ void led_warning(void)
     }
     printf("闪烁完毕\n");
 }
+
+void led_on_by_pcf8575() 
+{
+    LED(1);
+}
+
+void led_off_by_pcf8575(void) 
+{
+    LED(0);
+}

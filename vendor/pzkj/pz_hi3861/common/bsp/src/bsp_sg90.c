@@ -48,12 +48,22 @@ void set_sg90_angle(uint16_t angle)
 uint8_t door_state;
 void door_open(void) 
 {
+    if(door_state == 1) {
+        printf("[ERROR]门已处于打开状态，不可再被打开！！！\n");
+        return;
+    }
+    printf("门打开\n");
     door_state = 1;
     set_sg90_angle(DOOR_OPEN_ANGLE);
 }
 
 void door_close(void)
 {
+    if(door_state == 0) {
+        printf("[ERROR]门已处于关闭状态，不可再被关闭！！！\n");
+        return;
+    }
+    printf("门关闭\n");
     door_state = 0;
     set_sg90_angle(DOOR_CLOSE_ANGLE);
 }
