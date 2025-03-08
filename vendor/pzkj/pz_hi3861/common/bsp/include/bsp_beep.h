@@ -10,7 +10,7 @@
 #define BEEP_PIN         HI_IO_NAME_GPIO_8
 #define BEEP_GPIO_FUN    HI_IO_FUNC_GPIO_8_GPIO
 
-#define PF_BEEP_INDEX    15
+#define PF_BEEP_INDEX    14
 #define BEEP(a)          hi_gpio_set_ouput_val(BEEP_PIN,a)
 #define PF_BEEP(a)         pcf8575_write_bit(PF_BEEP_INDEX,a)
 

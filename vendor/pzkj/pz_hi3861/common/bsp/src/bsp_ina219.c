@@ -29,10 +29,11 @@ void ina219_init(void)
 
     // 配置INA219
     ina219_configure();
-    uint16_t data;
-    ina219_read_register(INA219_BASE_REG, &data);
-    ina219_swap_high_low(&data);
-    printf("data = %04x\n", data); //读到的依旧是高低反转过后的数据
+    // uint16_t data;
+    // ina219_read_register(INA219_CONFIG_REG, &data);
+    // printf("data1 = %04x\n", data); 
+    // ina219_read_register(INA219_BASE_REG, &data);
+    // printf("data2 = %04x\n", data); 
     // printf("INA219 Init success!!!\r\n");
 }
 
@@ -41,9 +42,9 @@ static hi_u32 ina219_write_register(uint8_t reg, uint16_t data)
 {
     uint8_t buffer[3] = {0};
     buffer[0] = reg;  // 寄存器地址
-    buffer[1] = (data >> 8) & 0xff;  // 要写入的数据
-    buffer[2] = data & 0xff; 
-
+    buffer[1] = data & 0xff; 
+    buffer[2] = (data >> 8) & 0xff;  // 要写入的数据
+    
     hi_i2c_data i2cData = {0};
     i2cData.send_buf = buffer;
     i2cData.send_len = sizeof(buffer);
@@ -80,14 +81,15 @@ static hi_u32 ina219_read_register(uint8_t reg, uint16_t *data)
 //配置INA219
 void ina219_configure(void)
 {
-    if(ina219_write_register(INA219_CONFIG_REG, INA219_CONFIG_REG_DEFAULT)) {
+    if(ina219_write_register(INA219_CONFIG_REG, INA219_CONFIG_REG_VAL)) {
         printf("config reg write failed\r\n");
     }
-    if(ina219_write_register(INA219_BASE_REG, INA219_CURRENT_LSB)) {
+    if(ina219_write_register(INA219_BASE_REG, INA219_BASE_REG_VAL)) {
         printf("base reg write failed\r\n");
     }
 }
 
+float cur_current, cur_voltage;
 // // 获取INA219的电流值
 float ina219_get_current(void)
 {
@@ -97,37 +99,36 @@ float ina219_get_current(void)
         printf("Failed to read current register.\r\n");
         return -1.0f;
     }
+    ina219_swap_high_low(&current_reg);//需要高低位转换一下数据才正常
 
+    // printf("current_reg = %4x\n",current_reg);
+    // printf("current_reg = %d\n",current_reg);
     // 将寄存器值转换为电流值（单位：mA）
-    float current = current_reg * 0.1;  // 假设分流电阻为0.1Ω
+    float current = (float)current_reg * 0.1; 
+    cur_current = current;
+    // printf("current = %.2f\n",current);
     return current;
 }
 
-// 获取INA219的电压值
+//获取INA219的电压值 mv
 float ina219_get_bus_voltage(void)
 {
     uint16_t bus_voltage_reg;
-    if (ina219_read_register(INA219_POWER_REG, &bus_voltage_reg) != HI_ERR_SUCCESS)
+    if (ina219_read_register(INA219_BUS_VOLTAGE_REG, &bus_voltage_reg) != HI_ERR_SUCCESS)
     {
         printf("Failed to read bus voltage register.\r\n");
         return -1.0f;
     }
 
     // 将寄存器值转换为电压值（单位：V）
-    float bus_voltage = (bus_voltage_reg >> 3) * 0.004;  // 16位寄存器，单位为mV
+    ina219_swap_high_low(&bus_voltage_reg);
+    float bus_voltage = ((int)(bus_voltage_reg >> 3)) * 4;  // 16位寄存器，单位为mV
+    cur_voltage = bus_voltage;
     return bus_voltage;
 }
 
+//获得功率
 float ina219_get_power(void)
 {
-    uint16_t power;
-    if (ina219_read_register(INA219_BUS_VOLTAGE_REG, &power) != HI_ERR_SUCCESS)
-    {
-        printf("Failed to read bus voltage register.\r\n");
-        return -1.0f;
-    }
-
-    // 将寄存器值转换为电压值（单位：V）
-    power *= 2;  // 16位寄存器，单位为mV
-    return power;
+    return cur_voltage * cur_current;
 }

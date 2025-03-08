@@ -16,9 +16,17 @@
 #define INA219_I2C_IDX         0             // 使用的 I2C 总线号
 #define INA219_I2C_SPEED       100000        // 100KHz I2C 速度
 
-#define INA219_CONFIG_REG_DEFAULT 0x199f    //配置寄存器
-#define INA219_CURRENT_LSB 0x1000          //未校准前的配置寄存器
-
+// #define INA219_CURRENT_LSB 0x1000          //未校准前的配置寄存器,current 电流
+#define INA219_MAX_VOLTAGE 0.32
+#define INA219_TEST_R      10f
+#define INA219_MAX_CURRENT INA219_MAX_VOLTAGE / INA219_TEST_R
+#define INA219_CURRENT_LSB_MIN INA219_MAX_CURRENT / 0x8000
+#define INA219_CURRENT_LSB_MAX INA219_MAX_CURRENT / 0x1000
+#define INA219_CURRENT_LSB_DEFAULT INA219_CURRENT_LSB_MIN   //0.001ma
+#define INA219_CONFIG_REG_DEFAULT 0.04096 / (INA219_CURRENT_LSB_DEFAULT * INA219_TEST_R)
+#define INA219_CONFIG_REG_VAL 0x3c1f    //配置寄存器
+#define INA219_BASE_REG_VAL 0x1000      //4096,10欧
+ 
 // 函数声明
 void ina219_init(void);                        // 初始化INA219模块
 float ina219_get_current(void);

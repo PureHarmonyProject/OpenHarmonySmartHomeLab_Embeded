@@ -16,8 +16,8 @@
 //函数声明
 void sg90_init(void);
 void set_sg90_angle(uint16_t angle);
-void door_open(void);
-void door_close(void);
+int door_open(void);
+int door_close(void);
 uint8_t door_get_curstate(void);
 
 #endif

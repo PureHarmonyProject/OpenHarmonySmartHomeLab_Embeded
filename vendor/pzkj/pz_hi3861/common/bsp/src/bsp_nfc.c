@@ -101,3 +101,47 @@ uint32_t nfc_init(void)
 
     return true;
 }
+
+/**
+ * @brief 向NFC卡片写入NDEF数据包
+ * @param *dataBuff: 要写入的数据
+ * @param dataBuff_Size: 数据长度
+ * @retval HI_ERR_SUCCESS: 成功，其他: 失败
+ */
+uint32_t write_NDEFDataPackage(const uint8_t *dataBuff, uint16_t dataBuff_Size) {
+    if (dataBuff == NULL || dataBuff_Size <= 0) {
+        printf("dataBuff == NULL 或 dataBuff_Size <= 0\r\n");
+        return HI_ERR_FAILURE;
+    }
+
+    uint8_t userMemoryPageNum = 0; // 计算需要写入的页数
+    if (dataBuff_Size <= NFC_PAGE_SIZE) {
+        userMemoryPageNum = 1;
+    } else {
+        userMemoryPageNum = (dataBuff_Size / NFC_PAGE_SIZE) + ((dataBuff_Size % NFC_PAGE_SIZE) > 0 ? 1 : 0);
+    }
+
+    // 写入数据
+    for (int i = 0; i < userMemoryPageNum; i++) {
+        uint8_t *pageBuffer = (uint8_t *)malloc(NFC_PAGE_SIZE);
+        if (pageBuffer == NULL) {
+            printf("pageBuffer == NULL.\r\n");
+            return HI_ERR_FAILURE;
+        }
+
+        // 填充页面数据
+        memset(pageBuffer, 0, NFC_PAGE_SIZE);
+        memcpy(pageBuffer, dataBuff + i * NFC_PAGE_SIZE, dataBuff_Size > NFC_PAGE_SIZE ? NFC_PAGE_SIZE : dataBuff_Size);
+
+        // 写入页面
+        if (!NT3HWriteUserData(i, pageBuffer)) {
+            printf("写入页面 %d 失败\r\n", i);
+            free(pageBuffer);
+            return HI_ERR_FAILURE;
+        }
+
+        free(pageBuffer);
+    }
+
+    return HI_ERR_SUCCESS;
+}

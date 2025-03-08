@@ -69,45 +69,76 @@ osThreadId_t NFC_Task_ID; //任务ID
 
 void NFC_Task(void)
 {
-    uint8_t ret, num = 0;
-    uint8_t ndefLen = 0;      // ndef包的长度
-    uint8_t ndef_Header = 0;  // ndef消息开始标志位-用不到
-    uint32_t result_code = 0; // 函数的返回值
-    uint8_t i=0;
+    // uint8_t ret, num = 0;
+    // uint8_t ndefLen = 0;      // ndef包的长度
+    // uint8_t ndef_Header = 0;  // ndef消息开始标志位-用不到
+    // uint32_t result_code = 0; // 函数的返回值
+    // uint8_t i=0;
     
-    nfc_init();
+    // nfc_init();
 
-    // 读整个数据的包头部分，读出整个数据的长度
-    if (result_code = NT3HReadHeaderNfc(&ndefLen, &ndef_Header) != true) 
-    {
-        printf("NT3HReadHeaderNfc is failed. result_code = %d\r\n", result_code);
-        return;
+    // // 读整个数据的包头部分，读出整个数据的长度
+    // if (result_code = NT3HReadHeaderNfc(&ndefLen, &ndef_Header) != true) 
+    // {
+    //     printf("NT3HReadHeaderNfc is failed. result_code = %d\r\n", result_code);
+    //     return;
+    // }
+
+    // ndefLen += NDEF_HEADER_SIZE; // 加上头部字节
+    // if (ndefLen <= NDEF_HEADER_SIZE) 
+    // {
+    //     printf("ndefLen <= 2\r\n");
+    //     return;
+    // }
+    // uint8_t *ndefBuff = (uint8_t *)malloc(ndefLen + 1);
+    // if (ndefBuff == NULL) 
+    // {
+    //     printf("ndefBuff malloc is Falied!\r\n");
+    //     return;
+    // }
+
+    // if (result_code = get_NDEFDataPackage(ndefBuff, ndefLen) != HI_ERR_SUCCESS) 
+    // {
+    //     printf("get_NDEFDataPackage is failed. result_code = %d\r\n", result_code);
+    //     return;
+    // }
+
+    // printf("start print ndefBuff.\r\n");
+    // for (i = 0; i < ndefLen; i++) 
+    // {
+    //     printf("0x%x ", ndefBuff[i]);
+    // }
+    
+    uint32_t result;
+
+    // 初始化NFC模块
+    result = nfc_init();
+    // 要写入的数据
+    const uint8_t dataToWrite[] = {0x01, 0x02, 0x03, 0x04, 0x05,0x05,0x05,0x05,0x05};
+    uint16_t dataSize = sizeof(dataToWrite);
+
+    // 写入数据到NFC卡片
+    result = write_NDEFDataPackage(dataToWrite, dataSize);
+    if (result != HI_ERR_SUCCESS) {
+        printf("写入NFC卡片失败，错误码：%d\r\n", result);
+        return -1;
     }
 
-    ndefLen += NDEF_HEADER_SIZE; // 加上头部字节
-    if (ndefLen <= NDEF_HEADER_SIZE) 
-    {
-        printf("ndefLen <= 2\r\n");
-        return;
-    }
-    uint8_t *ndefBuff = (uint8_t *)malloc(ndefLen + 1);
-    if (ndefBuff == NULL) 
-    {
-        printf("ndefBuff malloc is Falied!\r\n");
-        return;
+    printf("写入NFC卡片成功！\r\n");
+
+    // 读取NFC卡片数据
+    uint8_t readBuffer[100]; // 假设读取的最大数据长度为100字节
+    result = get_NDEFDataPackage(readBuffer, sizeof(readBuffer));
+    if (result != HI_ERR_SUCCESS) {
+        printf("读取NFC卡片失败，错误码：%d\r\n", result);
+        return -1;
     }
 
-    if (result_code = get_NDEFDataPackage(ndefBuff, ndefLen) != HI_ERR_SUCCESS) 
-    {
-        printf("get_NDEFDataPackage is failed. result_code = %d\r\n", result_code);
-        return;
+    printf("读取到的NFC卡片数据：");
+    for (int i = 0; i < dataSize; i++) {
+        printf("%02X ", readBuffer[i]);
     }
-
-    printf("start print ndefBuff.\r\n");
-    for (i = 0; i < ndefLen; i++) 
-    {
-        printf("0x%x ", ndefBuff[i]);
-    }
+    printf("\r\n");
     
     while (1) 
     {

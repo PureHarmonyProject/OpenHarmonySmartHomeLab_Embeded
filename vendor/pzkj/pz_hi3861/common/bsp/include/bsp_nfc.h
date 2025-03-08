@@ -38,6 +38,7 @@
 
 //函数声明
 uint32_t get_NDEFDataPackage(uint8_t *dataBuff, const uint16_t dataBuff_MaxSize);
+uint32_t write_NDEFDataPackage(const uint8_t *dataBuff, uint16_t dataBuff_Size);
 uint32_t nfc_init(void);
 
 #endif

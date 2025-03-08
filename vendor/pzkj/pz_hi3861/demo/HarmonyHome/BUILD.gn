@@ -25,6 +25,8 @@ static_library("template") {
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_sg90.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_smoke.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_ina219.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_ina226.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_nfc.c",
         # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_relay.c",
        
         
@@ -37,6 +39,9 @@ static_library("template") {
         # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_ds18b20.c",
         # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_ds18b20.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_pcf8575.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_rc522.c",
+        "//device/hisilicon/hispark_pegasus/sdk_liteos/platform/drivers/spi/hi_spi.c",
+        "//device/hisilicon/hispark_pegasus/sdk_liteos/platform/drivers/spi/spi.c",
         # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_ina219.c",
         # "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_sr04.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_wifi.c",
@@ -52,10 +57,22 @@ static_library("template") {
         "//third_party/paho.mqtt.embedded-c/MQTTPacket/src/MQTTSubscribeServer.c",
         "//third_party/paho.mqtt.embedded-c/MQTTPacket/src/MQTTUnsubscribeServer.c",
         "//third_party/paho.mqtt.embedded-c/MQTTPacket/src/MQTTUnsubscribeClient.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/nfc/NT3H.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/nfc/nfc.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/nfc/ndef/rtd/nfcForum.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/nfc/ndef/rtd/rtdText.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/nfc/ndef/rtd/rtdUri.c",
+        "//vendor/pzkj/pz_hi3861/common/bsp/nfc/ndef/ndef.c",
+        
     ]
+
+    cflags = [ "-Wno-unused-variable" ]
+    cflags += [ "-Wno-unused-but-set-variable" ]
+    cflags += [ "-Wno-unused-parameter" ]
 
     include_dirs = [
         "//utils/native/lite/include",
+        
         "//kernel/liteos_m/kal/cmsis",
         "//base/iot_hardware/peripheral/interfaces/kits",
         "//vendor/pzkj/pz_hi3861/common/bsp/include",
@@ -64,5 +81,10 @@ static_library("template") {
 
         "//third_party/paho.mqtt.embedded-c/MQTTPacket/src",
         "//third_party/cJSON",
+
+        "//vendor/pzkj/pz_hi3861/common/bsp/nfc/ndef",
+        "//vendor/pzkj/pz_hi3861/common/bsp/nfc/ndef/rtd/",
+        "//vendor/pzkj/pz_hi3861/common/bsp/nfc"
+
     ]
 }

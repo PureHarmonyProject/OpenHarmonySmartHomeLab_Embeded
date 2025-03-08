@@ -13,9 +13,12 @@
 #include "bsp_sg90.h"
 #include "bsp_smoke.h"
 #include "bsp_ina219.h"
+#include "bsp_ina226.h"
 #include "bsp_uart.h"
 // #include "bsp_ds18b20.h"
 #include "bsp_pcf8575.h"
+#include "bsp_nfc.h"
+#include "bsp_rc522.h"
 
 #include "bsp_wifi.h"
 #include "bsp_mqtt.h"
@@ -31,13 +34,121 @@
 #define TASK_DELAY_100MS 10    //10 = 100ms 1tick = 10ms
 
 osThreadId_t Test_Task_ID; //任务ID
+#define VALID_UID  {0x12, 0x34, 0x56, 0x78, 0x9A}  // 允许访问的 UID
+void rc522_test_spi(void) {
+    printf("[DEBUG] SPI 读写测试...\n");
 
-void test_task(void)
-{
+    // **写入 0x55 到 RC522 寄存器 0x0C (CommandReg)**
+    rc522_write_register(0x0C, 0x12);
+
+    // **读取 0x0C 看看是否正确**
+    hi_u8 test_value = rc522_read_register(0x0C);
+
+    printf("[DEBUG] 读取 CommandReg (0x0C): 0x%02X\n", test_value);
+}
+
+void test_task(void) {
     // pcf8575_init();
     // step_motor_init();
-    while (1) 
+    // ina219_init();
+
+    if(rc522_init() != HI_ERR_SUCCESS)  // 初始化 RC522
     {
+        printf("RC522 初始化失败\n");
+        return;
+    }
+    printf("RC522 初始化完成\n");
+
+    hi_u8 addr = 0x07;
+    hi_u8 write_data = 0x12;
+    hi_u8 read_data[1] = {0};
+
+    // printf("\n=== 写入寄存器 0x%02X ===\n", addr);
+    // rc522_write_read_register(addr, write_data, NULL, 0, 0);
+    printf("\n=== 读取寄存器 0x%02X ===\n", addr);
+    rc522_write_read_register(addr, 0x00, read_data, 1, 1);
+
+    printf("\n最终读取到的值: 0x%02X\n", read_data[0]);
+
+    // if(rc522_write_register(0x0c,0x12) != HI_ERR_SUCCESS)  // 初始化 RC522
+    // {
+    //     printf("RC522 写值失败\n");
+    //     return;
+    // }
+    // printf("RC522 写值成功\n");
+    // rc522_reset();
+    // hi_u8 test_reg = rc522_read_register(0x0c);
+    // printf("[DEBUG] 读取 test_reg (0x0c): 0x%02X\n",test_reg);
+    // rc522_test_spi();
+    // hi_u8 status2 = rc522_read_register(0x07);
+    // printf("[DEBUG] 读取 Status1Reg (0x07): 0x%02X\n", status2);
+
+    // // // 读取 RC522 版本号，检查 SPI 是否正常
+    // hi_u8 version = rc522_read_register(0x37);
+    // printf("RC522 版本号: 0x%02X\n", version);
+    // if (version != 0x91 && version != 0x92) {
+    //     printf("⚠️  RC522 版本号错误，检查 SPI 连接！\n");
+    //     return;
+    // }
+
+    // // 确保 RC522 天线打开
+    // rc522_write_register(0x14, 0x03);  // 打开天线
+    // hi_u8 tx_control = rc522_read_register(0x14);
+    // printf("RC522 天线状态: 0x%02X\n", tx_control);
+    // if (tx_control != 0x03) {
+    //     printf("⚠️  天线未正确打开，请检查 `rc522_antenna_on()`\n");
+    // }
+
+    // hi_u8 uid[5];
+    // hi_u8 valid_uid[5] = VALID_UID;
+    // 初始化NFC模块
+    // result = nfc_init();
+
+    while (1) {
+
+        printf("\n=== 读取寄存器 0x%02X ===\n", addr);
+        rc522_write_read_register(addr, 0x00, read_data, 1, 1);
+
+        printf("\n最终读取到的值: 0x%02X\n", read_data[0]);
+        // hi_u8 test_reg = rc522_read_register(0x0c);
+        // printf("[DEBUG] 读取 test_reg (0x0c): 0x%02X\n",test_reg);
+        // // rc522_test_spi();
+        // hi_u8 status2 = rc522_read_register(0x07);
+        // printf("[DEBUG] 读取 Status1Reg (0x07): 0x%02X\n", status2);
+    
+        // // // 读取 RC522 版本号，检查 SPI 是否正常
+        // hi_u8 version = rc522_read_register(0x37);
+        // printf("RC522 版本号: 0x%02X\n", version);
+        // hi_u8 status1 = rc522_read_register(0x07);
+        // printf("[DEBUG] 读取 Status1Reg (0x07): 0x%02X\n", status1);
+        // printf("\n=== NFC 读卡检测中... ===\n");
+
+        // // **先检测 NFC 卡是否存在**
+        // hi_u8 status = rc522_check_card();
+        // if (!status) {
+        //     printf("❌ 未检测到 NFC 卡\n");
+        // } else {
+        //     printf("✅ NFC 卡检测成功！开始读取 UID...\n");
+
+        //     // **读取 UID**
+        //     if (rc522_read_card_uid(uid)) {
+        //         printf("📟 NFC UID: %02X %02X %02X %02X %02X\n",
+        //                uid[0], uid[1], uid[2], uid[3], uid[4]);
+
+        //         // **检查 UID 是否匹配**
+        //         if (memcmp(uid, valid_uid, 5) == 0) {
+        //             printf("🔓 访问授权成功！\n");
+        //             // 这里可以添加开门/开灯的 GPIO 逻辑
+        //         } else {
+        //             printf("❌ 访问被拒绝！\n");
+        //         }
+        //     } else {
+        //         printf("⚠️ UID 读取失败！\n");
+        //     }
+        // }
+
+        // hi_sleep(1000);
+        // ina226_get_current();
         // led_on();
         // printf("窗帘打开\n");
         // curtain_open_angle(150);
@@ -54,11 +165,24 @@ void test_task(void)
         // printf("门关闭\n");
         // door_close();
         // usleep(500 * 1000);
-        printf("蜂鸣器响\n");
-        beep_warning_by_pcf8575();
+        // printf("蜂鸣器响\n");
+        // beep_warning_by_pcf8575();
         // usleep(500 * 1000);
         
-        // ina219_init();
+        
+        // printf("cur i = %.2f ma\n",ina226_get_current());
+        // printf("cur u = %.2f mv\n",ina219_get_bus_voltage());
+        // printf("cur p = %.2f mw\n",ina219_get_power());
+
+        // 读取NFC卡片数据
+        // uint8_t readBuffer[100]; // 假设读取的最大数据长度为100字节
+        // result = get_NDEFDataPackage(readBuffer, sizeof(readBuffer));
+        // printf("读取到的NFC卡片数据：");
+        // for (int i = 0; i < 9; i++) {
+        //     printf("%02X ", readBuffer[i]);
+        // }
+        // printf("\r\n");
+
         // pcf8575_write_bit(1,1);
         // pcf8575_write_bit(2,1);
         // pcf8575_write_bit(3,1);
@@ -74,9 +198,11 @@ void test_task(void)
         // door_open();
         // curtain_open_by_pcf8575();
         // beep_warning_by_pcf8575();
-        osDelay(TASK_DELAY_5000MS);  // 每5秒更新一次数据
+
+        osDelay(TASK_DELAY_100MS);  // 每 5 秒更新一次数据
     }
 }
+
 
 void test_task_create(void)
 {
@@ -114,10 +240,11 @@ void motion_sensor_task(void)
             printf("prevalue = %d, value = %d\n",prevalue, value);
             if(value == 1) {
                 printf("[MOTION] 检测到人体\n");
-                led_on();  // 打开LED
+                // led_on();  // 打开LED
+                // beep_warning_by_pcf8575();
             }else {
                 printf("[MOTION] 人已离开\n");
-                led_off();
+                // led_off();
             }
         }
 
@@ -290,26 +417,50 @@ void sensor_task_create(void)
 //根据串口命令控制步进电机、直流电机、舵机
 void handle_uart_command(char *command)
 {
-    printf("处理指令中\n");
-    if (strcmp(command, "CURTAIN ON") == 0) {
-        
-        curtain_open_by_pcf8575();
-    } else if (strcmp(command, "CURTAIN OFF") == 0) {
-        printf("窗帘关闭\n");
-        // curtain_open_by_pcf8575();
-    } else if (strcmp(command, "DOOR ON") == 0) {
-        door_open();
-    } else if (strcmp(command, "DOOR OFF") == 0) {
-        door_close();
-    } else if (strcmp(command, "LED ON") == 0) {
-        printf("灯打开\n");
-        led_on_by_pcf8575();
-    } else if (strcmp(command, "LED OFF") == 0) {
-        printf("灯关闭\n");
-        led_off_by_pcf8575();
-    } else {
-        printf("未知指令: %s\n", command);
-    }
+    /*重新规定指令*/
+    /*
+    0x01 : 开门
+    0x02: 关门
+    0x03: 开窗帘
+    0x04: 关窗帘
+    0x11: 门已被打开，不可重复开
+    0x12: 门已被关闭，不可重复关
+    0x21: 门已开好
+    0x22: 门已关好
+    0x23: 窗帘已开好
+    0x24: 窗帘已关好
+    */
+   uint16_t response = 0;  // 定义 16 位返回值
+   printf("处理指令中\n");
+
+   // 去除换行符，防止匹配失败
+   char *trimmed_command = strtok(command, "\r\n");
+
+   // 解析 16 进制指令（字符串 -> uint16_t）
+   uint16_t cmd = (uint16_t)strtol(trimmed_command, NULL, 16);
+
+   switch (cmd) {
+       case 0x03:  // 开窗帘
+           curtain_open_by_pcf8575();
+           response = 0x23;
+           break;
+       case 0x04:  // 关窗帘
+           printf("窗帘关闭\n");
+           response = 0x24;
+           break;
+       case 0x01:  // 开门
+           response = door_open() ? 0x21 : 0x11;
+           break;
+       case 0x02:  // 关门
+           response = door_close() ? 0x22 : 0x12;
+           break;
+       default:
+           printf("未知指令: %s\n", trimmed_command);
+           return;
+   }
+
+   // 发送 `uint16_t` 数据（发送 2 个字节）
+   uart1_send_data(&response, sizeof(response));
 }
 
 osThreadId_t Uart_Task_ID;
@@ -657,10 +808,14 @@ static bsp_init(void)
     // beep_init();
 
     //oled初始化
+    printf("OLED is initing !!!\r\n");
     oled_init_mutex();
     oled_init();
+    printf("OLED init success !!!\r\n");
+
 
     // 温湿度传感器初始化
+    printf("DHT11 is initing !!!\r\n");
     while(dht11_init())
 	{
 		printf("DHT11检测失败,请插好!\r\n");
@@ -677,18 +832,28 @@ static bsp_init(void)
     // //直流电机初始化
     // // dc_motor_init();
 
+    printf("PCF8575 is initing !!!\r\n");
     pcf8575_init();
     // //舵机初始化
+
+    printf("SG90 is initing !!!\r\n");
     sg90_init();
-
+    door_open();
+    door_close();
+    printf("SG90 init success !!!\r\n");
     // //人体感应初始化
+    printf("SR501 is initing !!!\r\n");
     sr501_init();
-
+    printf("SR501 init success !!!\r\n");
     // //烟雾传感器初始化
+    printf("SMOKE is initing !!!\r\n");
     smoke_init();
+    printf("SMOKE init success !!!\r\n");
+
 
     //iotda初始化
     // 初始化MQTT回调函数
+    printf("IOTDA is initing !!!\r\n");
     p_MQTTClient_sub_callback = &mqttClient_sub_callback;
 
     // 连接WiFi
@@ -713,27 +878,25 @@ static bsp_init(void)
     if (MQTTClient_subscribe(MQTT_TOPIC_SUB_COMMANDS) != WIFI_SUCCESS) {
         printf("[error] mqttClient_subscribe\r\n");
     }
+    printf("IOTDA init success !!!\r\n");
     sleep(TASK_INIT_TIME);
+
+    printf("all bsp init success !!!\r\n");
 
 }
 static void template_demo(void)
 {
     printf("极个别组-基于openharmony的智能家居系统\r\n");
 
-    bsp_init();
-    // sg90_init();
-    // pcf8575_init();
-    // led_init();
+    // bsp_init();
     test_task_create();
 
+    // motion_sensor_task_create();//貌似要等一分钟才会正常
+    // sensor_task_create();
+    // smoke_sensor_task_create();
+    // uart_task_create();
     
-    // sr501_init();
-    motion_sensor_task_create();//貌似要等一分钟才会正常
-    sensor_task_create();
-    smoke_sensor_task_create();
-    uart_task_create();
-    
-    wifi_iotda_task_create();//任务创建
+    // wifi_iotda_task_create();//任务创建
     
 }
 SYS_RUN(template_demo);
