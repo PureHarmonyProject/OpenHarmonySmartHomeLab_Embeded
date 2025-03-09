@@ -51,24 +51,32 @@ void test_task(void) {
     // pcf8575_init();
     // step_motor_init();
     // ina219_init();
+    // uart1_init(115200);
+    // // led_set_color_and_brightness(0xa900ff00);
+    // // sleep(500);
+    // led_set_color_and_brightness(0xa90000ff);
+    // sleep(500);
+    // led_set_color_and_brightness(0xa9ff0000);
+    // sleep(500);
+    // uint8_t data = 0xaa;
+    // uart1_send_data(&data, sizeof(data));
+    // if(rc522_init() != HI_ERR_SUCCESS)  // 初始化 RC522
+    // {
+    //     printf("RC522 初始化失败\n");
+    //     return;
+    // }
+    // printf("RC522 初始化完成\n");
 
-    if(rc522_init() != HI_ERR_SUCCESS)  // 初始化 RC522
-    {
-        printf("RC522 初始化失败\n");
-        return;
-    }
-    printf("RC522 初始化完成\n");
+    // hi_u8 addr = 0x07;
+    // hi_u8 write_data = 0x12;
+    // hi_u8 read_data[1] = {0};
 
-    hi_u8 addr = 0x07;
-    hi_u8 write_data = 0x12;
-    hi_u8 read_data[1] = {0};
+    // // printf("\n=== 写入寄存器 0x%02X ===\n", addr);
+    // // rc522_write_read_register(addr, write_data, NULL, 0, 0);
+    // printf("\n=== 读取寄存器 0x%02X ===\n", addr);
+    // rc522_write_read_register(addr, 0x00, read_data, 1, 1);
 
-    // printf("\n=== 写入寄存器 0x%02X ===\n", addr);
-    // rc522_write_read_register(addr, write_data, NULL, 0, 0);
-    printf("\n=== 读取寄存器 0x%02X ===\n", addr);
-    rc522_write_read_register(addr, 0x00, read_data, 1, 1);
-
-    printf("\n最终读取到的值: 0x%02X\n", read_data[0]);
+    // printf("\n最终读取到的值: 0x%02X\n", read_data[0]);
 
     // if(rc522_write_register(0x0c,0x12) != HI_ERR_SUCCESS)  // 初始化 RC522
     // {
@@ -103,13 +111,17 @@ void test_task(void) {
     // hi_u8 valid_uid[5] = VALID_UID;
     // 初始化NFC模块
     // result = nfc_init();
-
+    airConditioner_init();
+    
+    // airConditioner_cool(DC_MOTOR_HIGH);
+    // sleep(5000);
+    // airConditioner_stop(DC_MOTOR_LOW);
     while (1) {
 
-        printf("\n=== 读取寄存器 0x%02X ===\n", addr);
-        rc522_write_read_register(addr, 0x00, read_data, 1, 1);
+        // printf("\n=== 读取寄存器 0x%02X ===\n", addr);
+        // rc522_write_read_register(addr, 0x00, read_data, 1, 1);
 
-        printf("\n最终读取到的值: 0x%02X\n", read_data[0]);
+        // printf("\n最终读取到的值: 0x%02X\n", read_data[0]);
         // hi_u8 test_reg = rc522_read_register(0x0c);
         // printf("[DEBUG] 读取 test_reg (0x0c): 0x%02X\n",test_reg);
         // // rc522_test_spi();
@@ -198,8 +210,16 @@ void test_task(void) {
         // door_open();
         // curtain_open_by_pcf8575();
         // beep_warning_by_pcf8575();
+        airConditioner_work(6);
+        // airConditioner_heat(DC_MOTOR_MEDIUM);
+        osDelay(TASK_DELAY_5000MS); 
 
-        osDelay(TASK_DELAY_100MS);  // 每 5 秒更新一次数据
+        airConditioner_work(0);
+        osDelay(TASK_DELAY_1000MS); 
+        
+        airConditioner_work(7);
+        osDelay(TASK_DELAY_5000MS); 
+        // 每 5 秒更新一次数据
     }
 }
 
@@ -508,15 +528,15 @@ void uart_task_create(void)
 
 //注册华为云后需要更新的信息
 // 产品ID
-#define DEVICE_ID "678c85feef99673c8ae15f52"
+#define DEVICE_ID "67cc67268a63120625169e01"
 // MQTT客户端ID
-#define MQTT_CLIENT_ID "678c85feef99673c8ae15f52_hi3861_led_0_0_2025021015" 
+#define MQTT_CLIENT_ID "67cc67268a63120625169e01_Home_hi3861_0_0_2025030908" 
 // MQTT用户名
-#define MQTT_USER_NAME "678c85feef99673c8ae15f52_hi3861_led"
+#define MQTT_USER_NAME "67cc67268a63120625169e01_Home_hi3861"
 // MQTT密码
-#define MQTT_PASS_WORD "86d7740c80ac4374cc29074fa91ecb6fb1dbd87742faad2e5f04994f3d9f9f2b"
+#define MQTT_PASS_WORD "a5e4a9d80674a8d28007eedf518d3ce92ba56b0581cfb2e39eb40c0648784ab3"
 // 华为云平台的IP地址
-#define SERVER_IP_ADDR "117.78.5.125"
+#define SERVER_IP_ADDR "124.70.218.131"
 // 华为云平台的IP端口号
 #define SERVER_IP_PORT 1883
 // 订阅 接收控制命令的主题
@@ -532,11 +552,15 @@ void uart_task_create(void)
 #define TASK_STACK_SIZE (1024 * 10)
 #define MsgQueueObjectNumber 16 // 定义消息队列对象的个数
 typedef struct message_sensorData {
-    uint8_t led;        // LED灯当前的状态
-    float temperature;  // 当前的温度值
-    float humidity;   // 当前的湿度值
-    double curtain_curState; // 窗帘的开合百分比
-    uint8_t door; //门的开闭状态
+    uint32_t led_lightness_color;
+    uint8_t curtain_percent;
+    hi_bool curtain_openstate;
+    hi_bool door_state;
+    uint8_t temperature_indoor;
+    uint8_t humidity_indoor;  
+    uint32_t smoke;           // 烟雾传感器数据
+    hi_bool beep_state; // 蜂鸣器当前的状态
+    uint8_t airConditioner_state; // 空调当前的状态
 } msg_sensorData_t;
 msg_sensorData_t sensorData = {0}; // 传感器的数据
 osThreadId_t mqtt_send_task_id; // mqtt 发布数据任务ID
@@ -567,11 +591,17 @@ int Packaged_json_data(void)
     cJSON_AddStringToObject(array, "service_id", "attribute");
     properties = cJSON_CreateObject();
     cJSON_AddItemToObject(array, "properties", properties);
-    cJSON_AddStringToObject(properties, "led", sensorData.led ? "ON" : "OFF");
-    cJSON_AddNumberToObject(properties, "temperature", sensorData.temperature);
-    cJSON_AddNumberToObject(properties, "humidity", sensorData.humidity);
-    cJSON_AddNumberToObject(properties, "curtain_curState", sensorData.curtain_curState);
-    cJSON_AddStringToObject(properties, "door", sensorData.door ? "ON" : "OFF");
+    // 确保所有数据正确填充
+    cJSON_AddNumberToObject(properties, "led_lightness_color", sensorData.led_lightness_color);
+    // cJSON_AddNumberToObject(properties, "led_color", sensorData.led_color);
+    cJSON_AddNumberToObject(properties, "curtain_percent", sensorData.curtain_percent);
+    cJSON_AddNumberToObject(properties, "curtain_openstate", sensorData.curtain_openstate);
+    cJSON_AddNumberToObject(properties, "door_state", sensorData.door_state);
+    cJSON_AddNumberToObject(properties, "temperature_indoor", sensorData.temperature_indoor);
+    cJSON_AddNumberToObject(properties, "humidity_indoor", sensorData.humidity_indoor);
+    cJSON_AddNumberToObject(properties, "smoke", sensorData.smoke);
+    cJSON_AddNumberToObject(properties, "beep_state", sensorData.beep_state);
+    cJSON_AddNumberToObject(properties, "airConditioner_state", sensorData.airConditioner_state);  // ✅ 修正
     cJSON_AddItemToArray(services, array);  // 将对象添加到数组中
 
     /* 格式化打印创建的带数组的JSON对象 */
@@ -597,39 +627,106 @@ int Packaged_json_data(void)
     return ret;
 }
 
-//处理on,off类命令
-int get_jsonData_value(const cJSON *const object, uint8_t *value)
-{
-    cJSON *json_value = NULL;
-    int ret = -1;
-    json_value = cJSON_GetObjectItem(object, "value");
-    if (json_value) {
-        if (!strcmp(json_value->valuestring, "ON")) {
-            *value = 1;
-            json_value = NULL;
-            ret = 0; // 0为成功
-        } else if (!strcmp(json_value->valuestring, "OFF")) {
-            *value = 0;
-            json_value = NULL;
-            ret = 0;
-        }
+//处理led命令
+#include <stdio.h>
+#include <stdint.h>
+#include "cJSON.h"
+
+// 解析 LED 颜色值
+int led_setColor_get_jsonData_value(const cJSON *const object, uint32_t *value) {
+    if (object == NULL || value == NULL) {
+        printf("[ERROR] led_setColor_get_jsonData_value: 参数为空\n");
+        return -1;
     }
-    json_value = NULL;
-    return ret; // -1为失败
+
+    cJSON *json_value = cJSON_GetObjectItem(object, "color_RGB");//命令有误，实际该数据包含了亮度和rgb
+    if (!json_value) {
+        printf("[ERROR] led_setColor_get_jsonData_value: color_RGB 未找到\n");
+        return -1;
+    }
+
+    if (!cJSON_IsNumber(json_value)) {
+        printf("[ERROR] led_setColor_get_jsonData_value: color_RGB 类型错误\n");
+        return -1;
+    }
+
+    *value = (uint32_t)json_value->valuedouble;  // 使用 `valuedouble` 防止 `int32_t` 溢出
+
+    printf("✅ 提取的 color_RGB 值: %u (HEX: %08X)\n", *value, *value);
+    return 0;
 }
 
-//处理窗帘开合比命令
-int curtain_get_jsonData_value(const cJSON *const object, double *value)
-{
-    cJSON *json_value = NULL;
-    int ret = -1;
-    json_value = cJSON_GetObjectItem(object, "value");
-    if (json_value) {
-        *value = json_value->valuedouble;
+// 解析门状态值
+int door_setState_get_jsonData_value(const cJSON *const object, hi_bool *value) {
+    if (object == NULL || value == NULL) {
+        printf("[ERROR] door_setState_get_jsonData_value: 参数为空\n");
+        return -1;
     }
-    json_value = NULL;
-    return ret; // -1为失败
+
+    cJSON *json_value = cJSON_GetObjectItem(object, "door_state");
+    if (!json_value) {
+        printf("[ERROR] door_setState_get_jsonData_value: door_state 未找到\n");
+        return -1;
+    }
+
+    printf("🔍 JSON解析的door_state: %s\n", cJSON_Print(json_value));
+
+    if (cJSON_IsBool(json_value)) {
+        *value = cJSON_IsTrue(json_value) ? 1 : 0;
+        printf("✅ door_state 解析成功: %d\n", *value);
+        return 0;
+    }
+
+    printf("[ERROR] door_setState_get_jsonData_value: 类型错误 (期望: 布尔值)\n");
+    return -1;
 }
+
+// 解析窗帘开合百分比
+int curtain_openPercent_get_jsonData_value(const cJSON *const object, uint8_t *value) {
+    if (object == NULL || value == NULL) {
+        printf("[ERROR] curtain_openPercent_get_jsonData_value: 参数为空\n");
+        return -1;
+    }
+
+    cJSON *json_value = cJSON_GetObjectItem(object, "open_percent");
+    if (!json_value) {
+        printf("[ERROR] curtain_openPercent_get_jsonData_value: open_percent 未找到\n");
+        return -1;
+    }
+
+    if (!cJSON_IsNumber(json_value)) {
+        printf("[ERROR] curtain_openPercent_get_jsonData_value: open_percent 类型错误\n");
+        return -1;
+    }
+
+    *value = (uint8_t)json_value->valueint;
+    printf("✅ 提取的 open_percent 值: %d\n", *value);
+    return 0;
+}
+
+// 解析空调状态
+int airConditioner_setState_get_jsonData_value(const cJSON *const object, uint8_t *value) {
+    if (object == NULL || value == NULL) {
+        printf("[ERROR] airConditioner_setState_get_jsonData_value: 参数为空\n");
+        return -1;
+    }
+
+    cJSON *json_value = cJSON_GetObjectItem(object, "airConditioner_state");
+    if (!json_value) {
+        printf("[ERROR] airConditioner_setState_get_jsonData_value: airConditioner_state 未找到\n");
+        return -1;
+    }
+
+    if (!cJSON_IsNumber(json_value)) {
+        printf("[ERROR] airConditioner_setState_get_jsonData_value: airConditioner_state 类型错误\n");
+        return -1;
+    }
+
+    *value = (uint8_t)json_value->valueint;
+    printf("✅ 提取的 airConditioner_state 值: %d\n", *value);
+    return 0;
+}
+
 
 /**
  * @brief 解析JSON数据
@@ -646,26 +743,82 @@ int Parsing_json_data(const char *payload)
         paras = cJSON_GetObjectItem(root, "paras");
         if (command_name)
         {
-            if (!strcmp(command_name->valuestring, "led")) 
+            // if (!strcmp(command_name->valuestring, "led")) 
+            // {
+            //     ret_code = get_jsonData_value(paras, &sensorData.led);
+            // } 
+            // if (!strcmp(command_name->valuestring, "door")) 
+            // {
+            //     ret_code = get_jsonData_value(paras, &sensorData.door);
+            // }
+            // //窗帘的需求是什么
+            // if (!strcmp(command_name->valuestring, "curtain")) 
+            // {
+            //     ret_code = curtain_get_jsonData_value(paras, &sensorData.curtain_curState);
+            // }
+
+            /////////////////////////////////////////////////////////////////////////////////
+            // if (!strcmp(command_name->valuestring, "led_setLightness")) 
+            // {
+            //     ret_code = get_jsonData_value(paras, &sensorData.led);
+            // } 
+            //目前还没改过来,需要将亮度和color合起来
+            if (!strcmp(command_name->valuestring, "led_setLightness_color")) 
             {
-                ret_code = get_jsonData_value(paras, &sensorData.led);
-            } 
-            if (!strcmp(command_name->valuestring, "door")) 
-            {
-                ret_code = get_jsonData_value(paras, &sensorData.door);
+                ret_code = led_setColor_get_jsonData_value(paras, &sensorData.led_lightness_color);
+                led_set_color_and_brightness(sensorData.led_lightness_color);
             }
-            //窗帘的需求是什么
-            if (!strcmp(command_name->valuestring, "curtain")) 
+            if (!strcmp(command_name->valuestring, "curtain_openPercent")) 
             {
-                ret_code = curtain_get_jsonData_value(paras, &sensorData.curtain_curState);
+                ret_code = curtain_openPercent_get_jsonData_value(paras, &sensorData.curtain_percent);
+                (sensorData.curtain_percent == 100) ? curtain_open_by_pcf8575() : curtain_open_by_pcf8575();
             }
+            // if (!strcmp(command_name->valuestring, "curtain_closePercent")) 
+            // {
+            //     ret_code = get_jsonData_value(paras, &sensorData.led);
+            // } 
+            if (!strcmp(command_name->valuestring, "door_setState")) 
+            {
+                ret_code = door_setState_get_jsonData_value(paras, &sensorData.door_state);
+                (sensorData.door_state == 1) ? door_open() : door_close();
+            }
+            if (!strcmp(command_name->valuestring, "airConditioner_setState")) 
+            {
+                ret_code = airConditioner_setState_get_jsonData_value(paras, &sensorData.airConditioner_state);
+                airConditioner_work(sensorData.airConditioner_state);
+            }
+            // if (!strcmp(command_name->valuestring, "led_getState")) 
+            // {
+            //     ret_code = curtain_get_jsonData_value(paras, &sensorData.curtain_curState);
+            // }
+            // if (!strcmp(command_name->valuestring, "curtain_getState")) 
+            // {
+            //     ret_code = get_jsonData_value(paras, &sensorData.led);
+            // } 
+            // if (!strcmp(command_name->valuestring, "door_getState")) 
+            // {
+            //     ret_code = get_jsonData_value(paras, &sensorData.door);
+            // }
+            // if (!strcmp(command_name->valuestring, "dth11_getState")) 
+            // {
+            //     ret_code = curtain_get_jsonData_value(paras, &sensorData.curtain_curState);
+            // }
+            // if (!strcmp(command_name->valuestring, "smoke_getState")) 
+            // {
+            //     ret_code = curtain_get_jsonData_value(paras, &sensorData.curtain_curState);
+            // }
+            // if (!strcmp(command_name->valuestring, "beep_getState")) 
+            // {
+            //     ret_code = curtain_get_jsonData_value(paras, &sensorData.curtain_curState);
+            // }
         }
     }
     cJSON_Delete(root);
     root = command_name = paras = value = red = green = blue = NULL;
-    (sensorData.led == 1) ? LED(1) : LED(0);
-    (sensorData.door == 1) ? door_open() : door_close();
-    curtain_open_angle(360 * sensorData.curtain_curState);
+    // (sensorData.led == 1) ? LED(1) : LED(0);
+    
+    
+    // curtain_open_angle_by_pcf8575(360 * sensorData.curtain_percent / 100);
     return ret_code;
 }
 
@@ -679,10 +832,11 @@ void mqtt_send_task(void)
     {
         // 获取传感器的数据
         dht11_read_data(&temp, &humi);
-        sensorData.temperature = temp;
-        sensorData.humidity = humi;
-        sensorData.curtain_curState = curtain_get_curstate();
-        sensorData.door = door_get_curstate();
+        sensorData.temperature_indoor = temp;
+        sensorData.humidity_indoor = humi;
+        sensorData.curtain_percent = curtain_get_curstate() * 100;
+        sensorData.door_state = door_get_curstate();
+        sensorData.airConditioner_state = airConditioner_getState();
         // sensorData.door = door_get_curstate();
         // 组Topic
         memset_s(publish_topic, MQTT_DATA_MAX, 0, MQTT_DATA_MAX);
@@ -701,31 +855,38 @@ void mqtt_send_task(void)
 // 向云端发送返回值
 void send_cloud_request_code(const char *request_id, int ret_code, int request_len)
 {
-    char *request_topic = (char *)malloc(strlen(MALLOC_MQTT_TOPIC_PUB_COMMANDS_REQ) +
-                                            strlen(DEVICE_ID) + request_len + 1);
-    if (request_topic != NULL) 
-    {
-        memset_s(request_topic,
-                 strlen(DEVICE_ID) + strlen(MALLOC_MQTT_TOPIC_PUB_COMMANDS_REQ) + request_len + 1,
-                 0,
-                 strlen(DEVICE_ID) + strlen(MALLOC_MQTT_TOPIC_PUB_COMMANDS_REQ) + request_len + 1);
-        if (sprintf_s(request_topic,
-                      strlen(DEVICE_ID) + strlen(MALLOC_MQTT_TOPIC_PUB_COMMANDS_REQ) + request_len + 1,
-                      MQTT_TOPIC_PUB_COMMANDS_REQ, DEVICE_ID, request_id) > 0) 
-        {
-            if (ret_code == 0) 
-            {
-                MQTTClient_pub(request_topic, "{\"result_code\":0}", strlen("{\"result_code\":0}"));
-            } 
-            else if (ret_code == 1) 
-            {
-                MQTTClient_pub(request_topic, "{\"result_code\":1}", strlen("{\"result_code\":1}"));
-            }
+    char request_topic[128];
+    snprintf(request_topic, sizeof(request_topic), MQTT_TOPIC_PUB_COMMANDS_REQ, DEVICE_ID, request_id);
+
+    char response[64];
+    snprintf(response, sizeof(response), "{\"result_code\":%d}", ret_code);
+
+    printf("\n📤 发送 ACK 到 IoTDA\n");
+    printf("📤 ACK 主题 (request_topic): %s\n", request_topic);
+    printf("📤 ACK 数据 (response): %s\n", response);
+
+    int result = MQTTClient_pub(request_topic, response, strlen(response));
+
+    // **新增详细错误代码检查**
+    if (result == 0) {
+        printf("✅ ACK 发送成功\n");
+    } else {
+        printf("❌ ACK 发送失败，错误代码: %d\n", result);
+        if (result == -1) {
+            printf("   📌 可能的原因: MQTTClient_pub() 内部错误\n");
+        } else if (result == -2) {
+            printf("   📌 可能的原因: MQTT 连接未建立 (但你说不是这个问题)\n");
+        } else if (result == -3) {
+            printf("   📌 可能的原因: 发送数据过大\n");
+        } else if (result == -4) {
+            printf("   📌 可能的原因: MQTT 主题格式错误\n");
+        } else {
+            printf("   📌 可能的原因: 未知 MQTT 发送失败\n");
         }
-        free(request_topic);
-        request_topic = NULL;
     }
 }
+
+
 
 /**
  * @brief MQTT接收数据的回调函数
@@ -741,19 +902,24 @@ int8_t mqttClient_sub_callback(unsigned char *topic, unsigned char *payload)
         printf("topic: %s\r\n", topic);
         printf("payload: %s\r\n", payload);
 
-        // 提取出topic中的request_id
+        // 提取 request_id
         char request_id[50] = {0};
-        int ret_code = 1; // 1为失败
-        if (0 == strcpy_s(request_id, sizeof(request_id),
-                          topic + strlen(DEVICE_ID) + strlen("$oc/devices//sys/commands/request_id="))) {
-            printf("request_id: %s\r\n", request_id);
-            // 解析JSON数据
-            ret_code = Parsing_json_data(payload);
-            send_cloud_request_code(request_id, ret_code, sizeof(request_id));
+        char *request_start = strstr(topic, "request_id="); // 找到 request_id= 位置
+        if (request_start) {
+            strcpy_s(request_id, sizeof(request_id), request_start + 11);  // 复制 ID 部分
         }
+
+        printf("✅ 正确提取的 request_id: %s\r\n", request_id);
+
+        // 解析 JSON 数据
+        int ret_code = Parsing_json_data(payload);
+
+        // 发送 ACK 到 IoTDA
+        send_cloud_request_code(request_id, ret_code, strlen(request_id));
     }
     return 0;
 }
+
 
 /**
  * @brief MQTT  接收消息任务
@@ -850,7 +1016,7 @@ static bsp_init(void)
     smoke_init();
     printf("SMOKE init success !!!\r\n");
 
-
+    airConditioner_init();
     //iotda初始化
     // 初始化MQTT回调函数
     printf("IOTDA is initing !!!\r\n");
@@ -888,15 +1054,15 @@ static void template_demo(void)
 {
     printf("极个别组-基于openharmony的智能家居系统\r\n");
 
-    // bsp_init();
-    test_task_create();
+    bsp_init();
+    // test_task_create();
 
     // motion_sensor_task_create();//貌似要等一分钟才会正常
     // sensor_task_create();
     // smoke_sensor_task_create();
-    // uart_task_create();
+    uart_task_create();
     
-    // wifi_iotda_task_create();//任务创建
+    wifi_iotda_task_create();//任务创建
     
 }
 SYS_RUN(template_demo);

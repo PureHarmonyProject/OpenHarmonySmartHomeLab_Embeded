@@ -53,7 +53,7 @@ void step_motor_init(void);
 void step_motor_run(uint8_t step,uint8_t dir,uint8_t speed,uint16_t angle,uint8_t sta);
 void step_motor_run_by_pcf8575(uint8_t step, uint8_t dir, uint8_t speed, uint16_t angle, uint8_t sta);
 void curtain_open_angle(uint16_t angle);
-
+void curtain_open_angle_by_pcf8575(uint16_t angle);
 uint16_t curtain_get_curangle(void);
 float curtain_get_curstate(void);
 

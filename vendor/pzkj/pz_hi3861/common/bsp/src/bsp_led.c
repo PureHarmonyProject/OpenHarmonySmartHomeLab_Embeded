@@ -17,7 +17,7 @@
  */
 
 #include "bsp_led.h"
-
+#include "bsp_uart.h"
 //LED初始化
 void led_init(void)
 {
@@ -59,4 +59,16 @@ void led_on_by_pcf8575()
 void led_off_by_pcf8575(void) 
 {
     LED(0);
+}
+
+void led_set_color_and_brightness(uint32_t led_color_and_brightness)
+{
+    uint8_t buffer[4] = {
+        (led_color_and_brightness >> 24) & 0xff,  // 高字节 (帧头 + 亮度)
+        (led_color_and_brightness >> 16) & 0xff,  // R 分量
+        (led_color_and_brightness >> 8) & 0xff,   // G 分量
+        (led_color_and_brightness >> 0) & 0xff    // B 分量
+    };
+
+    uart1_send_data(buffer, sizeof(buffer));  // 发送 4 字节数据
 }

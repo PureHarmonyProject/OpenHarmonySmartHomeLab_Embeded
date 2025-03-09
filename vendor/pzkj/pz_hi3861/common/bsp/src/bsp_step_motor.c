@@ -138,7 +138,10 @@ void curtain_open_by_pcf8575(void)
 	step_motor_run_by_pcf8575(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, STEP_MOTOR_ANGLE, STEP_MOTOR_START);
 	step_motor_run_by_pcf8575(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, STEP_MOTOR_ANGLE, STEP_MOTOR_STOP);
 }
-void curtain_test(void)
+
+void curtain_open_angle_by_pcf8575(uint16_t angle)
 {
-    
+    cur_angle = angle;
+	step_motor_run_by_pcf8575(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, angle, STEP_MOTOR_START);
+	step_motor_run_by_pcf8575(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, angle, STEP_MOTOR_STOP);
 }
