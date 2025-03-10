@@ -12,6 +12,13 @@ void airConditioner_init(void)
     hi_io_set_func(DC_MOTOR_PIN2, DC_MOTOR_GPIO6_FUN);           // 设置IO为pwm模式
     hi_gpio_set_dir(DC_MOTOR_PIN2, HI_GPIO_DIR_OUT);            // 设置GPIO为输出模式
     hi_pwm_init(HI_PWM_PORT_PWM3);
+
+    // hi_u32 ret = hi_pwm_start(HI_PWM_PORT_PWM3,40000,40000);
+    // if(ret != HI_ERR_SUCCESS) {
+    //     printf("PWM3 start failed\n");
+    // }else {
+    //     printf("PWM3 start success\n");
+    // }
 }
 
 //pwm占空比输出调节
@@ -54,7 +61,7 @@ void airConditioner_cool(int type)
     hi_pwm_stop(HI_PWM_PORT_PWM3);
     osDelay(10);  // 确保PWM已完全停止
 
-    printf("空调制冷\n,速度为%d\n", type);
+    printf("空调制冷,速度为%d\n", type);
     hi_pwm_start(HI_PWM_PORT_PWM2,speed_array[type],40000);
     hi_pwm_start(HI_PWM_PORT_PWM3,0,40000);
 }
@@ -82,11 +89,11 @@ void airConditioner_work(uint8_t airConditioner_state)
         return;
     }
 
-    // 避免重复执行相同状态
-    if (cur_state == airConditioner_state) {
-        printf("airConditioner state unchanged, skipping PWM update.\n");
-        return;
-    }
+    // // 避免重复执行相同状态
+    // if (cur_state == airConditioner_state) {
+    //     printf("airConditioner state unchanged, skipping PWM update.\n");
+    //     return;
+    // }
 
     if (func_type == 0) {
         airConditioner_heat(speed_type - 1);

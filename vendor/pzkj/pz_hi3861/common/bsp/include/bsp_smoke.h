@@ -7,4 +7,7 @@
 
 void smoke_init(void);
 int smoke_check(void);
+uint16_t smoke_get_value(void);
+void MQ5_init(void);
+uint16_t MQ5_get_value(void);
 #endif

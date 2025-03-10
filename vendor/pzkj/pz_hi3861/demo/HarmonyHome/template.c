@@ -23,10 +23,13 @@
 #include "bsp_wifi.h"
 #include "bsp_mqtt.h"
 
+#include "bsp_pwm.h"
+
 #include "lwip/netifapi.h"
 #include "lwip/sockets.h"
 #include "lwip/api_shell.h"
 
+#include "hi_pwm.h" //test
 #include "cJSON.h"
 #define TASKDLYTICK    500
 #define TASK_DELAY_5000MS 500    //500 = 5000ms 1tick = 10ms
@@ -112,12 +115,27 @@ void test_task(void) {
     // 初始化NFC模块
     // result = nfc_init();
     airConditioner_init();
-    
+
+    // hi_pwm_stop(HI_PWM_PORT_PWM2);
+    // hi_pwm_stop(HI_PWM_PORT_PWM3);
+    // osDelay(10);  // 确保PWM已完全停止
+
+    // printf("空调制冷\n,速度为\n");
+    // hi_pwm_start(HI_PWM_PORT_PWM2,40000,40000);
+    // hi_pwm_start(HI_PWM_PORT_PWM3,0,40000);
+    // pwm_init();//PWM初始化
     // airConditioner_cool(DC_MOTOR_HIGH);
     // sleep(5000);
     // airConditioner_stop(DC_MOTOR_LOW);
     while (1) {
 
+
+
+
+        // pwm_init();//PWM初始化
+        // pwm_set_duty(40000);
+        
+        // usleep(10*1000);
         // printf("\n=== 读取寄存器 0x%02X ===\n", addr);
         // rc522_write_read_register(addr, 0x00, read_data, 1, 1);
 
@@ -211,9 +229,26 @@ void test_task(void) {
         // curtain_open_by_pcf8575();
         // beep_warning_by_pcf8575();
         airConditioner_work(6);
-        // airConditioner_heat(DC_MOTOR_MEDIUM);
+        // airConditioner_cool(2);
+        // hi_pwm_stop(HI_PWM_PORT_PWM2);
+        // hi_pwm_stop(HI_PWM_PORT_PWM3);
+        // osDelay(10);  // 确保PWM已完全停止
+
+        // printf("空调制冷\n,速度为%d\n", type);
+        // hi_pwm_start(HI_PWM_PORT_PWM2,40000,40000);
+        // hi_pwm_start(HI_PWM_PORT_PWM3,0,40000);
         osDelay(TASK_DELAY_5000MS); 
 
+
+        // hi_pwm_stop(HI_PWM_PORT_PWM2);
+        // hi_pwm_stop(HI_PWM_PORT_PWM3);
+        // osDelay(10);  // 确保PWM已完全停止
+
+        // printf("空调制冷\n,速度为\n");
+        // hi_pwm_start(HI_PWM_PORT_PWM2,40000,40000);
+        // hi_pwm_start(HI_PWM_PORT_PWM3,0,40000);
+
+        // airConditioner_stop();
         airConditioner_work(0);
         osDelay(TASK_DELAY_1000MS); 
         
@@ -324,14 +359,27 @@ osThreadId_t SMOKE_Task_ID; //任务ID
 
 void smoke_sensor_task(void)
 {
+    uint16_t data1,data2;
     while (1) 
     {
-        if(smoke_check()) {
+        data1 = smoke_get_value();
+        printf("[SMOKE] 烟雾传感器数值 = %d\n", data1);
+        if(data1 > 1000) {
             printf("[SMOKE] 检测到烟雾\n");
             led_warning();   // 打开LED和蜂鸣器
             beep_warning(); 
         }else {
             printf("[SMOKE] 没有检测到烟雾\n");
+        }
+
+        printf("[MQ5] 烟雾传感器数值 = %d\n", data2);
+        data2 = MQ5_get_value();
+        if(data2 > 1000) {
+            printf("[MQ5] 检测到燃气\n");
+            led_warning();   // 打开LED和蜂鸣器
+            beep_warning();
+        }else {
+            printf("[MQ5] 没有检测到燃气\n");
         }
         osDelay(100);  // 延时100ms进行下一次检查
     }
@@ -559,6 +607,7 @@ typedef struct message_sensorData {
     uint8_t temperature_indoor;
     uint8_t humidity_indoor;  
     uint32_t smoke;           // 烟雾传感器数据
+    uint32_t comb;           // 可燃气体数据
     hi_bool beep_state; // 蜂鸣器当前的状态
     uint8_t airConditioner_state; // 空调当前的状态
 } msg_sensorData_t;
@@ -593,13 +642,13 @@ int Packaged_json_data(void)
     cJSON_AddItemToObject(array, "properties", properties);
     // 确保所有数据正确填充
     cJSON_AddNumberToObject(properties, "led_lightness_color", sensorData.led_lightness_color);
-    // cJSON_AddNumberToObject(properties, "led_color", sensorData.led_color);
     cJSON_AddNumberToObject(properties, "curtain_percent", sensorData.curtain_percent);
     cJSON_AddNumberToObject(properties, "curtain_openstate", sensorData.curtain_openstate);
     cJSON_AddNumberToObject(properties, "door_state", sensorData.door_state);
     cJSON_AddNumberToObject(properties, "temperature_indoor", sensorData.temperature_indoor);
     cJSON_AddNumberToObject(properties, "humidity_indoor", sensorData.humidity_indoor);
     cJSON_AddNumberToObject(properties, "smoke", sensorData.smoke);
+    cJSON_AddNumberToObject(properties, "comb", sensorData.comb);
     cJSON_AddNumberToObject(properties, "beep_state", sensorData.beep_state);
     cJSON_AddNumberToObject(properties, "airConditioner_state", sensorData.airConditioner_state);  // ✅ 修正
     cJSON_AddItemToArray(services, array);  // 将对象添加到数组中
@@ -837,7 +886,9 @@ void mqtt_send_task(void)
         sensorData.curtain_percent = curtain_get_curstate() * 100;
         sensorData.door_state = door_get_curstate();
         sensorData.airConditioner_state = airConditioner_getState();
-        // sensorData.door = door_get_curstate();
+        sensorData.smoke = smoke_get_value();
+        sensorData.comb = MQ5_get_value();
+        sensorData.beep_state = beep_get_state();
         // 组Topic
         memset_s(publish_topic, MQTT_DATA_MAX, 0, MQTT_DATA_MAX);
         if (sprintf_s(publish_topic, MQTT_DATA_MAX, MQTT_TOPIC_PUB_PROPERTIES, DEVICE_ID) > 0) 
@@ -1016,6 +1067,9 @@ static bsp_init(void)
     smoke_init();
     printf("SMOKE init success !!!\r\n");
 
+    printf("MQ5 is initing !!!\r\n");
+    MQ5_init();
+    printf("MQ5 init success !!!\r\n");
     airConditioner_init();
     //iotda初始化
     // 初始化MQTT回调函数
