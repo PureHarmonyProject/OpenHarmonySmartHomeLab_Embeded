@@ -17,9 +17,10 @@
 #define DC_MOTOR_HIGH 2
 
 //函数声明
-void airConditioner_init(void);
-void airConditioner_heat(int type);
-void airConditioner_cool(int type);
+// void airConditioner_init(void);
+void airConditioner_send_cmd(uint8_t switch_state, uint8_t speed, uint8_t mode);
+void airConditioner_heat(uint8_t speed);
+void airConditioner_cool(uint8_t speed);
 void airConditioner_stop(void);
 void airConditioner_work(uint8_t airConditioner_state);
 uint8_t airConditioner_getState(void);

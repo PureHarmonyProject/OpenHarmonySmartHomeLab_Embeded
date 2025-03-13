@@ -537,6 +537,7 @@ void uart_task(void)
     char buffer[128];
     int len;
     uart1_init(115200);
+    uart2_init(115200);
     while (1)
     {
         len = uart1_read_data(buffer, sizeof(buffer));  // 接收串口数据
@@ -1025,20 +1026,20 @@ static bsp_init(void)
     // beep_init();
 
     //oled初始化
-    printf("OLED is initing !!!\r\n");
-    oled_init_mutex();
-    oled_init();
-    printf("OLED init success !!!\r\n");
+    // printf("OLED is initing !!!\r\n");
+    // oled_init_mutex();
+    // oled_init();
+    // printf("OLED init success !!!\r\n");
 
 
-    // 温湿度传感器初始化
-    printf("DHT11 is initing !!!\r\n");
-    while(dht11_init())
-	{
-		printf("DHT11检测失败,请插好!\r\n");
-		osDelay(TASK_DELAY_100MS); //100ms
-	}
-	printf("DHT11检测成功!\r\n");
+    // // 温湿度传感器初始化
+    // printf("DHT11 is initing !!!\r\n");
+    // while(dht11_init())
+	// {
+	// 	printf("DHT11检测失败,请插好!\r\n");
+	// 	osDelay(TASK_DELAY_100MS); //100ms
+	// }
+	// printf("DHT11检测成功!\r\n");
 
     // //电流电压传感器初始化 也需要做初始化检测处理
     // // ina219_init();
@@ -1049,28 +1050,30 @@ static bsp_init(void)
     // //直流电机初始化
     // // dc_motor_init();
 
-    printf("PCF8575 is initing !!!\r\n");
-    pcf8575_init();
+    // printf("PCF8575 is initing !!!\r\n");
+    // pcf8575_init();
     // //舵机初始化
 
-    printf("SG90 is initing !!!\r\n");
-    sg90_init();
-    door_open();
-    door_close();
-    printf("SG90 init success !!!\r\n");
-    // //人体感应初始化
-    printf("SR501 is initing !!!\r\n");
-    sr501_init();
-    printf("SR501 init success !!!\r\n");
-    // //烟雾传感器初始化
-    printf("SMOKE is initing !!!\r\n");
-    smoke_init();
-    printf("SMOKE init success !!!\r\n");
+    uart2_init(115200);
 
-    printf("MQ5 is initing !!!\r\n");
-    MQ5_init();
-    printf("MQ5 init success !!!\r\n");
-    airConditioner_init();
+    // printf("SG90 is initing !!!\r\n");
+    // sg90_init();
+    // door_open();
+    // door_close();
+    // printf("SG90 init success !!!\r\n");
+    // // //人体感应初始化
+    // printf("SR501 is initing !!!\r\n");
+    // sr501_init();
+    // printf("SR501 init success !!!\r\n");
+    // // //烟雾传感器初始化
+    // printf("SMOKE is initing !!!\r\n");
+    // smoke_init();
+    // printf("SMOKE init success !!!\r\n");
+
+    // printf("MQ5 is initing !!!\r\n");
+    // MQ5_init();
+    // printf("MQ5 init success !!!\r\n");
+    // airConditioner_init();
     //iotda初始化
     // 初始化MQTT回调函数
     printf("IOTDA is initing !!!\r\n");
@@ -1114,7 +1117,7 @@ static void template_demo(void)
     // motion_sensor_task_create();//貌似要等一分钟才会正常
     // sensor_task_create();
     // smoke_sensor_task_create();
-    uart_task_create();
+    // uart_task_create();
     
     wifi_iotda_task_create();//任务创建
     

@@ -1,111 +1,89 @@
 #include "bsp_dc_motor.h"
 #include "hi_pwm.h"
-
+#include "bsp_uart.h"
 //直流电机初始化
-void airConditioner_init(void)
+// void airConditioner_init(void)
+// {
+//     hi_gpio_init();                                            // GPIO初始化
+//     hi_io_set_func(DC_MOTOR_PIN1, DC_MOTOR_GPIO2_FUN);           // 设置IO为pwm模式
+//     hi_gpio_set_dir(DC_MOTOR_PIN1, HI_GPIO_DIR_OUT);            // 设置GPIO为输出模式
+//     hi_pwm_init(HI_PWM_PORT_PWM2);
+
+//     hi_io_set_func(DC_MOTOR_PIN2, DC_MOTOR_GPIO6_FUN);           // 设置IO为pwm模式
+//     hi_gpio_set_dir(DC_MOTOR_PIN2, HI_GPIO_DIR_OUT);            // 设置GPIO为输出模式
+//     hi_pwm_init(HI_PWM_PORT_PWM3);
+// }
+
+void airConditioner_send_cmd(uint8_t switch_state, uint8_t speed, uint8_t mode)
 {
-    hi_gpio_init();                                            // GPIO初始化
-    hi_io_set_func(DC_MOTOR_PIN1, DC_MOTOR_GPIO2_FUN);           // 设置IO为pwm模式
-    hi_gpio_set_dir(DC_MOTOR_PIN1, HI_GPIO_DIR_OUT);            // 设置GPIO为输出模式
-    hi_pwm_init(HI_PWM_PORT_PWM2);
+    uint32_t cmd = ((uint32_t)0xB << 28) |   // 帧头 `0xB`
+                   ((uint32_t)0x3 << 0)  |   // 设备 ID（空调 = 0x3）
+                   ((uint32_t)switch_state << 4) |  // 开关状态
+                   ((uint32_t)speed << 8) |  // 风速
+                   ((uint32_t)mode << 12);   // 制冷/制热模式
 
-    hi_io_set_func(DC_MOTOR_PIN2, DC_MOTOR_GPIO6_FUN);           // 设置IO为pwm模式
-    hi_gpio_set_dir(DC_MOTOR_PIN2, HI_GPIO_DIR_OUT);            // 设置GPIO为输出模式
-    hi_pwm_init(HI_PWM_PORT_PWM3);
+    uint8_t cmd_buffer[4];
+    cmd_buffer[0] = (cmd >> 24) & 0xFF;
+    cmd_buffer[1] = (cmd >> 16) & 0xFF;
+    cmd_buffer[2] = (cmd >> 8)  & 0xFF;
+    cmd_buffer[3] = cmd & 0xFF;
 
-    // hi_u32 ret = hi_pwm_start(HI_PWM_PORT_PWM3,40000,40000);
-    // if(ret != HI_ERR_SUCCESS) {
-    //     printf("PWM3 start failed\n");
-    // }else {
-    //     printf("PWM3 start success\n");
-    // }
+    printf("Sending Air Conditioner Command: %02X %02X %02X %02X\n", 
+           cmd_buffer[0], cmd_buffer[1], cmd_buffer[2], cmd_buffer[3]);
+
+    uart2_send_data(cmd_buffer, 4);
 }
 
 //pwm占空比输出调节
-static void dc_motor_pwm_set_duty(uint16_t duty)
+void airConditioner_heat(uint8_t speed)
 {
-    hi_pwm_start(HI_PWM_PORT_PWM3,duty,40000);//指定分频系数为40000 可认为重装载值就是40000 duty为ccr
-}
-
-//用pwm实现电机调速
-//只分三个档 低 中 高速
-int32_t speed_array[] = {20000,30000,40000}; //速度数组
-void dc_motor_run(int type)
-{
-    if(type < DC_MOTOR_LOW || type > DC_MOTOR_HIGH) {
+    if (speed < 1 || speed > 3) {
+        printf("Invalid speed level for heating!\n");
         return;
     }
-    pwm_set_duty(speed_array[type]);
+    printf("Sending command: Heat, speed=%d\n", speed);
+    airConditioner_send_cmd(1, speed, 1);  // 开启空调，模式=1（制热）
 }
 
-void airConditioner_heat(int type)
+
+void airConditioner_cool(uint8_t speed)
 {
-    if(type < DC_MOTOR_LOW || type > DC_MOTOR_HIGH) {
+    if (speed < 1 || speed > 3) {
+        printf("Invalid speed level for cooling!\n");
         return;
     }
-    hi_pwm_stop(HI_PWM_PORT_PWM2);
-    hi_pwm_stop(HI_PWM_PORT_PWM3);
-    osDelay(10);  // 确保PWM已完全停止
-
-    printf("空调制热\n,速度为%d\n", type);
-    hi_pwm_start(HI_PWM_PORT_PWM3,speed_array[type],40000);
-    hi_pwm_start(HI_PWM_PORT_PWM2,0,40000);
+    printf("Sending command: Cool, speed=%d\n", speed);
+    airConditioner_send_cmd(1, speed, 0);  // 开启空调，模式=0（制冷）
 }
-
-void airConditioner_cool(int type)
-{
-    if(type < DC_MOTOR_LOW || type > DC_MOTOR_HIGH) {
-        return;
-    }
-    hi_pwm_stop(HI_PWM_PORT_PWM2);
-    hi_pwm_stop(HI_PWM_PORT_PWM3);
-    osDelay(10);  // 确保PWM已完全停止
-
-    printf("空调制冷,速度为%d\n", type);
-    hi_pwm_start(HI_PWM_PORT_PWM2,speed_array[type],40000);
-    hi_pwm_start(HI_PWM_PORT_PWM3,0,40000);
-}
-
 void airConditioner_stop(void)
 {
-    printf("空调停转\n");
-    hi_pwm_stop(HI_PWM_PORT_PWM2);
-    hi_pwm_stop(HI_PWM_PORT_PWM3);
-    osDelay(10);  // 确保PWM已完全停止
+    printf("Sending command: Stop Air Conditioner\n");
+    airConditioner_send_cmd(0, 0, 0);  // 关闭空调
 }
+
 
 uint8_t cur_state;
 void airConditioner_work(uint8_t airConditioner_state)
 {
     cur_state = airConditioner_state;
-    int func_type = airConditioner_state & 0x1;
-    int speed_type = (airConditioner_state >> 1) & 0x3;
+    uint8_t func_type = airConditioner_state & 0x1;
+    uint8_t speed_type = (airConditioner_state >> 1) & 0x3;
 
-    printf("func_typr = %d, speed_type = %d\n",func_type, speed_type);
-    // 确保 speed_type 在合法范围内
-    if (speed_type == 0 || speed_type > 3) {
+    printf("Processing airConditioner_work: func_type=%d, speed_type=%d\n", func_type, speed_type);
+
+    // 确保 speed_type 合法（范围 1~3）
+    if (speed_type < 1 || speed_type > 3) {
         airConditioner_stop();
-        printf("airConditioner stop\n");
+        printf("Invalid speed! Stopping air conditioner.\n");
         return;
     }
 
-    // // 避免重复执行相同状态
-    // if (cur_state == airConditioner_state) {
-    //     printf("airConditioner state unchanged, skipping PWM update.\n");
-    //     return;
-    // }
-
     if (func_type == 0) {
-        airConditioner_heat(speed_type - 1);
-        printf("airConditioner heat, type = %d\n", speed_type);
+        airConditioner_heat(speed_type);
     } else {
-        airConditioner_cool(speed_type - 1);
-        printf("airConditioner cool, type = %d\n", speed_type);
+        airConditioner_cool(speed_type);
     }
-
-    
 }
-
 
 uint8_t airConditioner_getState(void)
 {

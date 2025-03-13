@@ -3,7 +3,7 @@
 
 void smoke_init(void)
 {
-    adc5_init();
+    adc6_init();
 }
 
 int smoke_check(void)

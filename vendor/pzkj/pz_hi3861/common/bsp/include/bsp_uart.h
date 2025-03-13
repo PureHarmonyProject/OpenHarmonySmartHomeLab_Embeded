@@ -18,6 +18,12 @@
 #define UART1_RX_PIN            HI_IO_NAME_GPIO_1
 #define UART1_RX_GPIO_FUN       HI_IO_FUNC_GPIO_1_UART1_RXD
 
+#define UART2_TX_PIN            HI_IO_NAME_GPIO_11
+#define UART2_TX_GPIO_FUN       HI_IO_FUNC_GPIO_11_UART2_TXD
+
+#define UART2_RX_PIN            HI_IO_NAME_GPIO_12
+#define UART2_RX_GPIO_FUN       HI_IO_FUNC_GPIO_12_UART2_RXD
+
 //函数声明
 void uart0_init(uint32_t buad);
 void uart0_send_data(uint8_t *dat,uint8_t len);
@@ -26,4 +32,8 @@ uint32_t uart0_read_data(uint8_t *dat,uint8_t len);
 void uart1_init(uint32_t buad);
 void uart1_send_data(uint8_t *dat,uint8_t len);
 uint32_t uart1_read_data(uint8_t *dat,uint8_t len);
+
+void uart2_init(uint32_t buad);
+void uart2_send_data(uint8_t *dat,uint8_t len);
+uint32_t uart2_read_data(uint8_t *dat,uint8_t len);
 #endif
