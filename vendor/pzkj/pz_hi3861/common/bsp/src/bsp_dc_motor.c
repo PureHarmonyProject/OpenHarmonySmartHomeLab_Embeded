@@ -45,7 +45,6 @@ void airConditioner_heat(uint8_t speed)
     airConditioner_send_cmd(1, speed, 1);  // 开启空调，模式=1（制热）
 }
 
-
 void airConditioner_cool(uint8_t speed)
 {
     if (speed < 1 || speed > 3) {
@@ -63,9 +62,10 @@ void airConditioner_stop(void)
 
 
 uint8_t cur_state;
+
 void airConditioner_work(uint8_t airConditioner_state)
 {
-    cur_state = airConditioner_state;
+    // cur_state = airConditioner_state;
     uint8_t func_type = airConditioner_state & 0x1;
     uint8_t speed_type = (airConditioner_state >> 1) & 0x3;
 
@@ -78,14 +78,19 @@ void airConditioner_work(uint8_t airConditioner_state)
         return;
     }
 
-    if (func_type == 0) {
+    if (func_type == 1) {
         airConditioner_heat(speed_type);
     } else {
         airConditioner_cool(speed_type);
     }
 }
 
-uint8_t airConditioner_getState(void)
+uint8_t airConditioner_get_curstate(void)
 {
     return cur_state;
+}
+
+void airConditioner_set_curstate(uint8_t state)
+{
+    cur_state = state;
 }

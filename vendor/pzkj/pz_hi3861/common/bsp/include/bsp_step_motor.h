@@ -56,6 +56,6 @@ void curtain_open_angle(uint16_t angle);
 void curtain_open_angle_by_pcf8575(uint16_t angle);
 uint16_t curtain_get_curangle(void);
 float curtain_get_curstate(void);
-
+void curtain_set_curangle(uint16_t cur_curtain_angle);
 void curtain_test(void);
 #endif

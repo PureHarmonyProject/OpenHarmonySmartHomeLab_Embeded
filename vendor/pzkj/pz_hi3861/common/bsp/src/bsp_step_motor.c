@@ -17,6 +17,7 @@
  */
 
 #include "bsp_step_motor.h"
+#include "bsp_uart.h"
 
 void step_motor_init(void)
 {
@@ -104,26 +105,18 @@ void step_motor_run_by_pcf8575(uint8_t step, uint8_t dir, uint8_t speed, uint16_
         PF_MOTOR_IN1(0); PF_MOTOR_IN2(0); PF_MOTOR_IN3(0); PF_MOTOR_IN4(0);
     }
 }
-
-void curtain_open(void)
-{
-	step_motor_run(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, STEP_MOTOR_ANGLE, STEP_MOTOR_START);
-	step_motor_run(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, STEP_MOTOR_ANGLE, STEP_MOTOR_STOP);
-}
-
 //旋转指定角度，角度范围0-360
 
 uint16_t cur_angle;
-void curtain_open_angle(uint16_t angle)
-{
-    cur_angle = angle;
-	step_motor_run(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, angle, STEP_MOTOR_START);
-	step_motor_run(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, angle, STEP_MOTOR_STOP);
-}
 
 uint16_t curtain_get_curangle(void)
 {
     return cur_angle;
+}
+
+void curtain_set_curangle(uint16_t cur_curtain_angle)
+{
+    cur_angle = cur_curtain_angle;
 }
 
 //开合百分比
@@ -144,4 +137,43 @@ void curtain_open_angle_by_pcf8575(uint16_t angle)
     cur_angle = angle;
 	step_motor_run_by_pcf8575(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, angle, STEP_MOTOR_START);
 	step_motor_run_by_pcf8575(STEP_MOTOR_BYTE, STEP_MOTOR_DIR_CLOCKWISE, STEP_MOTOR_SPEEP, angle, STEP_MOTOR_STOP);
+}
+
+void curtain_send_cmd(uint8_t switch_state, uint8_t angle)
+{
+    uint32_t cmd = ((uint32_t)0xB << 28) |   // 帧头 `0xB`
+                   ((uint32_t)0x2 << 0)  |   // 设备 ID（窗帘 = 0x2）
+                   ((uint32_t)switch_state << 4) |  // 开关状态（1 = 打开，0 = 关闭）
+                   ((uint32_t)angle << 8);   // 角度（0~150，每 10° 一档）
+
+    uint8_t cmd_buffer[4];
+    cmd_buffer[0] = (cmd >> 24) & 0xFF;
+    cmd_buffer[1] = (cmd >> 16) & 0xFF;
+    cmd_buffer[2] = (cmd >> 8)  & 0xFF;
+    cmd_buffer[3] = cmd & 0xFF;
+
+    printf("Sending Curtain Command: %02X %02X %02X %02X\n", 
+           cmd_buffer[0], cmd_buffer[1], cmd_buffer[2], cmd_buffer[3]);
+
+    uart2_send_data(cmd_buffer, 4);
+}
+
+void curtain_open_angle(uint16_t angle)
+{
+    if (angle > 150) {
+        printf("Invalid curtain angle! Max = 150°\n");
+        return;
+    }
+    printf("Sending command: Open curtain, angle=%d\n", angle);
+    curtain_send_cmd(1, angle / 10);  // 发送打开窗帘命令（angle 以 10° 为单位）
+}
+
+void curtain_close_angle(uint16_t angle)
+{
+    if (angle > 150) {
+        printf("Invalid curtain angle! Max = 150°\n");
+        return;
+    }
+    printf("Sending command: Close curtain, angle=%d\n", angle);
+    curtain_send_cmd(0, angle / 10);  // 发送关闭窗帘命令（angle 以 10° 为单位）
 }

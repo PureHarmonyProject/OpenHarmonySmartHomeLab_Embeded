@@ -531,28 +531,80 @@ void handle_uart_command(char *command)
    uart1_send_data(&response, sizeof(response));
 }
 
-osThreadId_t Uart_Task_ID;
-void uart_task(void)
+void usart2_rx_process(char usart2_receive_buffer[])
 {
-    char buffer[128];
-    int len;
-    uart1_init(115200);
-    uart2_init(115200);
-    while (1)
-    {
-        len = uart1_read_data(buffer, sizeof(buffer));  // 接收串口数据
-        if (len > 0) {
-            buffer[len] = '\0';
-            handle_uart_command(buffer);  // 处理串口指令
-        }
+    uint32_t received_response = (usart2_receive_buffer[0] << 24) |
+                                 (usart2_receive_buffer[1] << 16) |
+                                 (usart2_receive_buffer[2] << 8)  |
+                                 (usart2_receive_buffer[3]);
 
+    memset(usart2_receive_buffer, 0, sizeof(usart2_receive_buffer));
+
+    uint8_t response_type = (received_response >> 24) & 0xF;
+    uint8_t response_code = (received_response >> 20) & 0xF;
+    uint8_t device_id = received_response & 0xF;
+    uint8_t switch_state = (received_response >> 4) & 0xF;
+    uint8_t param1 = (received_response >> 8) & 0xF;
+    uint8_t param2 = (received_response >> 12) & 0xF;
+
+    // 确保帧头正确
+    if (((received_response >> 28) & 0xF) != 0xB || response_type != 0x1) {
+        printf("Invalid response received! response = %04x\n", received_response);
+        return;
+    }
+
+    printf("Response Received: Device %X, State %X, Param1 %X, Param2 %X, Success %X, response = %04x\n", 
+           device_id, switch_state, param1, param2, response_code, received_response);
+
+    uint8_t tmp = 0;
+    // 只有在执行成功时才更新状态
+    if (response_code == 0x1) 
+    {
+        switch (device_id)
+        {
+            case 0x1:  // 门
+                door_set_curstate(switch_state);
+                break;
+
+            case 0x2:  // 窗帘
+                curtain_set_curangle(param1 * 10);
+                break;
+
+            case 0x3:  // 空调
+                
+                tmp = (uint8_t)((param1 << 1) | param2);
+                airConditioner_set_curstate(tmp);
+                break;
+
+            default:
+                printf("Unknown device ID: %X\n", device_id);
+                break;
+        }
     }
 }
 
-void uart_task_create(void)
+
+osThreadId_t Uart1_Task_ID;
+void uart1_task(void)
+{
+    char buffer[128];
+    int len1;
+    uart1_init(115200);
+    while (1)
+    {
+        len1 = uart1_read_data(buffer, sizeof(buffer));  // 接收串口数据
+        if (len1 > 0) {
+            printf("usart1 process , len1 = %d\n", len1);
+            buffer[len1] = '\0';
+            handle_uart_command(buffer);  // 处理串口指令
+        }
+    }
+}
+
+void uart1_task_create(void)
 {
     osThreadAttr_t taskOptions;
-    taskOptions.name = "UartTask";           // 任务的名字
+    taskOptions.name = "Uart1Task";           // 任务的名字
     taskOptions.attr_bits = 0;                 // 属性位
     taskOptions.cb_mem = NULL;                 // 堆空间地址
     taskOptions.cb_size = 0;                   // 堆空间大小
@@ -560,13 +612,47 @@ void uart_task_create(void)
     taskOptions.stack_size = 4096;             // 栈空间大小 单位:字节
     taskOptions.priority = osPriorityNormal1;   // 任务的优先级
 
-    Uart_Task_ID = osThreadNew((osThreadFunc_t)uart_task, NULL, &taskOptions); // 创建INA219任务
-    if (Uart_Task_ID != NULL)
+    Uart1_Task_ID = osThreadNew((osThreadFunc_t)uart1_task, NULL, &taskOptions); // 创建INA219任务
+    if (Uart1_Task_ID != NULL)
     {
-        printf("ID = %d, Create Uart_Task_ID is OK!\n", Uart_Task_ID);
+        printf("ID = %d, Create Uart1_Task_ID is OK!\n", Uart1_Task_ID);
     }
 }
 
+osThreadId_t Uart2_Task_ID;
+void uart2_task(void)
+{
+    char usart2_receive_buffer[128];
+    int len2;
+    uart2_init(115200);
+    while (1)
+    {
+        len2 = uart2_read_data(usart2_receive_buffer, sizeof(usart2_receive_buffer));  // 接收串口数据
+        if (len2 > 0) {
+            printf("usart2 process , len2 = %d\n", len2);
+            usart2_receive_buffer[len2] = '\0';
+            usart2_rx_process(usart2_receive_buffer);  // 处理串口指令
+        }
+    }
+}
+
+void uart2_task_create(void)
+{
+    osThreadAttr_t taskOptions;
+    taskOptions.name = "Uart2Task";           // 任务的名字
+    taskOptions.attr_bits = 0;                 // 属性位
+    taskOptions.cb_mem = NULL;                 // 堆空间地址
+    taskOptions.cb_size = 0;                   // 堆空间大小
+    taskOptions.stack_mem = NULL;              // 栈空间地址
+    taskOptions.stack_size = 4096;             // 栈空间大小 单位:字节
+    taskOptions.priority = osPriorityNormal1;   // 任务的优先级
+
+    Uart2_Task_ID = osThreadNew((osThreadFunc_t)uart2_task, NULL, &taskOptions); // 创建INA219任务
+    if (Uart2_Task_ID != NULL)
+    {
+        printf("ID = %d, Create Uart2_Task_ID is OK!\n", Uart2_Task_ID);
+    }
+}
 /**********************************************************************************************************************/
 
 /**************************************************iotda任务******************************************************** */
@@ -754,6 +840,28 @@ int curtain_openPercent_get_jsonData_value(const cJSON *const object, uint8_t *v
     return 0;
 }
 
+int curtain_closePercent_get_jsonData_value(const cJSON *const object, uint8_t *value) {
+    if (object == NULL || value == NULL) {
+        printf("[ERROR] curtain_closePercent_get_jsonData_value: 参数为空\n");
+        return -1;
+    }
+
+    cJSON *json_value = cJSON_GetObjectItem(object, "close_percent");
+    if (!json_value) {
+        printf("[ERROR] curtain_closePercent_get_jsonData_value: close_percent 未找到\n");
+        return -1;
+    }
+
+    if (!cJSON_IsNumber(json_value)) {
+        printf("[ERROR] curtain_closePercent_get_jsonData_value: close_percent 类型错误\n");
+        return -1;
+    }
+
+    *value = (uint8_t)json_value->valueint;
+    printf("✅ 提取的 close_percent 值: %d\n", *value);
+    return 0;
+}
+
 // 解析空调状态
 int airConditioner_setState_get_jsonData_value(const cJSON *const object, uint8_t *value) {
     if (object == NULL || value == NULL) {
@@ -821,12 +929,13 @@ int Parsing_json_data(const char *payload)
             if (!strcmp(command_name->valuestring, "curtain_openPercent")) 
             {
                 ret_code = curtain_openPercent_get_jsonData_value(paras, &sensorData.curtain_percent);
-                (sensorData.curtain_percent == 100) ? curtain_open_by_pcf8575() : curtain_open_by_pcf8575();
+                curtain_open_angle(sensorData.curtain_percent); //待修改 应该是关闭到指定的角度，而不是关闭角度
             }
-            // if (!strcmp(command_name->valuestring, "curtain_closePercent")) 
-            // {
-            //     ret_code = get_jsonData_value(paras, &sensorData.led);
-            // } 
+            if (!strcmp(command_name->valuestring, "curtain_closePercent")) 
+            {
+                ret_code = curtain_closePercent_get_jsonData_value(paras, &sensorData.curtain_percent);
+                curtain_close_angle(sensorData.curtain_percent);
+            } 
             if (!strcmp(command_name->valuestring, "door_setState")) 
             {
                 ret_code = door_setState_get_jsonData_value(paras, &sensorData.door_state);
@@ -884,9 +993,9 @@ void mqtt_send_task(void)
         dht11_read_data(&temp, &humi);
         sensorData.temperature_indoor = temp;
         sensorData.humidity_indoor = humi;
-        sensorData.curtain_percent = curtain_get_curstate() * 100;
+        sensorData.curtain_percent = curtain_get_curangle();
         sensorData.door_state = door_get_curstate();
-        sensorData.airConditioner_state = airConditioner_getState();
+        sensorData.airConditioner_state = airConditioner_get_curstate();
         sensorData.smoke = smoke_get_value();
         sensorData.comb = MQ5_get_value();
         sensorData.beep_state = beep_get_state();
@@ -1026,20 +1135,20 @@ static bsp_init(void)
     // beep_init();
 
     //oled初始化
-    // printf("OLED is initing !!!\r\n");
-    // oled_init_mutex();
-    // oled_init();
-    // printf("OLED init success !!!\r\n");
+    printf("OLED is initing !!!\r\n");
+    oled_init_mutex();
+    oled_init();
+    printf("OLED init success !!!\r\n");
 
 
     // // 温湿度传感器初始化
-    // printf("DHT11 is initing !!!\r\n");
-    // while(dht11_init())
-	// {
-	// 	printf("DHT11检测失败,请插好!\r\n");
-	// 	osDelay(TASK_DELAY_100MS); //100ms
-	// }
-	// printf("DHT11检测成功!\r\n");
+    printf("DHT11 is initing !!!\r\n");
+    while(dht11_init())
+	{
+		printf("DHT11检测失败,请插好!\r\n");
+		osDelay(TASK_DELAY_100MS); //100ms
+	}
+	printf("DHT11检测成功!\r\n");
 
     // //电流电压传感器初始化 也需要做初始化检测处理
     // // ina219_init();
@@ -1065,14 +1174,14 @@ static bsp_init(void)
     // printf("SR501 is initing !!!\r\n");
     // sr501_init();
     // printf("SR501 init success !!!\r\n");
-    // // //烟雾传感器初始化
-    // printf("SMOKE is initing !!!\r\n");
-    // smoke_init();
-    // printf("SMOKE init success !!!\r\n");
+    // //烟雾传感器初始化
+    printf("SMOKE is initing !!!\r\n");
+    smoke_init();
+    printf("SMOKE init success !!!\r\n");
 
-    // printf("MQ5 is initing !!!\r\n");
-    // MQ5_init();
-    // printf("MQ5 init success !!!\r\n");
+    printf("MQ5 is initing !!!\r\n");
+    MQ5_init();
+    printf("MQ5 init success !!!\r\n");
     // airConditioner_init();
     //iotda初始化
     // 初始化MQTT回调函数
@@ -1115,10 +1224,10 @@ static void template_demo(void)
     // test_task_create();
 
     // motion_sensor_task_create();//貌似要等一分钟才会正常
-    // sensor_task_create();
-    // smoke_sensor_task_create();
-    // uart_task_create();
-    
+    sensor_task_create();
+    smoke_sensor_task_create();
+    uart1_task_create();
+    uart2_task_create();
     wifi_iotda_task_create();//任务创建
     
 }

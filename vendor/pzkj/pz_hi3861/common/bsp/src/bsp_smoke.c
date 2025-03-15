@@ -8,7 +8,7 @@ void smoke_init(void)
 
 int smoke_check(void)
 {
-    uint16_t smoke_val = get_adc5_value();
+    uint16_t smoke_val = get_adc6_value();
     printf("smoke_val = %d\n",smoke_val);
     if(smoke_val > 10000) {
         return 1;
@@ -19,7 +19,7 @@ int smoke_check(void)
 
 uint16_t smoke_get_value(void)
 {
-    return get_adc5_value();
+    return get_adc6_value();
 }
 
 void MQ5_init(void)

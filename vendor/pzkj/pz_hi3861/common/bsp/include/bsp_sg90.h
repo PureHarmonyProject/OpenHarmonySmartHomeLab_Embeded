@@ -19,5 +19,5 @@ void set_sg90_angle(uint16_t angle);
 int door_open(void);
 int door_close(void);
 uint8_t door_get_curstate(void);
-
+void door_set_curstate(uint8_t cur_door_state);
 #endif

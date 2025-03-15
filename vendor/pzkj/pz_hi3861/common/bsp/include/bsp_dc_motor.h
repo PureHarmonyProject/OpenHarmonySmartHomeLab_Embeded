@@ -23,5 +23,6 @@ void airConditioner_heat(uint8_t speed);
 void airConditioner_cool(uint8_t speed);
 void airConditioner_stop(void);
 void airConditioner_work(uint8_t airConditioner_state);
-uint8_t airConditioner_getState(void);
+uint8_t airConditioner_get_curstate(void);
+void airConditioner_set_curstate(uint8_t state);
 #endif
