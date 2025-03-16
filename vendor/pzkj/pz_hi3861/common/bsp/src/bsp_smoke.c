@@ -31,3 +31,13 @@ uint16_t MQ5_get_value(void)
 {
     return get_adc2_value();
 }
+
+void light_init(void)
+{
+    adc3_init();
+}
+
+uint16_t light_get_value(void)
+{
+    return get_adc3_value();
+}

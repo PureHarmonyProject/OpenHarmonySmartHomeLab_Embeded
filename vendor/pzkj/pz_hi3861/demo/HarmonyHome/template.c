@@ -359,28 +359,30 @@ osThreadId_t SMOKE_Task_ID; //任务ID
 
 void smoke_sensor_task(void)
 {
-    uint16_t data1,data2;
+    uint16_t data1,data2, data3;
     while (1) 
     {
         data1 = smoke_get_value();
         printf("[SMOKE] 烟雾传感器数值 = %d\n", data1);
-        if(data1 > 1000) {
+        if(data1 > 10000) {
             printf("[SMOKE] 检测到烟雾\n");
-            led_warning();   // 打开LED和蜂鸣器
-            beep_warning(); 
+            // led_warning();   // 打开LED和蜂鸣器
+            // beep_warning(); 
         }else {
             printf("[SMOKE] 没有检测到烟雾\n");
         }
 
-        printf("[MQ5] 烟雾传感器数值 = %d\n", data2);
         data2 = MQ5_get_value();
-        if(data2 > 1000) {
+        printf("[MQ5] 烟雾传感器数值 = %d\n", data2);
+        if(data2 > 10000) {
             printf("[MQ5] 检测到燃气\n");
-            led_warning();   // 打开LED和蜂鸣器
-            beep_warning();
+            // led_warning();   // 打开LED和蜂鸣器
+            // beep_warning();
         }else {
             printf("[MQ5] 没有检测到燃气\n");
         }
+
+        adjust_led_brightness_by_light_sensor();
         osDelay(100);  // 延时100ms进行下一次检查
     }
 }
@@ -394,7 +396,7 @@ void smoke_sensor_task_create(void)
     taskOptions.cb_mem = NULL;               // 堆空间地址
     taskOptions.cb_size = 0;                 // 堆空间大小
     taskOptions.stack_mem = NULL;            // 栈空间地址
-    taskOptions.stack_size = 1024;           // 栈空间大小 单位:字节
+    taskOptions.stack_size = 4096;           // 栈空间大小 单位:字节
     taskOptions.priority = osPriorityNormal2; // 任务的优先级
 
     SMOKE_Task_ID = osThreadNew((osThreadFunc_t)smoke_sensor_task, NULL, &taskOptions); // 创建任务1
@@ -419,6 +421,7 @@ void oled_init_mutex(void) {
 osThreadId_t Sensor_Task_ID; // INA219任务ID
 
 uint8_t temp, humi;
+
 // 传感器、电流电压更新
 void display_sensor_data(void)
 {
@@ -444,11 +447,11 @@ void display_sensor_data(void)
              temp, humi, current);
     
     // 使用互斥锁，防止OLED同时被多个任务操作
-    osMutexAcquire(oled_mutex, osWaitForever);  
-    oled_clear();
+    // osMutexAcquire(oled_mutex, osWaitForever);  
+    // oled_clear();
     oled_showstring(0, 0, display_buffer, 12);  // 显示数据
     oled_refresh_gram();
-    osMutexRelease(oled_mutex);  // 释放OLED互斥锁
+    // osMutexRelease(oled_mutex);  // 释放OLED互斥锁
 }
 
 void sensor_task(void)
@@ -471,7 +474,7 @@ void sensor_task_create(void)
     taskOptions.cb_size = 1024;                   // 堆空间大小
     taskOptions.stack_mem = NULL;              // 栈空间地址
     taskOptions.stack_size = 4096;             // 栈空间大小 单位:字节
-    taskOptions.priority = osPriorityNormal2;   // 任务的优先级
+    taskOptions.priority = osPriorityAboveNormal;   // 任务的优先级
 
     Sensor_Task_ID = osThreadNew((osThreadFunc_t)sensor_task, NULL, &taskOptions); // 创建INA219任务
     if (Sensor_Task_ID != NULL)
@@ -695,6 +698,7 @@ typedef struct message_sensorData {
     uint8_t humidity_indoor;  
     uint32_t smoke;           // 烟雾传感器数据
     uint32_t comb;           // 可燃气体数据
+    uint32_t light;           // 可燃气体数据
     hi_bool beep_state; // 蜂鸣器当前的状态
     uint8_t airConditioner_state; // 空调当前的状态
 } msg_sensorData_t;
@@ -730,12 +734,13 @@ int Packaged_json_data(void)
     // 确保所有数据正确填充
     cJSON_AddNumberToObject(properties, "led_lightness_color", sensorData.led_lightness_color);
     cJSON_AddNumberToObject(properties, "curtain_percent", sensorData.curtain_percent);
-    cJSON_AddNumberToObject(properties, "curtain_openstate", sensorData.curtain_openstate);
+    // cJSON_AddNumberToObject(properties, "curtain_openstate", sensorData.curtain_openstate);
     cJSON_AddNumberToObject(properties, "door_state", sensorData.door_state);
     cJSON_AddNumberToObject(properties, "temperature_indoor", sensorData.temperature_indoor);
     cJSON_AddNumberToObject(properties, "humidity_indoor", sensorData.humidity_indoor);
     cJSON_AddNumberToObject(properties, "smoke", sensorData.smoke);
     cJSON_AddNumberToObject(properties, "comb", sensorData.comb);
+    cJSON_AddNumberToObject(properties, "light", sensorData.light);
     cJSON_AddNumberToObject(properties, "beep_state", sensorData.beep_state);
     cJSON_AddNumberToObject(properties, "airConditioner_state", sensorData.airConditioner_state);  // ✅ 修正
     cJSON_AddItemToArray(services, array);  // 将对象添加到数组中
@@ -998,6 +1003,7 @@ void mqtt_send_task(void)
         sensorData.airConditioner_state = airConditioner_get_curstate();
         sensorData.smoke = smoke_get_value();
         sensorData.comb = MQ5_get_value();
+        sensorData.light = light_get_value();
         sensorData.beep_state = beep_get_state();
         // 组Topic
         memset_s(publish_topic, MQTT_DATA_MAX, 0, MQTT_DATA_MAX);

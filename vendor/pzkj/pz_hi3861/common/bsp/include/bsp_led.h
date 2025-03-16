@@ -24,5 +24,6 @@ void led_on(void);
 void led_off(void); 
 void led_warning(void);
 void led_set_color_and_brightness(uint32_t led_color_and_brightness);
-
+uint32_t led_get_color_and_brightness(void);
+void adjust_led_brightness_by_light_sensor(void);
 #endif
