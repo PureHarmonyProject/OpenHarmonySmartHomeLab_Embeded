@@ -486,52 +486,108 @@ void sensor_task_create(void)
 
 /**************************************************串口控制任务******************************************************** */
 //根据串口命令控制步进电机、直流电机、舵机
-void handle_uart_command(char *command)
+
+void usart1_rx_process(char usart1_receive_buffer[])
 {
-    /*重新规定指令*/
-    /*
-    0x01 : 开门
-    0x02: 关门
-    0x03: 开窗帘
-    0x04: 关窗帘
-    0x11: 门已被打开，不可重复开
-    0x12: 门已被关闭，不可重复关
-    0x21: 门已开好
-    0x22: 门已关好
-    0x23: 窗帘已开好
-    0x24: 窗帘已关好
-    */
-   uint16_t response = 0;  // 定义 16 位返回值
-   printf("处理指令中\n");
+    // **确保只取前 4 字节**
+    uint8_t buffer[4] = {0};
+    memcpy(buffer, usart1_receive_buffer, 4);
 
-   // 去除换行符，防止匹配失败
-   char *trimmed_command = strtok(command, "\r\n");
+    printf("Raw Data from ASRPRO: %02X %02X %02X %02X\n",
+        buffer[0], buffer[1], buffer[2], buffer[3]);
 
-   // 解析 16 进制指令（字符串 -> uint16_t）
-   uint16_t cmd = (uint16_t)strtol(trimmed_command, NULL, 16);
+    uint32_t received_command = (buffer[0] << 24) |
+                                (buffer[1] << 16) |
+                                (buffer[2] << 8)  |
+                                (buffer[3]);
 
-   switch (cmd) {
-       case 0x03:  // 开窗帘
-           curtain_open_by_pcf8575();
-           response = 0x23;
-           break;
-       case 0x04:  // 关窗帘
-           printf("窗帘关闭\n");
-           response = 0x24;
-           break;
-       case 0x01:  // 开门
-           response = door_open() ? 0x21 : 0x11;
-           break;
-       case 0x02:  // 关门
-           response = door_close() ? 0x22 : 0x12;
-           break;
-       default:
-           printf("未知指令: %s\n", trimmed_command);
-           return;
-   }
+    // **确保清空缓冲区，防止 FFFFFF 残留**
+    memset(usart1_receive_buffer, 0, sizeof(usart1_receive_buffer));
 
-   // 发送 `uint16_t` 数据（发送 2 个字节）
-   uart1_send_data(&response, sizeof(response));
+    uint8_t command_type = (received_command >> 28) & 0xF;  // 获取帧头类型
+
+    // **解析 LED 数据（0xA 帧头）**
+    if (command_type == 0xA) {
+        uint8_t brightnessLevel = (received_command >> 24) & 0xF;  // **4 位亮度**
+        uint8_t r = (received_command >> 16) & 0xFF;
+        uint8_t g = (received_command >> 8) & 0xFF;
+        uint8_t b = received_command & 0xFF;
+
+        printf("LED State Update: Brightness = %X, RGB = (%02X, %02X, %02X)\n",
+               brightnessLevel, r, g, b);
+
+        // **更新本地 LED 状态**
+        led_update_color_and_brightness(received_command);
+        return;
+    }
+
+    // **解析 窗帘/门 相关控制数据（0xC 帧头）**
+    if (command_type == 0xC) {
+        uint8_t device_id = received_command & 0xF;
+        uint8_t switch_state = (received_command >> 4) & 0xF;
+        uint8_t param1 = (received_command >> 8) & 0xF;
+        uint8_t param2 = (received_command >> 12) & 0xF;
+
+        printf("ASRPRO Command: Device %X, State %X, Param1 %X, Param2 %X, command = %08X\n", 
+               device_id, switch_state, param1, param2, received_command);
+
+        // **转换为 STM32 指令格式**
+        uint32_t stm32_command = ((uint32_t)0xB << 28) |  // STM32 帧头 `0xB`
+                                  (device_id) | 
+                                  (switch_state << 4) |
+                                  (param1 << 8) |
+                                  (param2 << 12);
+
+        uint8_t stm32_command_buffer[4];
+        stm32_command_buffer[0] = (stm32_command >> 24) & 0xFF;
+        stm32_command_buffer[1] = (stm32_command >> 16) & 0xFF;
+        stm32_command_buffer[2] = (stm32_command >> 8) & 0xFF;
+        stm32_command_buffer[3] = stm32_command & 0xFF;
+
+        printf("Sending Command to STM32: %08X\n", stm32_command);
+        uart2_send_data(stm32_command_buffer, 4);  // 发送给 STM32
+        return;
+    }
+
+    // **未知命令**
+    printf("Invalid command received from ASRPRO! command = %08X\n", received_command);
+}
+
+
+
+osThreadId_t Uart1_Task_ID;
+void uart1_task(void)
+{
+    char usart1_receive_buffer[128];
+    int len1;
+    uart1_init(115200);
+    while (1)
+    {
+        len1 = uart1_read_data(usart1_receive_buffer, 4);  // 接收串口数据
+        if (len1 > 0) {
+            printf("usart1 process , len1 = %d\n", len1);
+            usart1_receive_buffer[len1] = '\0';
+            usart1_rx_process(usart1_receive_buffer);  // 处理串口指令
+        }
+    }
+}
+
+void uart1_task_create(void)
+{
+    osThreadAttr_t taskOptions;
+    taskOptions.name = "Uart1Task";           // 任务的名字
+    taskOptions.attr_bits = 0;                // 属性位
+    taskOptions.cb_mem = NULL;                // 堆空间地址
+    taskOptions.cb_size = 0;                  // 堆空间大小
+    taskOptions.stack_mem = NULL;             // 栈空间地址
+    taskOptions.stack_size = 4096;            // 栈空间大小 单位:字节
+    taskOptions.priority = osPriorityNormal1; // 任务的优先级
+
+    Uart1_Task_ID = osThreadNew((osThreadFunc_t)uart1_task, NULL, &taskOptions);
+    if (Uart1_Task_ID != NULL)
+    {
+        printf("ID = %d, Create Uart1_Task_ID is OK!\n", Uart1_Task_ID);
+    }
 }
 
 void usart2_rx_process(char usart2_receive_buffer[])
@@ -583,42 +639,6 @@ void usart2_rx_process(char usart2_receive_buffer[])
                 printf("Unknown device ID: %X\n", device_id);
                 break;
         }
-    }
-}
-
-
-osThreadId_t Uart1_Task_ID;
-void uart1_task(void)
-{
-    char buffer[128];
-    int len1;
-    uart1_init(115200);
-    while (1)
-    {
-        len1 = uart1_read_data(buffer, sizeof(buffer));  // 接收串口数据
-        if (len1 > 0) {
-            printf("usart1 process , len1 = %d\n", len1);
-            buffer[len1] = '\0';
-            handle_uart_command(buffer);  // 处理串口指令
-        }
-    }
-}
-
-void uart1_task_create(void)
-{
-    osThreadAttr_t taskOptions;
-    taskOptions.name = "Uart1Task";           // 任务的名字
-    taskOptions.attr_bits = 0;                 // 属性位
-    taskOptions.cb_mem = NULL;                 // 堆空间地址
-    taskOptions.cb_size = 0;                   // 堆空间大小
-    taskOptions.stack_mem = NULL;              // 栈空间地址
-    taskOptions.stack_size = 4096;             // 栈空间大小 单位:字节
-    taskOptions.priority = osPriorityNormal1;   // 任务的优先级
-
-    Uart1_Task_ID = osThreadNew((osThreadFunc_t)uart1_task, NULL, &taskOptions); // 创建INA219任务
-    if (Uart1_Task_ID != NULL)
-    {
-        printf("ID = %d, Create Uart1_Task_ID is OK!\n", Uart1_Task_ID);
     }
 }
 

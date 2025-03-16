@@ -73,13 +73,18 @@ void led_set_color_and_brightness(uint32_t led_color_and_brightness)
         (led_color_and_brightness >> 0) & 0xff    // B 分量
     };
 
-    cur_color_light_state = led_color_and_brightness;
+    // cur_color_light_state = led_color_and_brightness;
     uart1_send_data(buffer, sizeof(buffer));  // 发送 4 字节数据
 }
 
 uint32_t led_get_color_and_brightness(void)
 {
     return cur_color_light_state;
+}
+
+void led_update_color_and_brightness(uint32_t new_color_brightness)
+{
+    cur_color_light_state = new_color_brightness;
 }
 
 void adjust_led_brightness_by_light_sensor(void)
