@@ -20,6 +20,8 @@
 void beep_init(void);
 void beep_alarm(uint16_t cnt,uint16_t time);
 void beep_warning(void);
+void beep_stop(void);
+
 
 void beep_alarm_by_pcf8575(uint16_t cnt,uint16_t time);
 void beep_warning_by_pcf8575(void);

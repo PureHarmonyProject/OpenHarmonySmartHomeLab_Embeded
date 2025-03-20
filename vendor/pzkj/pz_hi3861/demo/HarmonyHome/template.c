@@ -114,7 +114,8 @@ void test_task(void) {
     // hi_u8 valid_uid[5] = VALID_UID;
     // 初始化NFC模块
     // result = nfc_init();
-    airConditioner_init();
+    // airConditioner_init();
+    beep_init();
 
     // hi_pwm_stop(HI_PWM_PORT_PWM2);
     // hi_pwm_stop(HI_PWM_PORT_PWM3);
@@ -228,31 +229,33 @@ void test_task(void) {
         // door_open();
         // curtain_open_by_pcf8575();
         // beep_warning_by_pcf8575();
-        airConditioner_work(6);
-        // airConditioner_cool(2);
-        // hi_pwm_stop(HI_PWM_PORT_PWM2);
-        // hi_pwm_stop(HI_PWM_PORT_PWM3);
-        // osDelay(10);  // 确保PWM已完全停止
+        // airConditioner_work(6);
+        // // airConditioner_cool(2);
+        // // hi_pwm_stop(HI_PWM_PORT_PWM2);
+        // // hi_pwm_stop(HI_PWM_PORT_PWM3);
+        // // osDelay(10);  // 确保PWM已完全停止
 
-        // printf("空调制冷\n,速度为%d\n", type);
-        // hi_pwm_start(HI_PWM_PORT_PWM2,40000,40000);
-        // hi_pwm_start(HI_PWM_PORT_PWM3,0,40000);
-        osDelay(TASK_DELAY_5000MS); 
+        // // printf("空调制冷\n,速度为%d\n", type);
+        // // hi_pwm_start(HI_PWM_PORT_PWM2,40000,40000);
+        // // hi_pwm_start(HI_PWM_PORT_PWM3,0,40000);
+        // osDelay(TASK_DELAY_5000MS); 
 
 
-        // hi_pwm_stop(HI_PWM_PORT_PWM2);
-        // hi_pwm_stop(HI_PWM_PORT_PWM3);
-        // osDelay(10);  // 确保PWM已完全停止
+        // // hi_pwm_stop(HI_PWM_PORT_PWM2);
+        // // hi_pwm_stop(HI_PWM_PORT_PWM3);
+        // // osDelay(10);  // 确保PWM已完全停止
 
-        // printf("空调制冷\n,速度为\n");
-        // hi_pwm_start(HI_PWM_PORT_PWM2,40000,40000);
-        // hi_pwm_start(HI_PWM_PORT_PWM3,0,40000);
+        // // printf("空调制冷\n,速度为\n");
+        // // hi_pwm_start(HI_PWM_PORT_PWM2,40000,40000);
+        // // hi_pwm_start(HI_PWM_PORT_PWM3,0,40000);
 
-        // airConditioner_stop();
-        airConditioner_work(0);
-        osDelay(TASK_DELAY_1000MS); 
+        // // airConditioner_stop();
+        // airConditioner_work(0);
+        // osDelay(TASK_DELAY_1000MS); 
         
-        airConditioner_work(7);
+        // airConditioner_work(7);
+
+        beep_warning();
         osDelay(TASK_DELAY_5000MS); 
         // 每 5 秒更新一次数据
     }

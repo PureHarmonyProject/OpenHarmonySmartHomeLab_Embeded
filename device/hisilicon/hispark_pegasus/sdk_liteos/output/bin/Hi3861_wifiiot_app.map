@@ -12748,7 +12748,7 @@ Discarded input sections
  .data          0x0000000000000000        0x0 ohos\libs\libtemplate.a(libtemplate.template.o)
  .bss           0x0000000000000000        0x0 ohos\libs\libtemplate.a(libtemplate.template.o)
  .text.test_task
-                0x0000000000000000       0x60 ohos\libs\libtemplate.a(libtemplate.template.o)
+                0x0000000000000000       0x32 ohos\libs\libtemplate.a(libtemplate.template.o)
  .text.motion_sensor_task
                 0x0000000000000000       0x68 ohos\libs\libtemplate.a(libtemplate.template.o)
  .text.rc522_test_spi
@@ -12788,7 +12788,11 @@ Discarded input sections
  .data          0x0000000000000000        0x0 ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
  .bss           0x0000000000000000        0x0 ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
  .text.beep_init
-                0x0000000000000000       0x5c ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
+                0x0000000000000000       0x5a ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
+ .text.beep_set_duty
+                0x0000000000000000       0x42 ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
+ .text.beep_stop
+                0x0000000000000000       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
  .text.beep_alarm
                 0x0000000000000000       0x72 ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
  .text.beep_warning
@@ -13000,9 +13004,9 @@ Discarded input sections
                 0x0000000000000000       0x66 ohos\libs\libtemplate.a(libtemplate.bsp_exti.o)
  .text.exti_init
                 0x0000000000000000       0xb0 ohos\libs\libtemplate.a(libtemplate.bsp_exti.o)
- .bss.key1.2029
+ .bss.key1.2031
                 0x0000000000000000        0x1 ohos\libs\libtemplate.a(libtemplate.bsp_exti.o)
- .bss.key2.2033
+ .bss.key2.2035
                 0x0000000000000000        0x1 ohos\libs\libtemplate.a(libtemplate.bsp_exti.o)
  .comment       0x0000000000000000       0x44 ohos\libs\libtemplate.a(libtemplate.bsp_exti.o)
  .text          0x0000000000000000        0x0 ohos\libs\libtemplate.a(libtemplate.bsp_time.o)
@@ -13015,7 +13019,7 @@ Discarded input sections
  .text.time_onoff
                 0x0000000000000000       0x66 ohos\libs\libtemplate.a(libtemplate.bsp_time.o)
  .bss.g_times   0x0000000000000000        0x2 ohos\libs\libtemplate.a(libtemplate.bsp_time.o)
- .bss.i.2052    0x0000000000000000        0x1 ohos\libs\libtemplate.a(libtemplate.bsp_time.o)
+ .bss.i.2054    0x0000000000000000        0x1 ohos\libs\libtemplate.a(libtemplate.bsp_time.o)
  .bss.timer_handle
                 0x0000000000000000        0x4 ohos\libs\libtemplate.a(libtemplate.bsp_time.o)
  .rodata.time_init.str1.4
