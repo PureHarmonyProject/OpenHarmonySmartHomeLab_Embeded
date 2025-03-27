@@ -14,6 +14,17 @@
 static_library("template") {
     sources = [
         "template.c",
+
+        # "tasks/sensor_task.c",
+        "tasks/motion_task.c",
+        "tasks/smoke_task.c",
+        "tasks/test_task.c",
+        "tasks/mqtt_task.c",
+        "tasks/dht11_oled_task.c",
+        "tasks/uart1_task.c",
+        "tasks/uart2_task.c",
+        "tasks/bsp_init.c",
+
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_led.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_beep.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_oled.c",
@@ -69,6 +80,7 @@ static_library("template") {
     cflags = [ "-Wno-unused-variable" ]
     cflags += [ "-Wno-unused-but-set-variable" ]
     cflags += [ "-Wno-unused-parameter" ]
+    # include_dirs += [ "tasks" ]
 
     include_dirs = [
         "//utils/native/lite/include",
@@ -84,7 +96,8 @@ static_library("template") {
 
         "//vendor/pzkj/pz_hi3861/common/bsp/nfc/ndef",
         "//vendor/pzkj/pz_hi3861/common/bsp/nfc/ndef/rtd/",
-        "//vendor/pzkj/pz_hi3861/common/bsp/nfc"
-
+        "//vendor/pzkj/pz_hi3861/common/bsp/nfc",
+        "//vendor/pzkj/pz_hi3861/demo/HarmonyHome", 
+        "//vendor/pzkj/pz_hi3861/demo/HarmonyHome/tasks"      
     ]
 }
