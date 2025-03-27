@@ -14,7 +14,6 @@ void bsp_init(void)
 
     //oled初始化
     printf("OLED is initing !!!\r\n");
-    oled_init_mutex();
     oled_init();
     printf("OLED init success !!!\r\n");
 
@@ -29,7 +28,7 @@ void bsp_init(void)
 	printf("DHT11检测成功!\r\n");
 
     // //电流电压传感器初始化 也需要做初始化检测处理
-    // // ina219_init();
+    ina226_init();
 
     // //步进电机初始化
     // // step_motor_init();

@@ -9,6 +9,7 @@ extern void wifi_iotda_task_create(void);
 extern void sensor_task_create(void);
 extern void bsp_init(void);
 
+extern bsp_oled_init(void);
 static void template_demo(void)
 {
     printf("极个别组-基于openharmony的智能家居系统\r\n");
@@ -17,6 +18,7 @@ static void template_demo(void)
     // // test_task_create();
 
     // motion_sensor_task_create();//貌似要等一分钟才会正常
+    // oled_init();
     sensor_task_create();
     smoke_sensor_task_create();
     uart1_task_create();

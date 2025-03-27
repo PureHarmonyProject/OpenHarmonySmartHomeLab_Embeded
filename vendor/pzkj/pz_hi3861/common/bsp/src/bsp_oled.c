@@ -405,7 +405,7 @@ void oled_shownum(uint8_t x,uint8_t y,uint32_t num,uint8_t len,uint8_t size)
 } 
 
 //显示字符串
-//x,y:起点坐标  
+//x,y:起点坐标  128 x 64
 //size:字体大小 
 //*p:字符串起始地址 
 void oled_showstring(uint8_t x,uint8_t y,const uint8_t *p,uint8_t size)
@@ -524,5 +524,16 @@ void oled_init(void)
 	oled_wr_byte(0xA6,OLED_CMD); //设置显示方式;bit0:1,反相显示;0,正常显示	    						   
 	oled_wr_byte(0xAF,OLED_CMD); //开启显示	
 
-	oled_clear();
+    const char *word = "HOme";
+    uint8_t font_size = 24;     // 可改为 16 或 12
+    uint8_t char_width = 12;    // 每个字宽度（与字体大小对应）
+    uint8_t word_len = strlen(word);
+    uint8_t total_width = word_len * char_width;
+
+    uint8_t x = (128 - total_width) / 2;
+    uint8_t y = (64 - font_size) / 2;
+
+    oled_clear();
+    oled_showstring(x, y, (uint8_t *)word, font_size);
+    oled_refresh_gram();
 }

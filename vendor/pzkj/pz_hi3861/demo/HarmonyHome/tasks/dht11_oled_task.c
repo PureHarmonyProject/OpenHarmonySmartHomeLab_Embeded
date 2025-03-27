@@ -1,88 +1,108 @@
 #include "dht11_oled_task.h"
 #include "template.h"
 
-// 10. sensor更新 包含温湿度传感器、电压传感器数据，在oled上更新
-osMutexId_t oled_mutex;  // 用于控制OLED的互斥锁
-
-void oled_init_mutex(void) {
-    osMutexAttr_t mutex_attr = {0};
-    oled_mutex = osMutexNew(&mutex_attr);  // 初始化OLED的互斥锁
-}
-
-osThreadId_t Sensor_Task_ID; // INA219任务ID
+osThreadId_t Sensor_Task_ID;
 
 uint8_t temp, humi;
 
-// 传感器、电流电压更新
+#include "bsp_ina226.h"
+#include "bsp_smoke.h"
+#include "bsp_sg90.h"
+
+uint8_t current_page = 0;
+
 void display_sensor_data(void)
 {
-    char display_buffer[128];
-    
-    int16_t current;
-    // uint16_t bus_voltage, shunt_voltage;
-    
-    // 获取温湿度数据
-    // dht11_read_data(&temp, &humi);
-    
-    // // 获取电流电压数据
-    // current = ina219_read_current();
-    // bus_voltage = ina219_read_bus_voltage();
-    // shunt_voltage = ina219_read_shunt_voltage();
+    char line1[32];
+    char line2[32];
+    char line3[32];
 
-    // snprintf(display_buffer, sizeof(display_buffer), 
-    //          "Temp: %dC Humidity: %d%%\nCurrent: %d mA\nBus Voltage: %d mV", 
-    //          temp, humi, current, bus_voltage);
+    oled_clear();
 
-    snprintf(display_buffer, sizeof(display_buffer), 
-             "Temp: %dC Humidity: %d%%\n", 
-             temp, humi, current);
-    
-    // 使用互斥锁，防止OLED同时被多个任务操作
-    // osMutexAcquire(oled_mutex, osWaitForever);  
-    // oled_clear();
-    oled_showstring(0, 0, display_buffer, 12);  // 显示数据
+    // 顶部标题栏
+    oled_fill_rectangle(0, 0, 128, 12, 1);
+    oled_showstring(24, 2, (uint8_t *)" Smart Panel ", 12);
+
+    switch (current_page) {
+        case 0:  // Page 0: 温湿度
+            dht11_read_data(&temp, &humi);
+            snprintf(line1, sizeof(line1), "Temp     : %2d C", temp);
+            snprintf(line2, sizeof(line2), "Humidity : %2d %%", humi);
+            oled_showstring(0, 16, (uint8_t *)line1, 12);
+            oled_showstring(0, 28, (uint8_t *)line2, 12);
+            break;
+
+        case 1:  // Page 1: 电流/电压/功率
+        {
+            float current = ina226_get_current();
+            float voltage = ina226_get_bus_voltage();
+            float power = current * voltage / 1000.0; // mW to W
+
+            snprintf(line1, sizeof(line1), "Voltage  : %.1f V", voltage);
+            snprintf(line2, sizeof(line2), "Current  : %.1f mA", current);
+            snprintf(line3, sizeof(line3), "Power    : %.2f W", power);
+
+            oled_showstring(0, 16, (uint8_t *)line1, 12);
+            oled_showstring(0, 28, (uint8_t *)line2, 12);
+            oled_showstring(0, 40, (uint8_t *)line3, 12);
+            break;
+        }
+
+        case 2:  // Page 2: 门锁 + 烟雾 + 液化气体
+        {
+            uint16_t smoke = smoke_get_value();
+            uint16_t gas = MQ5_get_value();
+            uint8_t door = door_get_curstate();  // 1=开, 0=关
+
+            snprintf(line1, sizeof(line1), "Door     : %s", door ? "Open" : "Closed");
+            snprintf(line2, sizeof(line2), "Smoke    : %u", smoke);
+            snprintf(line3, sizeof(line3), "Gas(MQ5) : %u", gas);
+
+            oled_showstring(0, 16, (uint8_t *)line1, 12);
+            oled_showstring(0, 28, (uint8_t *)line2, 12);
+            oled_showstring(0, 40, (uint8_t *)line3, 12);
+            break;
+        }
+    }
+
+    // 分割线 + 状态栏
+    oled_draw_hline(0, 51, 128, 1);
+
+    char status[32];
+    snprintf(status, sizeof(status), "Page: %d", current_page + 1);
+    oled_showstring(0, 52, (uint8_t *)status, 12);
+
     oled_refresh_gram();
-    // osMutexRelease(oled_mutex);  // 释放OLED互斥锁
+
+    // 切换页码：0 -> 1 -> 2 -> 0 ...
+    current_page = (current_page + 1) % 3;
 }
+
+
+
 
 void sensor_task(void)
 {
-        //oled初始化
-    // printf("OLED is initing !!!\r\n");
-    // oled_init_mutex();
-    // oled_init();
-    // printf("OLED init success !!!\r\n");
-
-
-    // // // 温湿度传感器初始化
-    // printf("DHT11 is initing !!!\r\n");
-    // while(dht11_init())
-	// {
-	// 	printf("DHT11检测失败,请插好!\r\n");
-	// 	osDelay(TASK_DELAY_100MS); //100ms
-	// }
-	// printf("DHT11检测成功!\r\n");
     while (1) 
     {
         display_sensor_data();
         printf("更新传感器数据\n");
-        osDelay(TASK_DELAY_5000MS);  // 每5秒更新一次数据
+        osDelay(TASK_DELAY_5000MS);
     }
 }
 
-// INA219任务创建
 void sensor_task_create(void)
 {
     osThreadAttr_t taskOptions;
-    taskOptions.name = "SensorTask";           // 任务的名字
-    taskOptions.attr_bits = 0;                 // 属性位
-    taskOptions.cb_mem = NULL;                 // 堆空间地址
-    taskOptions.cb_size = 1024;                   // 堆空间大小
-    taskOptions.stack_mem = NULL;              // 栈空间地址
-    taskOptions.stack_size = 4096;             // 栈空间大小 单位:字节
-    taskOptions.priority = osPriorityAboveNormal;   // 任务的优先级
+    taskOptions.name = "SensorTask";
+    taskOptions.attr_bits = 0;
+    taskOptions.cb_mem = NULL;
+    taskOptions.cb_size = 1024;
+    taskOptions.stack_mem = NULL;
+    taskOptions.stack_size = 4096;
+    taskOptions.priority = osPriorityAboveNormal;
 
-    Sensor_Task_ID = osThreadNew((osThreadFunc_t)sensor_task, NULL, &taskOptions); // 创建INA219任务
+    Sensor_Task_ID = osThreadNew((osThreadFunc_t)sensor_task, NULL, &taskOptions);
     if (Sensor_Task_ID != NULL)
     {
         printf("ID = %d, Create Sensor_Task_ID is OK!\n", Sensor_Task_ID);
