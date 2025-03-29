@@ -13,6 +13,9 @@ typedef struct message_sensorData {
     uint32_t light;           // 可燃气体数据
     hi_bool beep_state; // 蜂鸣器当前的状态
     uint8_t airConditioner_state; // 空调当前的状态
+    float current; // 当前电流 ma
+    float voltage; // 当前电压 mv
+    float power; // 当前功率 mw
 } msg_sensorData_t;
 
 msg_sensorData_t sensorData = {0}; // 传感器的数据
@@ -57,6 +60,9 @@ int Packaged_json_data(void)
     cJSON_AddNumberToObject(properties, "light", sensorData.light);
     cJSON_AddNumberToObject(properties, "beep_state", sensorData.beep_state);
     cJSON_AddNumberToObject(properties, "airConditioner_state", sensorData.airConditioner_state);  // ✅ 修正
+    cJSON_AddNumberToObject(properties, "current", sensorData.current);
+    cJSON_AddNumberToObject(properties, "voltage", sensorData.voltage);
+    cJSON_AddNumberToObject(properties, "power", sensorData.power);
     cJSON_AddItemToArray(services, array);  // 将对象添加到数组中
 
     /* 格式化打印创建的带数组的JSON对象 */
@@ -341,6 +347,15 @@ void mqtt_send_task(void)
         sensorData.comb = MQ5_get_value();
         sensorData.light = light_get_value();
         sensorData.beep_state = beep_get_state();
+        sensorData.current = ina226_get_current();
+        sensorData.voltage = ina226_get_bus_voltage();
+        sensorData.power = sensorData.current * sensorData.voltage / 1000;
+        // 同时也给asrpro发送心跳
+
+        char buf[64];
+        sprintf(buf, "C1%d,%d,%d,%d,%d\n", sensorData.temperature_indoor, sensorData.humidity_indoor, sensorData.door_state, sensorData.smoke, sensorData.comb);
+        uart1_send_data(buf, sizeof(buf));  // 发送数据
+
         // 组Topic
         memset_s(publish_topic, MQTT_DATA_MAX, 0, MQTT_DATA_MAX);
         if (sprintf_s(publish_topic, MQTT_DATA_MAX, MQTT_TOPIC_PUB_PROPERTIES, DEVICE_ID) > 0) 

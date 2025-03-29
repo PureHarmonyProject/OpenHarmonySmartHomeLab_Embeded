@@ -31,7 +31,7 @@ void smoke_sensor_task(void)
         else
             printf("[MQ5] 没有检测到燃气\n");
 
-        adjust_led_brightness_by_light_sensor();
+        // adjust_led_brightness_by_light_sensor();
         osDelay(100);
     }
 }

@@ -38,9 +38,9 @@ void display_sensor_data(void)
             float voltage = ina226_get_bus_voltage();
             float power = current * voltage / 1000.0; // mW to W
 
-            snprintf(line1, sizeof(line1), "Voltage  : %.1f V", voltage);
+            snprintf(line1, sizeof(line1), "Voltage  : %.1f mV", voltage);
             snprintf(line2, sizeof(line2), "Current  : %.1f mA", current);
-            snprintf(line3, sizeof(line3), "Power    : %.2f W", power);
+            snprintf(line3, sizeof(line3), "Power    : %.2f mW", power);
 
             oled_showstring(0, 16, (uint8_t *)line1, 12);
             oled_showstring(0, 28, (uint8_t *)line2, 12);
