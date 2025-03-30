@@ -1,7 +1,7 @@
 #include "dht11_oled_task.h"
 #include "template.h"
 
-osThreadId_t Sensor_Task_ID;
+
 
 uint8_t temp, humi;
 
@@ -78,9 +78,7 @@ void display_sensor_data(void)
     current_page = (current_page + 1) % 3;
 }
 
-
-
-
+osThreadId_t Sensor_Task_ID;
 void sensor_task(void)
 {
     while (1) 

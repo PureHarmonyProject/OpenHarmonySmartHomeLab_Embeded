@@ -7,6 +7,7 @@ extern void uart1_task_create(void);
 extern void uart2_task_create(void);
 extern void wifi_iotda_task_create(void);
 extern void sensor_task_create(void);
+extern void automation_task_create(void);
 extern void bsp_init(void);
 
 extern bsp_oled_init(void);
@@ -24,6 +25,6 @@ static void template_demo(void)
     uart1_task_create();
     uart2_task_create();
     wifi_iotda_task_create();//任务创建
-    
+    automation_task_create();
 }
 SYS_RUN(template_demo);

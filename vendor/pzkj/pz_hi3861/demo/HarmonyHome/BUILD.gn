@@ -24,6 +24,7 @@ static_library("template") {
         "tasks/uart1_task.c",
         "tasks/uart2_task.c",
         "tasks/bsp_init.c",
+        "tasks/automation_task.c",
 
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_led.c",
         "//vendor/pzkj/pz_hi3861/common/bsp/src/bsp_beep.c",

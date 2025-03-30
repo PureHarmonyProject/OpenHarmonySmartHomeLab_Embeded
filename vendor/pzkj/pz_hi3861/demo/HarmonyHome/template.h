@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
+
 #include "cmsis_os2.h"
 #include <unistd.h>
 #include "ohos_init.h"

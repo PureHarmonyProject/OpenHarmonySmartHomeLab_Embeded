@@ -30,27 +30,11 @@ void bsp_init(void)
     // //电流电压传感器初始化 也需要做初始化检测处理
     ina226_init();
 
-    // //步进电机初始化
-    // // step_motor_init();
 
-    // //直流电机初始化
-    // // dc_motor_init();
-
-    // printf("PCF8575 is initing !!!\r\n");
-    // pcf8575_init();
-    // //舵机初始化
-
-    // uart2_init(115200);
-
-    // printf("SG90 is initing !!!\r\n");
-    // sg90_init();
-    // door_open();
-    // door_close();
-    // printf("SG90 init success !!!\r\n");
-    // // //人体感应初始化
-    // printf("SR501 is initing !!!\r\n");
-    // sr501_init();
-    // printf("SR501 init success !!!\r\n");
+    // //人体感应初始化
+    printf("SR501 is initing !!!\r\n");
+    sr501_init();
+    printf("SR501 init success !!!\r\n");
     // //烟雾传感器初始化
     printf("SMOKE is initing !!!\r\n");
     smoke_init();
@@ -59,7 +43,7 @@ void bsp_init(void)
     printf("MQ5 is initing !!!\r\n");
     MQ5_init();
     printf("MQ5 init success !!!\r\n");
-    // airConditioner_init();
+    
     //iotda初始化
     // 初始化MQTT回调函数
     printf("IOTDA is initing !!!\r\n");

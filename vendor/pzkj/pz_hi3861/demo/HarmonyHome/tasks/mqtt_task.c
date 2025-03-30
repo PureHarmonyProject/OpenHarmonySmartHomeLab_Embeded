@@ -5,7 +5,7 @@ typedef struct message_sensorData {
     uint32_t led_lightness_color;
     uint8_t curtain_percent;
     hi_bool curtain_openstate;
-    hi_bool door_state;
+    uint8_t door_state;
     uint8_t temperature_indoor;
     uint8_t humidity_indoor;  
     uint32_t smoke;           // 烟雾传感器数据
@@ -113,7 +113,7 @@ int led_setColor_get_jsonData_value(const cJSON *const object, uint32_t *value) 
 }
 
 // 解析门状态值
-int door_setState_get_jsonData_value(const cJSON *const object, hi_bool *value) {
+int door_setState_get_jsonData_value(const cJSON *const object, uint8_t *value) {
     if (object == NULL || value == NULL) {
         printf("[ERROR] door_setState_get_jsonData_value: 参数为空\n");
         return -1;
@@ -125,15 +125,22 @@ int door_setState_get_jsonData_value(const cJSON *const object, hi_bool *value) 
         return -1;
     }
 
-    printf("🔍 JSON解析的door_state: %s\n", cJSON_Print(json_value));
+    // printf("🔍 JSON解析的door_state: %s\n", cJSON_Print(json_value));
 
-    if (cJSON_IsBool(json_value)) {
-        *value = cJSON_IsTrue(json_value) ? 1 : 0;
-        printf("✅ door_state 解析成功: %d\n", *value);
-        return 0;
+    // if (cJSON_IsBool(json_value)) {
+    //     *value = cJSON_IsTrue(json_value) ? 1 : 0;
+    //     printf("✅ door_state 解析成功: %d\n", *value);
+    //     return 0;
+    // }
+
+    if (!cJSON_IsNumber(json_value)) {
+        printf("[ERROR] door_setState_get_jsonData_value: door_state 类型错误\n");
+        return -1;
     }
 
-    printf("[ERROR] door_setState_get_jsonData_value: 类型错误 (期望: 布尔值)\n");
+    *value = (uint8_t)json_value->valueint;
+    printf("✅ door_state 解析成功: %d\n", *value);
+
     return -1;
 }
 
@@ -461,7 +468,7 @@ void wifi_iotda_task_create(void)
     taskOptions.cb_size = 0;                 // 堆空间大小
     taskOptions.stack_mem = NULL;            // 栈空间地址
     taskOptions.stack_size = TASK_STACK_SIZE;           // 栈空间大小 单位:字节
-    taskOptions.priority = osPriorityNormal1; // 任务的优先级
+    taskOptions.priority = osPriorityNormal3; // 任务的优先级
 
     mqtt_send_task_id = osThreadNew((osThreadFunc_t)mqtt_send_task, NULL, &taskOptions); // 创建任务
     if (mqtt_send_task_id != NULL)

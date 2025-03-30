@@ -22,3 +22,26 @@ static int sr501_read(void) {
 int sr501_check(void) {
     return sr501_read();
 }
+
+adjust_led_brightness_by_motion_sensor()
+{
+    if (sr501_check()) {
+        // uint32_t current_led_state = led_get_color_and_brightness();
+    
+        // // 只修改亮度部分，保留 RGB 颜色
+        // uint32_t new_led_state = (0xA << 28) | (0xA << 24) | (current_led_state & 0x00FFFFFF);
+
+        // printf("[DEBUG][SR501] New LED State = 0x%X\n", new_led_state);
+        // 发送 LED 颜色和亮度调整命令
+        led_set_color_and_brightness(0xAFFFFFFF);
+    } else {
+        // uint32_t current_led_state = led_get_color_and_brightness();
+    
+        // // 只修改亮度部分，保留 RGB 颜色
+        // uint32_t new_led_state = (0xA << 28) | (0x0 << 24) | (current_led_state & 0x00FFFFFF);
+
+        // printf("[DEBUG] New LED State = 0x%X\n", new_led_state);
+        // 发送 LED 颜色和亮度调整命令
+        led_set_color_and_brightness(0xA0000000);
+    }
+}
