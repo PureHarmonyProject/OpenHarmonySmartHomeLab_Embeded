@@ -1,5 +1,6 @@
 #include "mqtt_task.h"
 #include "template.h"
+#include "automation_task.h"
 
 typedef struct message_sensorData {
     uint32_t led_lightness_color;
@@ -16,6 +17,7 @@ typedef struct message_sensorData {
     float current; // 当前电流 ma
     float voltage; // 当前电压 mv
     float power; // 当前功率 mw
+    uint32_t automation_mode_scene;
 } msg_sensorData_t;
 
 msg_sensorData_t sensorData = {0}; // 传感器的数据
@@ -63,6 +65,7 @@ int Packaged_json_data(void)
     cJSON_AddNumberToObject(properties, "current", sensorData.current);
     cJSON_AddNumberToObject(properties, "voltage", sensorData.voltage);
     cJSON_AddNumberToObject(properties, "power", sensorData.power);
+    cJSON_AddNumberToObject(properties, "automation_mode_scene", sensorData.automation_mode_scene);
     cJSON_AddItemToArray(services, array);  // 将对象添加到数组中
 
     /* 格式化打印创建的带数组的JSON对象 */
@@ -212,7 +215,49 @@ int airConditioner_setState_get_jsonData_value(const cJSON *const object, uint8_
     return 0;
 }
 
+int enable_automation_mode_scene_get_jsonData_value(const cJSON *const object, uint32_t *value) {
+    if (object == NULL || value == NULL) {
+        printf("[ERROR] enable_automation_mode_scene_get_jsonData_value: 参数为空\n");
+        return -1;
+    }
 
+    cJSON *json_value = cJSON_GetObjectItem(object, "automation_mode_scene");
+    if (!json_value) {
+        printf("[ERROR] enable_automation_mode_scene_get_jsonData_value: automation_mode_scene 未找到\n");
+        return -1;
+    }
+
+    if (!cJSON_IsNumber(json_value)) {
+        printf("[ERROR] enable_automation_mode_scene_get_jsonData_value: automation_mode_scene 类型错误\n");
+        return -1;
+    }
+
+    *value = (uint8_t)json_value->valueint;
+    printf("✅ 提取的 automation_mode_scene 值: %d\n", *value);
+    return 0;
+}
+
+int disable_automation_mode_scene_get_jsonData_value(const cJSON *const object, uint32_t *value) {
+    if (object == NULL || value == NULL) {
+        printf("[ERROR] disable_automation_mode_scene_get_jsonData_value: 参数为空\n");
+        return -1;
+    }
+
+    cJSON *json_value = cJSON_GetObjectItem(object, "automation_mode_scene");
+    if (!json_value) {
+        printf("[ERROR] disable_automation_mode_scene_get_jsonData_value: automation_mode_scene 未找到\n");
+        return -1;
+    }
+
+    if (!cJSON_IsNumber(json_value)) {
+        printf("[ERROR] disable_automation_mode_scene_get_jsonData_value: automation_mode_scene 类型错误\n");
+        return -1;
+    }
+
+    *value = (uint8_t)json_value->valueint;
+    printf("✅ 提取的 automation_mode_scene 值: %d\n", *value);
+    return 0;
+}
 /**
  * @brief 解析JSON数据
  */
@@ -272,6 +317,16 @@ int Parsing_json_data(const char *payload)
             {
                 ret_code = airConditioner_setState_get_jsonData_value(paras, &sensorData.airConditioner_state);
                 airConditioner_work(sensorData.airConditioner_state);
+            }
+            if (!strcmp(command_name->valuestring, "enable_automation_mode_scene")) 
+            {
+                ret_code = enable_automation_mode_scene_get_jsonData_value(paras, &sensorData.automation_mode_scene);
+                enable_scene(sensorData.automation_mode_scene);
+            }
+            if (!strcmp(command_name->valuestring, "disable_automation_mode_scene")) 
+            {
+                ret_code = disable_automation_mode_scene_get_jsonData_value(paras, &sensorData.automation_mode_scene);
+                disable_scene(sensorData.automation_mode_scene);
             }
             // if (!strcmp(command_name->valuestring, "led_getState")) 
             // {
@@ -357,6 +412,7 @@ void mqtt_send_task(void)
         sensorData.current = ina226_get_current();
         sensorData.voltage = ina226_get_bus_voltage();
         sensorData.power = sensorData.current * sensorData.voltage / 1000;
+        sensorData.automation_mode_scene = get_mode_scene();
         // 同时也给asrpro发送心跳
 
         char buf[64];

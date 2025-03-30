@@ -27,6 +27,10 @@ void disable_scene(AutoModeFlags scene_mask) {
     auto_mode_flags &= ~scene_mask;
 }
 
+AutoModeFlags get_mode_scene(void)
+{
+    return auto_mode_flags;
+}
 void print_enabled_modes() {
     printf("当前自动化标志位: 0x%08X\n", auto_mode_flags);
 

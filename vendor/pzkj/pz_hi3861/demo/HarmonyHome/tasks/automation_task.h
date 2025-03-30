@@ -58,5 +58,6 @@ void disable_mode(AutoModeFlags mode);
 uint8_t is_mode_enabled(AutoModeFlags mode);
 void enable_scene(AutoModeFlags scene_mask);
 void disable_scene(AutoModeFlags scene_mask);
+AutoModeFlags get_mode_scene(void);
 
 #endif // __AUTOMATION_TASK_H_
