@@ -2,24 +2,6 @@
 #include "template.h"
 #include "automation_task.h"
 
-typedef struct message_sensorData {
-    uint32_t led_lightness_color;
-    uint8_t curtain_percent;
-    hi_bool curtain_openstate;
-    uint8_t door_state;
-    uint8_t temperature_indoor;
-    uint8_t humidity_indoor;  
-    uint32_t smoke;           // 烟雾传感器数据
-    uint32_t comb;           // 可燃气体数据
-    uint32_t light;           // 可燃气体数据
-    hi_bool beep_state; // 蜂鸣器当前的状态
-    uint8_t airConditioner_state; // 空调当前的状态
-    float current; // 当前电流 ma
-    float voltage; // 当前电压 mv
-    float power; // 当前功率 mw
-    uint32_t automation_mode_scene;
-} msg_sensorData_t;
-
 msg_sensorData_t sensorData = {0}; // 传感器的数据
 osThreadId_t mqtt_send_task_id; // mqtt 发布数据任务ID
 osThreadId_t mqtt_recv_task_id; // mqtt 接收数据任务ID
@@ -33,6 +15,8 @@ void send_cloud_request_code(const char *request_id, int ret_code, int request_l
 
 extern uint8_t temp, humi;
 
+extern airConditioner_mode origin_mode;
+extern airConditioner_speed origin_speed;
 /**
  * @brief 组JSON数据
  */
@@ -232,7 +216,7 @@ int enable_automation_mode_scene_get_jsonData_value(const cJSON *const object, u
         return -1;
     }
 
-    *value = (uint8_t)json_value->valueint;
+    *value = (uint32_t)json_value->valueint;
     printf("✅ 提取的 automation_mode_scene 值: %d\n", *value);
     return 0;
 }
@@ -254,7 +238,7 @@ int disable_automation_mode_scene_get_jsonData_value(const cJSON *const object, 
         return -1;
     }
 
-    *value = (uint8_t)json_value->valueint;
+    *value = (uint32_t)json_value->valueint;
     printf("✅ 提取的 automation_mode_scene 值: %d\n", *value);
     return 0;
 }
@@ -316,6 +300,7 @@ int Parsing_json_data(const char *payload)
             if (!strcmp(command_name->valuestring, "airConditioner_setState")) 
             {
                 ret_code = airConditioner_setState_get_jsonData_value(paras, &sensorData.airConditioner_state);
+                airConditioner_update_origin_state(sensorData.airConditioner_state);
                 airConditioner_work(sensorData.airConditioner_state);
             }
             if (!strcmp(command_name->valuestring, "enable_automation_mode_scene")) 

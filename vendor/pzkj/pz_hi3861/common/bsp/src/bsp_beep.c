@@ -1,6 +1,7 @@
 #include "bsp_beep.h"
 #include "hi_pwm.h"
 
+uint8_t beep_state = 0;
 //蜂鸣器初始化
 void beep_init(void)
 {
@@ -31,15 +32,17 @@ void beep_set_duty(uint16_t duty)
 // 关闭蜂鸣器
 void beep_stop(void)
 {
+    beep_state = 0;
     hi_pwm_stop(HI_PWM_PORT_PWM1);
 }
 
 void beep_warning(void)
 {
+    beep_state = 1;
     beep_alarm(BEEP_WARNING_COUNT,BEEP_WARNING_TIME);
 }
 
-uint8_t beep_state = 0;
+
 void beep_alarm_by_pcf8575(uint16_t cnt,uint16_t time)
 {
     

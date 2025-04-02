@@ -17,7 +17,6 @@
 #include "bsp_dc_motor.h"
 #include "bsp_sg90.h"
 #include "bsp_smoke.h"
-#include "bsp_ina219.h"
 #include "bsp_ina226.h"
 #include "bsp_uart.h"
 // #include "bsp_ds18b20.h"
@@ -41,8 +40,11 @@
 #define TASK_DELAY_1000MS  100    //100 = 1000ms 1tick = 10ms
 #define TASK_DELAY_100MS 10    //10 = 100ms 1tick = 10ms
 #define TASKDLYTICK    500
+
+#define TASK_DELAY_100MS 10    //10 = 100ms 1tick = 10ms
+#define TASK_DELAY_3000MS 300
 #define TASK_DELAY_5000MS 500    //500 = 5000ms 1tick = 10ms
 #define TASK_DELAY_1000MS  100    //100 = 1000ms 1tick = 10ms
-#define TASK_DELAY_100MS 10    //10 = 100ms 1tick = 10ms
+
 
 #endif // __TEST_TASK_H__

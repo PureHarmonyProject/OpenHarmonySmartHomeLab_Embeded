@@ -3,34 +3,26 @@
 
 osThreadId_t SMOKE_Task_ID;
 
+#define MAX_SMOKE 2000
+#define MAX_MQ5 2000
 void smoke_sensor_task(void)
 {
     uint16_t data1, data2;
 
-    // printf("SMOKE is initing !!!\r\n");
-    // smoke_init();
-    // printf("SMOKE init success !!!\r\n");
-
-    // printf("MQ5 is initing !!!\r\n");
-    // MQ5_init();
-    // printf("MQ5 init success !!!\r\n");
-
     while (1)
     {
         data1 = smoke_get_value();
-        printf("[SMOKE] 烟雾传感器数值 = %d\n", data1);
-        if (data1 > 10000)
-            printf("[SMOKE] 检测到烟雾\n");
-        else
-            printf("[SMOKE] 没有检测到烟雾\n");
 
         data2 = MQ5_get_value();
-        printf("[MQ5] 烟雾传感器数值 = %d\n", data2);
-        if (data2 > 10000)
-            printf("[MQ5] 检测到燃气\n");
-        else
-            printf("[MQ5] 没有检测到燃气\n");
 
+        if(data1 > MAX_SMOKE || data2 > MAX_MQ5)
+        {
+            beep_warning();
+        }
+        else
+        {
+            beep_stop();
+        }
         osDelay(100);
     }
 }

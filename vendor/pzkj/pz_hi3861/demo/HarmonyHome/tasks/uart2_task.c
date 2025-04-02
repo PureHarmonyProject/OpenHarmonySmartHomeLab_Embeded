@@ -34,9 +34,13 @@ void usart2_rx_process(char usart2_receive_buffer[])
         {
         case 0x1:
             door_set_curstate(switch_state);
+            // oled_clear();
+            // snprintf(line2, sizeof(line2), "DOOR %s", switch_state ? "OPEN" : "CLOSE");
+            // oled_showstring(0, 16, (uint8_t *)line1, 20);
             break;
         case 0x2:
-            curtain_set_curangle(param1 * 10);
+            // curtain_set_curangle(param1 * 10);
+            curtain_update_curangle(switch_state, param1 * 10);
             break;
         case 0x3:
             airConditioner_set_curstate((uint8_t)((param1 << 1) | param2));

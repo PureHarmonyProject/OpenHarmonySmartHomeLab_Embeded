@@ -101,6 +101,17 @@ void curtain_set_curangle(uint16_t cur_curtain_angle)
     cur_angle = cur_curtain_angle;
 }
 
+void curtain_update_curangle(uint8_t is_open, uint16_t cur_curtain_angle)
+{
+    if(is_open)
+    {
+        cur_angle += cur_curtain_angle;
+    }
+    else
+    {
+        cur_angle -= cur_curtain_angle;
+    }
+}
 //开合百分比
 float curtain_get_curstate(void)
 {
@@ -142,20 +153,36 @@ void curtain_send_cmd(uint8_t switch_state, uint8_t angle)
 
 void curtain_open_angle(uint16_t angle)
 {
-    if (angle > 150) {
+    if (angle + cur_angle > 150) {
         printf("Invalid curtain angle! Max = 150°\n");
         return;
     }
+
     printf("Sending command: Open curtain, angle=%d\n", angle);
     curtain_send_cmd(1, angle / 10);  // 发送打开窗帘命令（angle 以 10° 为单位）
 }
 
 void curtain_close_angle(uint16_t angle)
 {
-    if (angle > 150) {
-        printf("Invalid curtain angle! Max = 150°\n");
+    if (angle - cur_angle > 0) {
+        printf("Invalid curtain angle! Min = 0°\n");
         return;
     }
+
     printf("Sending command: Close curtain, angle=%d\n", angle);
     curtain_send_cmd(0, angle / 10);  // 发送关闭窗帘命令（angle 以 10° 为单位）
+}
+
+void curtain_set_angle(uint16_t angle)
+{
+    if(angle > cur_angle)
+    {
+        printf("打开窗帘%d度\n",angle - angle);
+        curtain_open_angle(angle - cur_angle);
+    }
+    else
+    {
+        printf("关闭窗帘%d度\n", cur_angle - angle);
+        curtain_close_angle(cur_angle - angle);
+    }
 }

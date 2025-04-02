@@ -2,6 +2,25 @@
 #define __MQTT_TASK_H__
 
 #include <stdint.h>
+#include <hi_types_base.h>
+
+typedef struct message_sensorData {
+    uint32_t led_lightness_color;
+    uint8_t curtain_percent;
+    hi_bool curtain_openstate;
+    uint8_t door_state;
+    uint8_t temperature_indoor;
+    uint8_t humidity_indoor;  
+    uint32_t smoke;           // 烟雾传感器数据
+    uint32_t comb;           // 可燃气体数据
+    uint32_t light;           // 亮度数据
+    hi_bool beep_state; // 蜂鸣器当前的状态
+    uint8_t airConditioner_state; // 空调当前的状态
+    float current; // 当前电流 ma
+    float voltage; // 当前电压 mv
+    float power; // 当前功率 mw
+    uint32_t automation_mode_scene;
+} msg_sensorData_t;
 
 //WIFI连接热点和密码
 #define WIFI_SSID "duki"

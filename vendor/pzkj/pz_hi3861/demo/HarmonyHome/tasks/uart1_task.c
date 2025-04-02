@@ -57,6 +57,10 @@ void usart1_rx_process(char usart1_receive_buffer[])
         stm32_command_buffer[3] = stm32_command & 0xFF;
 
         printf("Sending Command to STM32: %08X\n", stm32_command);
+        if(device_id == 3)
+        {
+            airConditioner_update_origin_state(param1 << 1 | param2);
+        }
         uart2_send_data(stm32_command_buffer, 4);
         return;
     }

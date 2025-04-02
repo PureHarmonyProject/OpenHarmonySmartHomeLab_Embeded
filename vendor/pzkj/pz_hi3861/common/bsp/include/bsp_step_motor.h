@@ -58,4 +58,7 @@ uint16_t curtain_get_curangle(void);
 float curtain_get_curstate(void);
 void curtain_set_curangle(uint16_t cur_curtain_angle);
 void curtain_test(void);
+void curtain_set_angle(uint16_t angle);
+
+void curtain_update_curangle(uint8_t is_open, uint16_t cur_curtain_angle);
 #endif

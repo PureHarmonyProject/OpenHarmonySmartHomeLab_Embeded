@@ -34,7 +34,7 @@ void airConditioner_send_cmd(uint8_t switch_state, uint8_t speed, uint8_t mode)
     uart2_send_data(cmd_buffer, 4);
 }
 
-//pwm占空比输出调节
+//pwm占空比输出调节 1, 2, 3档位
 void airConditioner_heat(uint8_t speed)
 {
     if (speed < 1 || speed > 3) {
@@ -60,9 +60,9 @@ void airConditioner_stop(void)
     airConditioner_send_cmd(0, 0, 0);  // 关闭空调
 }
 
-
 uint8_t cur_state;
-
+airConditioner_mode origin_mode, default_mode;
+airConditioner_speed origin_speed, default_speed;
 void airConditioner_work(uint8_t airConditioner_state)
 {
     // cur_state = airConditioner_state;
@@ -93,4 +93,87 @@ uint8_t airConditioner_get_curstate(void)
 void airConditioner_set_curstate(uint8_t state)
 {
     cur_state = state;
+    default_mode = cur_state & 0x01;
+    default_speed = (cur_state >> 1) & 0x03;
+}
+
+void airConditioner_slow(void)
+{
+    uint8_t tmp = airConditioner_get_curstate();
+    uint8_t func_type = tmp & 0x1;
+    uint8_t speed_type = (tmp >> 1) & 0x3;
+
+    if(speed_type > 1 && speed_type < 4) 
+    {
+        speed_type--;
+        tmp = speed_type << 1 | func_type;
+    }
+    
+    airConditioner_work(tmp);
+}
+
+void airConditioner_speed_up(void)
+{
+    uint8_t tmp = airConditioner_get_curstate();
+    uint8_t func_type = tmp & 0x1;
+    uint8_t speed_type = (tmp >> 1) & 0x3;
+
+    if(speed_type >= 1 && speed_type < 3) 
+    {
+        speed_type++;
+        tmp = speed_type << 1 | func_type;
+    }
+    
+    airConditioner_work(tmp);
+}
+
+void airConditioner_low_power(void)
+{
+    uint8_t tmp = airConditioner_get_curstate();
+    uint8_t func_type = tmp & 0x1;
+    uint8_t speed_type = (tmp >> 1) & 0x3;
+
+    speed_type = 1;
+    tmp = speed_type << 1 | func_type;
+    
+    airConditioner_work(tmp);
+}
+
+void airConditioner_mid_power(void)
+{
+    uint8_t tmp = airConditioner_get_curstate();
+    uint8_t func_type = tmp & 0x1;
+    uint8_t speed_type = (tmp >> 1) & 0x3;
+
+    speed_type = 2;
+    tmp = speed_type << 1 | func_type;
+
+    airConditioner_work(tmp);
+}
+void airConditioner_high_power(void)
+{
+    uint8_t tmp = airConditioner_get_curstate();
+    uint8_t func_type = tmp & 0x1;
+    uint8_t speed_type = (tmp >> 1) & 0x3;
+
+    speed_type = 3;
+    tmp = speed_type << 1 | func_type;
+
+    airConditioner_work(tmp);
+}
+
+void airConditioner_mode_power(uint8_t mode, uint8_t speed)
+{
+    // mode = 2, power = 4时，表示为之前的模式运行
+    if(mode == AIRCONDITIONER_MODE_ORIGIN) mode = origin_mode;
+    if(speed == AIRCONDITIONER_SPEED_ORIGIN) speed = origin_speed;
+    if(mode == AIRCONDITIONER_MODE_DEFAULT) mode = default_mode;
+    if(speed == AIRCONDITIONER_SPEED_DEFAULT) speed = default_speed;
+    airConditioner_work(speed << 1 | mode);
+}
+
+void airConditioner_update_origin_state(uint8_t airConditioner_state)
+{
+    origin_mode = airConditioner_state & 0x1;
+    origin_speed = (airConditioner_state >> 1) & 0x3;
 }
