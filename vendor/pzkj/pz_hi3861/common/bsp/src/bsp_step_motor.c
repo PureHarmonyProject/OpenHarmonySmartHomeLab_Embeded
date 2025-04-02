@@ -106,10 +106,15 @@ void curtain_update_curangle(uint8_t is_open, uint16_t cur_curtain_angle)
     if(is_open)
     {
         cur_angle += cur_curtain_angle;
+        if(cur_angle > 150) cur_angle = 150;
     }
     else
     {
-        cur_angle -= cur_curtain_angle;
+        if(cur_angle < cur_curtain_angle) cur_angle = 0;
+        else
+        {
+            cur_angle -= cur_curtain_angle;
+        }
     }
 }
 //开合百分比
