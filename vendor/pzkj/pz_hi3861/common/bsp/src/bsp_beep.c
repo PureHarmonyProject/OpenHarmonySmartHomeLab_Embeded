@@ -14,19 +14,19 @@ void beep_init(void)
 // 设置蜂鸣器 PWM 输出的占空比
 void beep_alarm(uint16_t cnt, uint16_t time)
 {
-    while (cnt--)
-    {
-        beep_set_duty(20000); // 50% 占空比 (20000/40000)
-        usleep(time);         // 持续 time 时间
-        beep_stop();          // 关闭蜂鸣器
-        usleep(time);         // 停止 time 时间
-    }
+    // while (cnt--)
+    // {
+    beep_set_duty(20000); // 50% 占空比 (20000/40000)
+    //     usleep(time);         // 持续 time 时间
+    //     beep_stop();          // 关闭蜂鸣器
+    //     usleep(time);         // 停止 time 时间
+    // }
 }
 
 // 设置蜂鸣器 PWM 输出的占空比
 void beep_set_duty(uint16_t duty)
 {
-    hi_pwm_start(HI_PWM_PORT_PWM1, duty, 40000);  // 40000 作为分频系数
+    hi_pwm_start(HI_PWM_PORT_PWM1, duty, 40000);  // 40000 作为fre
 }
 
 // 关闭蜂鸣器

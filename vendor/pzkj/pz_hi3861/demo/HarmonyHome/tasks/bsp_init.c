@@ -10,13 +10,28 @@ void bsp_init(void)
     // led_init();
 
     // //蜂鸣器初始化
-    // beep_init();
+    beep_init();
 
     //oled初始化
     printf("OLED is initing !!!\r\n");
     oled_init();
     printf("OLED init success !!!\r\n");
 
+    const char *word = "HOme";
+    uint8_t font_size = 24;     // 可改为 16 或 12
+    uint8_t char_width = 12;    // 每个字宽度（与字体大小对应）
+    uint8_t word_len = strlen(word);
+    uint8_t total_width = word_len * char_width;
+
+    uint8_t x = (128 - total_width) / 2;
+    uint8_t y = (64 - font_size) / 2;
+
+    oled_clear();
+    oled_showstring(x, y, (uint8_t *)word, font_size);
+	char status[32];
+	snprintf(status, sizeof(status), "System Is Initing!");
+    oled_showstring_center(52, (uint8_t *)status, 12);
+    oled_refresh_gram();
 
     // // 温湿度传感器初始化
     printf("DHT11 is initing !!!\r\n");

@@ -135,3 +135,11 @@ void sensor_task_create(void)
         printf("ID = %d, Create Sensor_Task_ID is OK!\n", Sensor_Task_ID);
     }
 }
+
+void oled_showstring_center(uint8_t y, uint8_t *str, uint8_t font_size)
+{
+    uint8_t char_width = (font_size == 16) ? 8 : 6;  // 常见字体宽度
+    uint8_t len = strlen((const char *)str);
+    uint8_t x = (128 - (len * char_width)) / 2;
+    oled_showstring(x, y, str, font_size);
+}

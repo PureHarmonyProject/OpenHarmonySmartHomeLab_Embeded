@@ -3,6 +3,8 @@
 
 osThreadId_t Uart2_Task_ID;
 
+extern uint8_t page_mode;
+extern void oled_showstring_center(uint8_t y, uint8_t *str, uint8_t font_size);
 void usart2_rx_process(char usart2_receive_buffer[])
 {
     uint32_t received_response = (usart2_receive_buffer[0] << 24) |
@@ -30,21 +32,47 @@ void usart2_rx_process(char usart2_receive_buffer[])
 
     if (response_code == 0x1)
     {
+        char line1[32];
+        char line2[32];
+        char line3[32];
         switch (device_id)
         {
         case 0x1:
             door_set_curstate(switch_state);
-            // oled_clear();
-            // snprintf(line2, sizeof(line2), "DOOR %s", switch_state ? "OPEN" : "CLOSE");
-            // oled_showstring(0, 16, (uint8_t *)line1, 20);
+            oled_clear();
+            snprintf(line1, sizeof(line1), "---Device Action---");
+            oled_showstring_center(1, (uint8_t *)line1, 12);
+            snprintf(line2, sizeof(line2), "DOOR %s", switch_state ? "OPEN" : "CLOSE");
+            oled_showstring_center(18, (uint8_t *)line2, 12);
+            oled_refresh_gram();
+            page_mode = 2;
             break;
+        
         case 0x2:
-            // curtain_set_curangle(param1 * 10);
             curtain_update_curangle(switch_state, param1 * 10);
+            oled_clear();
+            snprintf(line1, sizeof(line1), "---Device Action---");
+            oled_showstring_center(1, (uint8_t *)line1, 12);
+            snprintf(line2, sizeof(line2), "CURTAIN :%s", switch_state ? "OPEN" : "CLOSE");
+            oled_showstring_center(17, (uint8_t *)line2, 12);
+            snprintf(line3, sizeof(line3), "CURTAIN PERCENT :%d", curtain_get_curangle());
+            oled_showstring_center(37, (uint8_t *)line3, 12);
+            oled_refresh_gram();
+            page_mode = 2;
             break;
+        
         case 0x3:
             airConditioner_set_curstate((uint8_t)((param1 << 1) | param2));
-            break;
+            oled_clear();
+            snprintf(line1, sizeof(line1), "---Device Action---");
+            oled_showstring_center(1, (uint8_t *)line1, 12);
+            snprintf(line2, sizeof(line2), "AC MODE :%s", param2 ? "HEAT" : "COOL");
+            oled_showstring_center(17, (uint8_t *)line2, 12);
+            snprintf(line3, sizeof(line3), "AC SPEED :%d", param1);
+            oled_showstring_center(37, (uint8_t *)line3, 12);
+            oled_refresh_gram();
+            page_mode = 2;
+            break;        
         default:
             printf("Unknown device ID: %X\n", device_id);
             break;

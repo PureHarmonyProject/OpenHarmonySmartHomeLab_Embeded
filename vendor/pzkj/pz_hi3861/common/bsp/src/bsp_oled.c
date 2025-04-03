@@ -505,17 +505,4 @@ void oled_init(void)
 	oled_wr_byte(0xA4,OLED_CMD); //全局显示开启;bit0:1,开启;0,关闭;(白屏/黑屏)
 	oled_wr_byte(0xA6,OLED_CMD); //设置显示方式;bit0:1,反相显示;0,正常显示	    						   
 	oled_wr_byte(0xAF,OLED_CMD); //开启显示	
-
-    const char *word = "HOme";
-    uint8_t font_size = 24;     // 可改为 16 或 12
-    uint8_t char_width = 12;    // 每个字宽度（与字体大小对应）
-    uint8_t word_len = strlen(word);
-    uint8_t total_width = word_len * char_width;
-
-    uint8_t x = (128 - total_width) / 2;
-    uint8_t y = (64 - font_size) / 2;
-
-    oled_clear();
-    oled_showstring(x, y, (uint8_t *)word, font_size);
-    oled_refresh_gram();
 }

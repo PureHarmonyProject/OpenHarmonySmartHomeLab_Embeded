@@ -1,6 +1,7 @@
 #include "uart1_task.h"
 #include "template.h"
 
+// 用于与asrpro通信
 osThreadId_t Uart1_Task_ID;
 
 void usart1_rx_process(char usart1_receive_buffer[])
