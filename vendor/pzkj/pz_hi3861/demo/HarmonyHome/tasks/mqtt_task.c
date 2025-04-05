@@ -74,6 +74,102 @@ int Packaged_json_data(void)
     return ret;
 }
 
+// 只打包传感器相关数据
+int Packaged_sensor_json_data(void)
+{
+    cJSON *root = NULL, *array = NULL, *services = NULL;
+    cJSON *properties = NULL;
+    int ret = 0;
+
+    root = cJSON_CreateObject(); // 创建根对象
+    services = cJSON_CreateArray();
+    cJSON_AddItemToObject(root, "services", services);
+
+    array = cJSON_CreateObject();
+    cJSON_AddStringToObject(array, "service_id", "attribute");
+    properties = cJSON_CreateObject();
+    cJSON_AddItemToObject(array, "properties", properties);
+
+    // 添加传感器相关字段
+    cJSON_AddNumberToObject(properties, "temperature_indoor", sensorData.temperature_indoor);
+    cJSON_AddNumberToObject(properties, "humidity_indoor", sensorData.humidity_indoor);
+    cJSON_AddNumberToObject(properties, "smoke", sensorData.smoke);
+    cJSON_AddNumberToObject(properties, "comb", sensorData.comb);
+    cJSON_AddNumberToObject(properties, "light", sensorData.light);
+    cJSON_AddNumberToObject(properties, "current", sensorData.current);
+    cJSON_AddNumberToObject(properties, "voltage", sensorData.voltage);
+    cJSON_AddNumberToObject(properties, "power", sensorData.power);
+
+    cJSON_AddItemToArray(services, array);
+
+    char *str_print = cJSON_PrintUnformatted(root);
+    if (str_print != NULL) {
+        if (strcpy_s(mqtt_data, strlen(str_print) + 1, str_print) == 0) {
+            ret = 0;
+        } else {
+            ret = -1;
+        }
+        cJSON_free(str_print);
+    } else {
+        ret = -1;
+    }
+
+    if (root != NULL) {
+        cJSON_Delete(root);
+    } else {
+        ret = -1;
+    }
+
+    return ret;
+}
+
+
+// 只打包家居状态类数据
+int Packaged_home_json_data(void)
+{
+    cJSON *root = NULL, *array = NULL, *services = NULL;
+    cJSON *properties = NULL;
+    int ret = 0;
+
+    root = cJSON_CreateObject(); // 创建根对象
+    services = cJSON_CreateArray();
+    cJSON_AddItemToObject(root, "services", services);
+
+    array = cJSON_CreateObject();
+    cJSON_AddStringToObject(array, "service_id", "attribute");
+    properties = cJSON_CreateObject();
+    cJSON_AddItemToObject(array, "properties", properties);
+
+    // 添加家居设备状态相关字段
+    cJSON_AddNumberToObject(properties, "led_lightness_color", sensorData.led_lightness_color);
+    cJSON_AddNumberToObject(properties, "curtain_percent", sensorData.curtain_percent);
+    cJSON_AddNumberToObject(properties, "door_state", sensorData.door_state);
+    cJSON_AddNumberToObject(properties, "airConditioner_state", sensorData.airConditioner_state);
+
+    cJSON_AddItemToArray(services, array);
+
+    char *str_print = cJSON_PrintUnformatted(root);
+    if (str_print != NULL) {
+        if (strcpy_s(mqtt_data, strlen(str_print) + 1, str_print) == 0) {
+            ret = 0;
+        } else {
+            ret = -1;
+        }
+        cJSON_free(str_print);
+    } else {
+        ret = -1;
+    }
+
+    if (root != NULL) {
+        cJSON_Delete(root);
+    } else {
+        ret = -1;
+    }
+
+    return ret;
+}
+
+
 // 解析 LED 颜色值
 int led_setColor_get_jsonData_value(const cJSON *const object, uint32_t *value) {
     if (object == NULL || value == NULL) {
@@ -354,36 +450,8 @@ int Parsing_json_data(const char *payload)
 // extern void send_http_post_to_server(void);
 void mqtt_send_task(void)
 {
-    // printf("IOTDA is initing !!!\r\n");
-    // p_MQTTClient_sub_callback = &mqttClient_sub_callback;
-
-    // // 连接WiFi
-    // if (WiFi_connectHotspots(WIFI_SSID, WIFI_PAWD) != WIFI_SUCCESS) {
-    //     printf("[error] connectWiFiHotspots\r\n");
-    // }
-    // sleep(TASK_INIT_TIME);
-
-    // // 连接MQTT服务器
-    // if (MQTTClient_connectServer(SERVER_IP_ADDR, SERVER_IP_PORT) != WIFI_SUCCESS) {
-    //     printf("[error] mqttClient_connectServer\r\n");
-    // }
-    // sleep(TASK_INIT_TIME);
-
-    // // 初始化MQTT客户端
-    // if (MQTTClient_init(MQTT_CLIENT_ID, MQTT_USER_NAME, MQTT_PASS_WORD) != WIFI_SUCCESS) {
-    //     printf("[error] mqttClient_init\r\n");
-    // }
-    // sleep(TASK_INIT_TIME); 
-
-    // // 订阅主题
-    // if (MQTTClient_subscribe(MQTT_TOPIC_SUB_COMMANDS) != WIFI_SUCCESS) {
-    //     printf("[error] mqttClient_subscribe\r\n");
-    // }
-    // printf("IOTDA init success !!!\r\n");
-    // sleep(TASK_INIT_TIME);
     while (1) 
     {
-        // 获取传感器的数据
         dht11_read_data(&temp, &humi);
         sensorData.temperature_indoor = temp;
         sensorData.humidity_indoor = humi;
@@ -398,25 +466,29 @@ void mqtt_send_task(void)
         sensorData.current = ina226_get_current() * 1000;
         sensorData.power   = sensorData.current * sensorData.voltage / 1000;
         sensorData.automation_mode_scene = get_mode_scene();
-        // 同时也给asrpro发送心跳
-        // send_http_post_to_server();
-        char buf[64];
-        sprintf(buf, "C1%d,%d,%d,%d,%d\n", sensorData.temperature_indoor, sensorData.humidity_indoor, sensorData.door_state, sensorData.smoke, sensorData.comb);
-        uart1_send_data(buf, sizeof(buf));  // 发送数据
 
-        // 组Topic
+        // 第一次上报：传感器数据
         memset_s(publish_topic, MQTT_DATA_MAX, 0, MQTT_DATA_MAX);
-        if (sprintf_s(publish_topic, MQTT_DATA_MAX, MQTT_TOPIC_PUB_PROPERTIES, DEVICE_ID) > 0) 
+        if (sprintf_s(publish_topic, MQTT_DATA_MAX, MQTT_TOPIC_PUB_PROPERTIES, DEVICE_ID) > 0)
         {
-            // 组JSON数据
-            Packaged_json_data();
-            // 发布消息
+            Packaged_sensor_json_data();  // 👈 新的函数
             MQTTClient_pub(publish_topic, mqtt_data, strlen((char *)mqtt_data));
         }
-        osDelay(TASK_DELAY_2000MS);
+
+        osDelay(TASK_DELAY_1000MS);  // ⏱️ 延时一秒
+
+        // 第二次上报：家居控制数据
+        memset_s(publish_topic, MQTT_DATA_MAX, 0, MQTT_DATA_MAX);
+        if (sprintf_s(publish_topic, MQTT_DATA_MAX, MQTT_TOPIC_PUB_PROPERTIES, DEVICE_ID) > 0)
+        {
+            Packaged_home_json_data();  // 👈 新的函数
+            MQTTClient_pub(publish_topic, mqtt_data, strlen((char *)mqtt_data));
+        }
+
+        osDelay(TASK_DELAY_2000MS); // ⏱️ 保持之前的总周期
     }
-    
 }
+
 
 // 向云端发送返回值
 void send_cloud_request_code(const char *request_id, int ret_code, int request_len)
