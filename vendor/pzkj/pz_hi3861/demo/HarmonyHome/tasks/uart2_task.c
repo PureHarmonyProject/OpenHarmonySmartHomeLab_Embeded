@@ -66,8 +66,16 @@ void usart2_rx_process(char usart2_receive_buffer[])
             oled_clear();
             snprintf(line1, sizeof(line1), "---Device Action---");
             oled_showstring_center(1, (uint8_t *)line1, 12);
-            snprintf(line2, sizeof(line2), "AC MODE :%s", param2 ? "HEAT" : "COOL");
-            oled_showstring_center(17, (uint8_t *)line2, 12);
+            if(param1 != 0)
+            {
+                snprintf(line2, sizeof(line2), "AC MODE :%s", param2 ? "HEAT" : "COOL");
+                oled_showstring_center(17, (uint8_t *)line2, 12);
+            }
+            else
+            {
+                snprintf(line2, sizeof(line2), "AC MODE :%s", "STOP");
+                oled_showstring_center(17, (uint8_t *)line2, 12);
+            }
             snprintf(line3, sizeof(line3), "AC SPEED :%d", param1);
             oled_showstring_center(37, (uint8_t *)line3, 12);
             oled_refresh_gram();

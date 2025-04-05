@@ -1,8 +1,6 @@
 #include "dht11_oled_task.h"
 #include "template.h"
 
-
-
 uint8_t temp, humi;
 
 #include "bsp_ina226.h"
@@ -113,8 +111,7 @@ void sensor_task(void)
     while (1) 
     {
         display_sensor_data();
-        printf("更新传感器数据\n");
-        osDelay(TASK_DELAY_3000MS);
+        osDelay(TASK_DELAY_5000MS);
     }
 }
 

@@ -23,8 +23,8 @@ typedef struct message_sensorData {
 } msg_sensorData_t;
 
 //WIFI连接热点和密码
-#define WIFI_SSID "duki"
-#define WIFI_PAWD "12345678"
+#define WIFI_SSID "CMCC-92B9"
+#define WIFI_PAWD "12345678@kd"
 
 //注册华为云后需要更新的信息
 // 产品ID
