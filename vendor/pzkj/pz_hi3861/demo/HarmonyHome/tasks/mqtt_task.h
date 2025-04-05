@@ -16,9 +16,9 @@ typedef struct message_sensorData {
     uint32_t light;           // 亮度数据
     hi_bool beep_state; // 蜂鸣器当前的状态
     uint8_t airConditioner_state; // 空调当前的状态
-    float current; // 当前电流 ma
-    float voltage; // 当前电压 mv
-    float power; // 当前功率 mw
+    uint32_t current; // 当前电流 ua
+    uint32_t voltage; // 当前电压 uv
+    uint32_t power; // 当前功率 uw
     uint32_t automation_mode_scene;
 } msg_sensorData_t;
 

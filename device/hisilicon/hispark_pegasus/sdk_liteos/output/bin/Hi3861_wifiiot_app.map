@@ -36583,507 +36583,507 @@ Linker script and memory map
                 0x000000000049cabc       0x3e ohos\libs\libtemplate.a(libtemplate.automation_task.o)
                 0x000000000049cabc                adjust_curtain_by_lightness
  .text.adjust_device_by_power
-                0x000000000049cafa       0x90 ohos\libs\libtemplate.a(libtemplate.automation_task.o)
+                0x000000000049cafa       0x9c ohos\libs\libtemplate.a(libtemplate.automation_task.o)
                 0x000000000049cafa                adjust_device_by_power
  .text.light_task_control
-                0x000000000049cb8a       0x3e ohos\libs\libtemplate.a(libtemplate.automation_task.o)
-                0x000000000049cb8a                light_task_control
+                0x000000000049cb96       0x3e ohos\libs\libtemplate.a(libtemplate.automation_task.o)
+                0x000000000049cb96                light_task_control
  .text.airConditioner_task_control
-                0x000000000049cbc8       0x30 ohos\libs\libtemplate.a(libtemplate.automation_task.o)
-                0x000000000049cbc8                airConditioner_task_control
+                0x000000000049cbd4       0x30 ohos\libs\libtemplate.a(libtemplate.automation_task.o)
+                0x000000000049cbd4                airConditioner_task_control
  .text.curtain_task_control
-                0x000000000049cbf8       0x3e ohos\libs\libtemplate.a(libtemplate.automation_task.o)
-                0x000000000049cbf8                curtain_task_control
+                0x000000000049cc04       0x3e ohos\libs\libtemplate.a(libtemplate.automation_task.o)
+                0x000000000049cc04                curtain_task_control
  .text.power_task_control
-                0x000000000049cc36       0x32 ohos\libs\libtemplate.a(libtemplate.automation_task.o)
-                0x000000000049cc36                power_task_control
+                0x000000000049cc42       0x32 ohos\libs\libtemplate.a(libtemplate.automation_task.o)
+                0x000000000049cc42                power_task_control
  .text.automation_task
-                0x000000000049cc68       0x2a ohos\libs\libtemplate.a(libtemplate.automation_task.o)
-                0x000000000049cc68                automation_task
+                0x000000000049cc74       0x2a ohos\libs\libtemplate.a(libtemplate.automation_task.o)
+                0x000000000049cc74                automation_task
  .text.automation_task_create
-                0x000000000049cc92       0x6c ohos\libs\libtemplate.a(libtemplate.automation_task.o)
-                0x000000000049cc92                automation_task_create
+                0x000000000049cc9e       0x6c ohos\libs\libtemplate.a(libtemplate.automation_task.o)
+                0x000000000049cc9e                automation_task_create
  .text.adc2_init
-                0x000000000049ccfe       0x30 ohos\libs\libtemplate.a(libtemplate.bsp_adc.o)
-                0x000000000049ccfe                adc2_init
+                0x000000000049cd0a       0x30 ohos\libs\libtemplate.a(libtemplate.bsp_adc.o)
+                0x000000000049cd0a                adc2_init
  .text.get_adc2_value
-                0x000000000049cd2e       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_adc.o)
-                0x000000000049cd2e                get_adc2_value
+                0x000000000049cd3a       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_adc.o)
+                0x000000000049cd3a                get_adc2_value
  .text.adc6_init
-                0x000000000049cd68       0x30 ohos\libs\libtemplate.a(libtemplate.bsp_adc.o)
-                0x000000000049cd68                adc6_init
+                0x000000000049cd74       0x30 ohos\libs\libtemplate.a(libtemplate.bsp_adc.o)
+                0x000000000049cd74                adc6_init
  .text.get_adc6_value
-                0x000000000049cd98       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_adc.o)
-                0x000000000049cd98                get_adc6_value
+                0x000000000049cda4       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_adc.o)
+                0x000000000049cda4                get_adc6_value
  .text.get_adc3_value
-                0x000000000049cdd2       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_adc.o)
-                0x000000000049cdd2                get_adc3_value
+                0x000000000049cdde       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_adc.o)
+                0x000000000049cdde                get_adc3_value
  .text.beep_init
-                0x000000000049ce0c       0x3e ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
-                0x000000000049ce0c                beep_init
+                0x000000000049ce18       0x3e ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
+                0x000000000049ce18                beep_init
  .text.beep_set_duty
-                0x000000000049ce4a       0x32 ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
-                0x000000000049ce4a                beep_set_duty
+                0x000000000049ce56       0x32 ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
+                0x000000000049ce56                beep_set_duty
  .text.beep_alarm
-                0x000000000049ce7c       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
-                0x000000000049ce7c                beep_alarm
+                0x000000000049ce88       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
+                0x000000000049ce88                beep_alarm
  .text.beep_stop
-                0x000000000049ceaa       0x32 ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
-                0x000000000049ceaa                beep_stop
+                0x000000000049ceb6       0x32 ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
+                0x000000000049ceb6                beep_stop
  .text.beep_warning
-                0x000000000049cedc       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
-                0x000000000049cedc                beep_warning
+                0x000000000049cee8       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
+                0x000000000049cee8                beep_warning
  .text.beep_get_state
-                0x000000000049cf16       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
-                0x000000000049cf16                beep_get_state
+                0x000000000049cf22       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_beep.o)
+                0x000000000049cf22                beep_get_state
  .text.airConditioner_send_cmd
-                0x000000000049cf42       0x7c ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
-                0x000000000049cf42                airConditioner_send_cmd
+                0x000000000049cf4e       0x7c ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
+                0x000000000049cf4e                airConditioner_send_cmd
  .text.airConditioner_heat
-                0x000000000049cfbe       0x5c ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
-                0x000000000049cfbe                airConditioner_heat
+                0x000000000049cfca       0x5c ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
+                0x000000000049cfca                airConditioner_heat
  .text.airConditioner_cool
-                0x000000000049d01a       0x5c ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
-                0x000000000049d01a                airConditioner_cool
+                0x000000000049d026       0x5c ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
+                0x000000000049d026                airConditioner_cool
  .text.airConditioner_stop
-                0x000000000049d076       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
-                0x000000000049d076                airConditioner_stop
+                0x000000000049d082       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
+                0x000000000049d082                airConditioner_stop
  .text.airConditioner_work
-                0x000000000049d0b0       0x6e ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
-                0x000000000049d0b0                airConditioner_work
+                0x000000000049d0bc       0x6e ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
+                0x000000000049d0bc                airConditioner_work
  .text.airConditioner_get_curstate
-                0x000000000049d11e       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
-                0x000000000049d11e                airConditioner_get_curstate
+                0x000000000049d12a       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
+                0x000000000049d12a                airConditioner_get_curstate
  .text.airConditioner_set_curstate
-                0x000000000049d14a       0x44 ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
-                0x000000000049d14a                airConditioner_set_curstate
+                0x000000000049d156       0x44 ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
+                0x000000000049d156                airConditioner_set_curstate
  .text.airConditioner_slow
-                0x000000000049d18e       0x50 ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
-                0x000000000049d18e                airConditioner_slow
+                0x000000000049d19a       0x50 ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
+                0x000000000049d19a                airConditioner_slow
  .text.airConditioner_low_power
-                0x000000000049d1de       0x32 ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
-                0x000000000049d1de                airConditioner_low_power
+                0x000000000049d1ea       0x32 ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
+                0x000000000049d1ea                airConditioner_low_power
  .text.airConditioner_mode_power
-                0x000000000049d210       0x6a ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
-                0x000000000049d210                airConditioner_mode_power
+                0x000000000049d21c       0x6a ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
+                0x000000000049d21c                airConditioner_mode_power
  .text.airConditioner_update_origin_state
-                0x000000000049d27a       0x3c ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
-                0x000000000049d27a                airConditioner_update_origin_state
+                0x000000000049d286       0x3c ohos\libs\libtemplate.a(libtemplate.bsp_dc_motor.o)
+                0x000000000049d286                airConditioner_update_origin_state
  .text.dht11_io_in
-                0x000000000049d2b6       0x34 ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
-                0x000000000049d2b6                dht11_io_in
+                0x000000000049d2c2       0x34 ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
+                0x000000000049d2c2                dht11_io_in
  .text.GPIO_GetInputValue
-                0x000000000049d2ea       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
-                0x000000000049d2ea                GPIO_GetInputValue
+                0x000000000049d2f6       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
+                0x000000000049d2f6                GPIO_GetInputValue
  .text.dht11_reset
-                0x000000000049d318       0x4c ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
-                0x000000000049d318                dht11_reset
+                0x000000000049d324       0x4c ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
+                0x000000000049d324                dht11_reset
  .text.dht11_check
-                0x000000000049d364       0x8a ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
-                0x000000000049d364                dht11_check
+                0x000000000049d370       0x8a ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
+                0x000000000049d370                dht11_check
  .text.dht11_read_bit
-                0x000000000049d3ee       0x84 ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
-                0x000000000049d3ee                dht11_read_bit
+                0x000000000049d3fa       0x84 ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
+                0x000000000049d3fa                dht11_read_bit
  .text.dht11_read_byte
-                0x000000000049d472       0x42 ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
-                0x000000000049d472                dht11_read_byte
+                0x000000000049d47e       0x42 ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
+                0x000000000049d47e                dht11_read_byte
  .text.dht11_read_data
-                0x000000000049d4b4       0x74 ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
-                0x000000000049d4b4                dht11_read_data
+                0x000000000049d4c0       0x74 ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
+                0x000000000049d4c0                dht11_read_data
  .text.dht11_init
-                0x000000000049d528       0x48 ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
-                0x000000000049d528                dht11_init
+                0x000000000049d534       0x48 ohos\libs\libtemplate.a(libtemplate.bsp_dht11.o)
+                0x000000000049d534                dht11_init
  .text.ina226_swap_high_low
-                0x000000000049d570       0x36 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
+                0x000000000049d57c       0x36 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
  .text.ina226_write_register
-                0x000000000049d5a6       0x50 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
+                0x000000000049d5b2       0x50 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
  .text.ina226_read_register
-                0x000000000049d5f6       0x68 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
+                0x000000000049d602       0x68 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
  .text.ina226_configure
-                0x000000000049d65e       0x58 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
-                0x000000000049d65e                ina226_configure
+                0x000000000049d66a       0x58 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
+                0x000000000049d66a                ina226_configure
  .text.ina226_init
-                0x000000000049d6b6       0x76 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
-                0x000000000049d6b6                ina226_init
+                0x000000000049d6c2       0x76 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
+                0x000000000049d6c2                ina226_init
  .text.ina226_get_current
-                0x000000000049d72c       0x66 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
-                0x000000000049d72c                ina226_get_current
+                0x000000000049d738       0x66 ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
+                0x000000000049d738                ina226_get_current
  .text.ina226_get_bus_voltage
-                0x000000000049d792       0x5a ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
-                0x000000000049d792                ina226_get_bus_voltage
+                0x000000000049d79e       0x5a ohos\libs\libtemplate.a(libtemplate.bsp_ina226.o)
+                0x000000000049d79e                ina226_get_bus_voltage
  .text.bsp_init
-                0x000000000049d7ec      0x1f6 ohos\libs\libtemplate.a(libtemplate.bsp_init.o)
-                0x000000000049d7ec                bsp_init
+                0x000000000049d7f8      0x1f6 ohos\libs\libtemplate.a(libtemplate.bsp_init.o)
+                0x000000000049d7f8                bsp_init
  .text.led_set_color_and_brightness
-                0x000000000049d9e2       0x50 ohos\libs\libtemplate.a(libtemplate.bsp_led.o)
-                0x000000000049d9e2                led_set_color_and_brightness
+                0x000000000049d9ee       0x50 ohos\libs\libtemplate.a(libtemplate.bsp_led.o)
+                0x000000000049d9ee                led_set_color_and_brightness
  .text.led_get_color_and_brightness
-                0x000000000049da32       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_led.o)
-                0x000000000049da32                led_get_color_and_brightness
+                0x000000000049da3e       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_led.o)
+                0x000000000049da3e                led_get_color_and_brightness
  .text.led_update_color_and_brightness
-                0x000000000049da5e       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_led.o)
-                0x000000000049da5e                led_update_color_and_brightness
+                0x000000000049da6a       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_led.o)
+                0x000000000049da6a                led_update_color_and_brightness
  .text.adjust_led_brightness_by_light_sensor
-                0x000000000049da8a       0x7a ohos\libs\libtemplate.a(libtemplate.bsp_led.o)
-                0x000000000049da8a                adjust_led_brightness_by_light_sensor
+                0x000000000049da96       0x7a ohos\libs\libtemplate.a(libtemplate.bsp_led.o)
+                0x000000000049da96                adjust_led_brightness_by_light_sensor
  .text.transport_getdata
-                0x000000000049db04       0x36 ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
+                0x000000000049db10       0x36 ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
  .text.transport_sendPacketBuffer
-                0x000000000049db3a       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
+                0x000000000049db46       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
  .text.MQTTClient_connectServer
-                0x000000000049db74       0xa2 ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
-                0x000000000049db74                MQTTClient_connectServer
+                0x000000000049db80       0xa2 ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
+                0x000000000049db80                MQTTClient_connectServer
  .text.MQTTClient_subscribe
-                0x000000000049dc16      0x100 ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
-                0x000000000049dc16                MQTTClient_subscribe
+                0x000000000049dc22      0x100 ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
+                0x000000000049dc22                MQTTClient_subscribe
  .text.MQTTClient_init
-                0x000000000049dd16      0x1b2 ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
-                0x000000000049dd16                MQTTClient_init
+                0x000000000049dd22      0x1b2 ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
+                0x000000000049dd22                MQTTClient_init
  .text.MQTTClient_pub
-                0x000000000049dec8       0xe2 ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
-                0x000000000049dec8                MQTTClient_pub
+                0x000000000049ded4       0xe2 ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
+                0x000000000049ded4                MQTTClient_pub
  .text.MQTTClient_sub
-                0x000000000049dfaa       0xfa ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
-                0x000000000049dfaa                MQTTClient_sub
+                0x000000000049dfb6       0xfa ohos\libs\libtemplate.a(libtemplate.bsp_mqtt.o)
+                0x000000000049dfb6                MQTTClient_sub
  .text.iic_senddata
-                0x000000000049e0a4       0x3c ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e0a4                iic_senddata
+                0x000000000049e0b0       0x3c ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e0b0                iic_senddata
  .text.write_iic_cmd
-                0x000000000049e0e0       0x34 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e0e0                write_iic_cmd
+                0x000000000049e0ec       0x34 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e0ec                write_iic_cmd
  .text.write_iic_data
-                0x000000000049e114       0x38 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e114                write_iic_data
+                0x000000000049e120       0x38 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e120                write_iic_data
  .text.oled_wr_byte
-                0x000000000049e14c       0x32 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e14c                oled_wr_byte
+                0x000000000049e158       0x32 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e158                oled_wr_byte
  .text.oled_refresh_gram
-                0x000000000049e17e       0x76 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e17e                oled_refresh_gram
+                0x000000000049e18a       0x76 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e18a                oled_refresh_gram
  .text.oled_clear
-                0x000000000049e1f4       0x54 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e1f4                oled_clear
+                0x000000000049e200       0x54 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e200                oled_clear
  .text.oled_drawpoint
-                0x000000000049e248       0x76 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e248                oled_drawpoint
+                0x000000000049e254       0x76 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e254                oled_drawpoint
  .text.oled_fill
-                0x000000000049e2be       0x58 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e2be                oled_fill
+                0x000000000049e2ca       0x58 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e2ca                oled_fill
  .text.oled_fill_rectangle
-                0x000000000049e316       0x42 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e316                oled_fill_rectangle
+                0x000000000049e322       0x42 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e322                oled_fill_rectangle
  .text.oled_draw_hline
-                0x000000000049e358       0x4c ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e358                oled_draw_hline
+                0x000000000049e364       0x4c ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e364                oled_draw_hline
  .text.oled_showchar
-                0x000000000049e3a4      0x10a ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e3a4                oled_showchar
+                0x000000000049e3b0      0x10a ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e3b0                oled_showchar
  .text.oled_showstring
-                0x000000000049e4ae       0x84 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e4ae                oled_showstring
+                0x000000000049e4ba       0x84 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e4ba                oled_showstring
  .text.oled_init
-                0x000000000049e532      0x160 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
-                0x000000000049e532                oled_init
+                0x000000000049e53e      0x160 ohos\libs\libtemplate.a(libtemplate.bsp_oled.o)
+                0x000000000049e53e                oled_init
  .text.door_get_curstate
-                0x000000000049e692       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_sg90.o)
-                0x000000000049e692                door_get_curstate
+                0x000000000049e69e       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_sg90.o)
+                0x000000000049e69e                door_get_curstate
  .text.door_set_curstate
-                0x000000000049e6be       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_sg90.o)
-                0x000000000049e6be                door_set_curstate
+                0x000000000049e6ca       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_sg90.o)
+                0x000000000049e6ca                door_set_curstate
  .text.door_send_cmd
-                0x000000000049e6ea       0x68 ohos\libs\libtemplate.a(libtemplate.bsp_sg90.o)
-                0x000000000049e6ea                door_send_cmd
+                0x000000000049e6f6       0x68 ohos\libs\libtemplate.a(libtemplate.bsp_sg90.o)
+                0x000000000049e6f6                door_send_cmd
  .text.door_open
-                0x000000000049e752       0x60 ohos\libs\libtemplate.a(libtemplate.bsp_sg90.o)
-                0x000000000049e752                door_open
+                0x000000000049e75e       0x60 ohos\libs\libtemplate.a(libtemplate.bsp_sg90.o)
+                0x000000000049e75e                door_open
  .text.door_close
-                0x000000000049e7b2       0x5c ohos\libs\libtemplate.a(libtemplate.bsp_sg90.o)
-                0x000000000049e7b2                door_close
+                0x000000000049e7be       0x5c ohos\libs\libtemplate.a(libtemplate.bsp_sg90.o)
+                0x000000000049e7be                door_close
  .text.smoke_init
-                0x000000000049e80e       0x28 ohos\libs\libtemplate.a(libtemplate.bsp_smoke.o)
-                0x000000000049e80e                smoke_init
+                0x000000000049e81a       0x28 ohos\libs\libtemplate.a(libtemplate.bsp_smoke.o)
+                0x000000000049e81a                smoke_init
  .text.smoke_get_value
-                0x000000000049e836       0x4c ohos\libs\libtemplate.a(libtemplate.bsp_smoke.o)
-                0x000000000049e836                smoke_get_value
+                0x000000000049e842       0x4c ohos\libs\libtemplate.a(libtemplate.bsp_smoke.o)
+                0x000000000049e842                smoke_get_value
  .text.MQ5_init
-                0x000000000049e882       0x28 ohos\libs\libtemplate.a(libtemplate.bsp_smoke.o)
-                0x000000000049e882                MQ5_init
+                0x000000000049e88e       0x28 ohos\libs\libtemplate.a(libtemplate.bsp_smoke.o)
+                0x000000000049e88e                MQ5_init
  .text.MQ5_get_value
-                0x000000000049e8aa       0x4c ohos\libs\libtemplate.a(libtemplate.bsp_smoke.o)
-                0x000000000049e8aa                MQ5_get_value
+                0x000000000049e8b6       0x4c ohos\libs\libtemplate.a(libtemplate.bsp_smoke.o)
+                0x000000000049e8b6                MQ5_get_value
  .text.light_get_value
-                0x000000000049e8f6       0x28 ohos\libs\libtemplate.a(libtemplate.bsp_smoke.o)
-                0x000000000049e8f6                light_get_value
+                0x000000000049e902       0x28 ohos\libs\libtemplate.a(libtemplate.bsp_smoke.o)
+                0x000000000049e902                light_get_value
  .text.sr501_read
-                0x000000000049e91e       0x42 ohos\libs\libtemplate.a(libtemplate.bsp_sr501.o)
+                0x000000000049e92a       0x42 ohos\libs\libtemplate.a(libtemplate.bsp_sr501.o)
  .text.sr501_init
-                0x000000000049e960       0x40 ohos\libs\libtemplate.a(libtemplate.bsp_sr501.o)
-                0x000000000049e960                sr501_init
+                0x000000000049e96c       0x40 ohos\libs\libtemplate.a(libtemplate.bsp_sr501.o)
+                0x000000000049e96c                sr501_init
  .text.sr501_check
-                0x000000000049e9a0       0x28 ohos\libs\libtemplate.a(libtemplate.bsp_sr501.o)
-                0x000000000049e9a0                sr501_check
+                0x000000000049e9ac       0x28 ohos\libs\libtemplate.a(libtemplate.bsp_sr501.o)
+                0x000000000049e9ac                sr501_check
  .text.adjust_led_brightness_by_motion_sensor
-                0x000000000049e9c8       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_sr501.o)
-                0x000000000049e9c8                adjust_led_brightness_by_motion_sensor
+                0x000000000049e9d4       0x3a ohos\libs\libtemplate.a(libtemplate.bsp_sr501.o)
+                0x000000000049e9d4                adjust_led_brightness_by_motion_sensor
  .text.curtain_get_curangle
-                0x000000000049ea02       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
-                0x000000000049ea02                curtain_get_curangle
+                0x000000000049ea0e       0x2c ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
+                0x000000000049ea0e                curtain_get_curangle
  .text.curtain_update_curangle
-                0x000000000049ea2e       0x5a ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
-                0x000000000049ea2e                curtain_update_curangle
+                0x000000000049ea3a       0x5a ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
+                0x000000000049ea3a                curtain_update_curangle
  .text.curtain_send_cmd
-                0x000000000049ea88       0x6c ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
-                0x000000000049ea88                curtain_send_cmd
+                0x000000000049ea94       0x6c ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
+                0x000000000049ea94                curtain_send_cmd
  .text.curtain_open_angle
-                0x000000000049eaf4       0x66 ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
-                0x000000000049eaf4                curtain_open_angle
+                0x000000000049eb00       0x66 ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
+                0x000000000049eb00                curtain_open_angle
  .text.curtain_close_angle
-                0x000000000049eb5a       0x64 ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
-                0x000000000049eb5a                curtain_close_angle
+                0x000000000049eb66       0x64 ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
+                0x000000000049eb66                curtain_close_angle
  .text.curtain_set_angle
-                0x000000000049ebbe       0x74 ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
-                0x000000000049ebbe                curtain_set_angle
+                0x000000000049ebca       0x74 ohos\libs\libtemplate.a(libtemplate.bsp_step_motor.o)
+                0x000000000049ebca                curtain_set_angle
  .text.uart1_init
-                0x000000000049ec32       0x72 ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
-                0x000000000049ec32                uart1_init
+                0x000000000049ec3e       0x72 ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
+                0x000000000049ec3e                uart1_init
  .text.uart1_send_data
-                0x000000000049eca4       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
-                0x000000000049eca4                uart1_send_data
+                0x000000000049ecb0       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
+                0x000000000049ecb0                uart1_send_data
  .text.uart1_read_data
-                0x000000000049ecd2       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
-                0x000000000049ecd2                uart1_read_data
+                0x000000000049ecde       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
+                0x000000000049ecde                uart1_read_data
  .text.uart2_init
-                0x000000000049ed00       0x72 ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
-                0x000000000049ed00                uart2_init
+                0x000000000049ed0c       0x72 ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
+                0x000000000049ed0c                uart2_init
  .text.uart2_send_data
-                0x000000000049ed72       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
-                0x000000000049ed72                uart2_send_data
+                0x000000000049ed7e       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
+                0x000000000049ed7e                uart2_send_data
  .text.uart2_read_data
-                0x000000000049eda0       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
-                0x000000000049eda0                uart2_read_data
+                0x000000000049edac       0x2e ohos\libs\libtemplate.a(libtemplate.bsp_uart.o)
+                0x000000000049edac                uart2_read_data
  .text.ConnectionWifiChangedHandler
-                0x000000000049edce       0x4c ohos\libs\libtemplate.a(libtemplate.bsp_wifi.o)
+                0x000000000049edda       0x4c ohos\libs\libtemplate.a(libtemplate.bsp_wifi.o)
  .text.WaitConnectResult
-                0x000000000049ee1a       0x70 ohos\libs\libtemplate.a(libtemplate.bsp_wifi.o)
+                0x000000000049ee26       0x70 ohos\libs\libtemplate.a(libtemplate.bsp_wifi.o)
  .text.Sta_GetWiFiIP
-                0x000000000049ee8a       0x42 ohos\libs\libtemplate.a(libtemplate.bsp_wifi.o)
-                0x000000000049ee8a                Sta_GetWiFiIP
+                0x000000000049ee96       0x42 ohos\libs\libtemplate.a(libtemplate.bsp_wifi.o)
+                0x000000000049ee96                Sta_GetWiFiIP
  .text.WiFi_connectHotspots
-                0x000000000049eecc      0x17c ohos\libs\libtemplate.a(libtemplate.bsp_wifi.o)
-                0x000000000049eecc                WiFi_connectHotspots
+                0x000000000049eed8      0x17c ohos\libs\libtemplate.a(libtemplate.bsp_wifi.o)
+                0x000000000049eed8                WiFi_connectHotspots
  .text.display_sensor_data
-                0x000000000049f048      0x25c ohos\libs\libtemplate.a(libtemplate.dht11_oled_task.o)
-                0x000000000049f048                display_sensor_data
+                0x000000000049f054      0x25c ohos\libs\libtemplate.a(libtemplate.dht11_oled_task.o)
+                0x000000000049f054                display_sensor_data
  .text.sensor_task
-                0x000000000049f2a4       0x1e ohos\libs\libtemplate.a(libtemplate.dht11_oled_task.o)
-                0x000000000049f2a4                sensor_task
+                0x000000000049f2b0       0x1e ohos\libs\libtemplate.a(libtemplate.dht11_oled_task.o)
+                0x000000000049f2b0                sensor_task
  .text.sensor_task_create
-                0x000000000049f2c2       0x6c ohos\libs\libtemplate.a(libtemplate.dht11_oled_task.o)
-                0x000000000049f2c2                sensor_task_create
+                0x000000000049f2ce       0x6c ohos\libs\libtemplate.a(libtemplate.dht11_oled_task.o)
+                0x000000000049f2ce                sensor_task_create
  .text.oled_showstring_center
-                0x000000000049f32e       0x62 ohos\libs\libtemplate.a(libtemplate.dht11_oled_task.o)
-                0x000000000049f32e                oled_showstring_center
+                0x000000000049f33a       0x62 ohos\libs\libtemplate.a(libtemplate.dht11_oled_task.o)
+                0x000000000049f33a                oled_showstring_center
  .text.mqtt_recv_task
-                0x000000000049f390       0x1e ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049f390                mqtt_recv_task
+                0x000000000049f39c       0x1e ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049f39c                mqtt_recv_task
  .text.Packaged_json_data
-                0x000000000049f3ae      0x1d4 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049f3ae                Packaged_json_data
+                0x000000000049f3ba      0x1d4 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049f3ba                Packaged_json_data
  .text.mqtt_send_task
-                0x000000000049f582       0xfc ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049f582                mqtt_send_task
+                0x000000000049f58e       0xfc ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049f58e                mqtt_send_task
  .text.led_setColor_get_jsonData_value
-                0x000000000049f67e       0x86 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049f67e                led_setColor_get_jsonData_value
+                0x000000000049f68a       0x86 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049f68a                led_setColor_get_jsonData_value
  .text.door_setState_get_jsonData_value
-                0x000000000049f704       0x7e ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049f704                door_setState_get_jsonData_value
+                0x000000000049f710       0x7e ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049f710                door_setState_get_jsonData_value
  .text.curtain_openPercent_get_jsonData_value
-                0x000000000049f782       0x80 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049f782                curtain_openPercent_get_jsonData_value
+                0x000000000049f78e       0x80 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049f78e                curtain_openPercent_get_jsonData_value
  .text.curtain_closePercent_get_jsonData_value
-                0x000000000049f802       0x80 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049f802                curtain_closePercent_get_jsonData_value
+                0x000000000049f80e       0x80 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049f80e                curtain_closePercent_get_jsonData_value
  .text.airConditioner_setState_get_jsonData_value
-                0x000000000049f882       0x80 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049f882                airConditioner_setState_get_jsonData_value
+                0x000000000049f88e       0x80 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049f88e                airConditioner_setState_get_jsonData_value
  .text.enable_automation_mode_scene_get_jsonData_value
-                0x000000000049f902       0x7a ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049f902                enable_automation_mode_scene_get_jsonData_value
+                0x000000000049f90e       0x7a ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049f90e                enable_automation_mode_scene_get_jsonData_value
  .text.disable_automation_mode_scene_get_jsonData_value
-                0x000000000049f97c       0x7a ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049f97c                disable_automation_mode_scene_get_jsonData_value
+                0x000000000049f988       0x7a ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049f988                disable_automation_mode_scene_get_jsonData_value
  .text.Parsing_json_data
-                0x000000000049f9f6      0x1a2 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049f9f6                Parsing_json_data
+                0x000000000049fa02      0x1a2 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049fa02                Parsing_json_data
  .text.send_cloud_request_code
-                0x000000000049fb98       0xf6 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049fb98                send_cloud_request_code
+                0x000000000049fba4       0xf6 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049fba4                send_cloud_request_code
  .text.mqttClient_sub_callback
-                0x000000000049fc8e       0xa0 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049fc8e                mqttClient_sub_callback
+                0x000000000049fc9a       0xa0 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049fc9a                mqttClient_sub_callback
  .text.wifi_iotda_task_create
-                0x000000000049fd2e       0xa4 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
-                0x000000000049fd2e                wifi_iotda_task_create
+                0x000000000049fd3a       0xa4 ohos\libs\libtemplate.a(libtemplate.mqtt_task.o)
+                0x000000000049fd3a                wifi_iotda_task_create
  .text.MQTTSerialize_connectLength
-                0x000000000049fdd2       0xbc ohos\libs\libtemplate.a(libtemplate.MQTTConnectClient.o)
-                0x000000000049fdd2                MQTTSerialize_connectLength
+                0x000000000049fdde       0xbc ohos\libs\libtemplate.a(libtemplate.MQTTConnectClient.o)
+                0x000000000049fdde                MQTTSerialize_connectLength
  .text.MQTTSerialize_connect
-                0x000000000049fe8e      0x14a ohos\libs\libtemplate.a(libtemplate.MQTTConnectClient.o)
-                0x000000000049fe8e                MQTTSerialize_connect
+                0x000000000049fe9a      0x14a ohos\libs\libtemplate.a(libtemplate.MQTTConnectClient.o)
+                0x000000000049fe9a                MQTTSerialize_connect
  .text.MQTTDeserialize_connack
-                0x000000000049ffd8       0x64 ohos\libs\libtemplate.a(libtemplate.MQTTConnectClient.o)
-                0x000000000049ffd8                MQTTDeserialize_connack
+                0x000000000049ffe4       0x64 ohos\libs\libtemplate.a(libtemplate.MQTTConnectClient.o)
+                0x000000000049ffe4                MQTTDeserialize_connack
  .text.MQTTDeserialize_publish
-                0x00000000004a003c       0xae ohos\libs\libtemplate.a(libtemplate.MQTTDeserializePublish.o)
-                0x00000000004a003c                MQTTDeserialize_publish
- .text.bufchar  0x00000000004a00ea       0x5c ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a00ea                bufchar
+                0x00000000004a0048       0xae ohos\libs\libtemplate.a(libtemplate.MQTTDeserializePublish.o)
+                0x00000000004a0048                MQTTDeserialize_publish
+ .text.bufchar  0x00000000004a00f6       0x5c ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a00f6                bufchar
  .text.MQTTPacket_encode
-                0x00000000004a0146       0x50 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a0146                MQTTPacket_encode
+                0x00000000004a0152       0x50 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a0152                MQTTPacket_encode
  .text.MQTTPacket_decode
-                0x00000000004a0196       0x6a ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a0196                MQTTPacket_decode
+                0x00000000004a01a2       0x6a ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a01a2                MQTTPacket_decode
  .text.MQTTPacket_len
-                0x00000000004a0200       0x50 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a0200                MQTTPacket_len
+                0x00000000004a020c       0x50 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a020c                MQTTPacket_len
  .text.MQTTPacket_decodeBuf
-                0x00000000004a0250       0x38 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a0250                MQTTPacket_decodeBuf
- .text.readInt  0x00000000004a0288       0x38 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a0288                readInt
+                0x00000000004a025c       0x38 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a025c                MQTTPacket_decodeBuf
+ .text.readInt  0x00000000004a0294       0x38 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a0294                readInt
  .text.readChar
-                0x00000000004a02c0       0x30 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a02c0                readChar
+                0x00000000004a02cc       0x30 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a02cc                readChar
  .text.writeChar
-                0x00000000004a02f0       0x30 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a02f0                writeChar
+                0x00000000004a02fc       0x30 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a02fc                writeChar
  .text.writeInt
-                0x00000000004a0320       0x48 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a0320                writeInt
+                0x00000000004a032c       0x48 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a032c                writeInt
  .text.writeCString
-                0x00000000004a0368       0x48 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a0368                writeCString
+                0x00000000004a0374       0x48 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a0374                writeCString
  .text.writeMQTTString
-                0x00000000004a03b0       0x60 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a03b0                writeMQTTString
+                0x00000000004a03bc       0x60 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a03bc                writeMQTTString
  .text.readMQTTLenString
-                0x00000000004a0410       0x60 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a0410                readMQTTLenString
+                0x00000000004a041c       0x60 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a041c                readMQTTLenString
  .text.MQTTstrlen
-                0x00000000004a0470       0x34 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a0470                MQTTstrlen
+                0x00000000004a047c       0x34 ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a047c                MQTTstrlen
  .text.MQTTPacket_read
-                0x00000000004a04a4       0x6c ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
-                0x00000000004a04a4                MQTTPacket_read
+                0x00000000004a04b0       0x6c ohos\libs\libtemplate.a(libtemplate.MQTTPacket.o)
+                0x00000000004a04b0                MQTTPacket_read
  .text.MQTTSerialize_publishLength
-                0x00000000004a0510       0x40 ohos\libs\libtemplate.a(libtemplate.MQTTSerializePublish.o)
-                0x00000000004a0510                MQTTSerialize_publishLength
+                0x00000000004a051c       0x40 ohos\libs\libtemplate.a(libtemplate.MQTTSerializePublish.o)
+                0x00000000004a051c                MQTTSerialize_publishLength
  .text.MQTTSerialize_publish
-                0x00000000004a0550       0xb4 ohos\libs\libtemplate.a(libtemplate.MQTTSerializePublish.o)
-                0x00000000004a0550                MQTTSerialize_publish
+                0x00000000004a055c       0xb4 ohos\libs\libtemplate.a(libtemplate.MQTTSerializePublish.o)
+                0x00000000004a055c                MQTTSerialize_publish
  .text.MQTTSerialize_subscribeLength
-                0x00000000004a0604       0x52 ohos\libs\libtemplate.a(libtemplate.MQTTSubscribeClient.o)
-                0x00000000004a0604                MQTTSerialize_subscribeLength
+                0x00000000004a0610       0x52 ohos\libs\libtemplate.a(libtemplate.MQTTSubscribeClient.o)
+                0x00000000004a0610                MQTTSerialize_subscribeLength
  .text.MQTTSerialize_subscribe
-                0x00000000004a0656       0xaa ohos\libs\libtemplate.a(libtemplate.MQTTSubscribeClient.o)
-                0x00000000004a0656                MQTTSerialize_subscribe
+                0x00000000004a0662       0xaa ohos\libs\libtemplate.a(libtemplate.MQTTSubscribeClient.o)
+                0x00000000004a0662                MQTTSerialize_subscribe
  .text.MQTTDeserialize_suback
-                0x00000000004a0700       0x90 ohos\libs\libtemplate.a(libtemplate.MQTTSubscribeClient.o)
-                0x00000000004a0700                MQTTDeserialize_suback
+                0x00000000004a070c       0x90 ohos\libs\libtemplate.a(libtemplate.MQTTSubscribeClient.o)
+                0x00000000004a070c                MQTTDeserialize_suback
  .text.smoke_sensor_task
-                0x00000000004a0790       0x88 ohos\libs\libtemplate.a(libtemplate.smoke_task.o)
-                0x00000000004a0790                smoke_sensor_task
+                0x00000000004a079c       0x88 ohos\libs\libtemplate.a(libtemplate.smoke_task.o)
+                0x00000000004a079c                smoke_sensor_task
  .text.smoke_sensor_task_create
-                0x00000000004a0818       0x6a ohos\libs\libtemplate.a(libtemplate.smoke_task.o)
-                0x00000000004a0818                smoke_sensor_task_create
+                0x00000000004a0824       0x6a ohos\libs\libtemplate.a(libtemplate.smoke_task.o)
+                0x00000000004a0824                smoke_sensor_task_create
  .text.template_demo
-                0x00000000004a0882       0x48 ohos\libs\libtemplate.a(libtemplate.template.o)
+                0x00000000004a088e       0x48 ohos\libs\libtemplate.a(libtemplate.template.o)
  .text.usart1_rx_process
-                0x00000000004a08ca      0x146 ohos\libs\libtemplate.a(libtemplate.uart1_task.o)
-                0x00000000004a08ca                usart1_rx_process
+                0x00000000004a08d6      0x146 ohos\libs\libtemplate.a(libtemplate.uart1_task.o)
+                0x00000000004a08d6                usart1_rx_process
  .text.uart1_task
-                0x00000000004a0a10       0x46 ohos\libs\libtemplate.a(libtemplate.uart1_task.o)
-                0x00000000004a0a10                uart1_task
+                0x00000000004a0a1c       0x46 ohos\libs\libtemplate.a(libtemplate.uart1_task.o)
+                0x00000000004a0a1c                uart1_task
  .text.uart1_task_create
-                0x00000000004a0a56       0x6a ohos\libs\libtemplate.a(libtemplate.uart1_task.o)
-                0x00000000004a0a56                uart1_task_create
+                0x00000000004a0a62       0x6a ohos\libs\libtemplate.a(libtemplate.uart1_task.o)
+                0x00000000004a0a62                uart1_task_create
  .text.usart2_rx_process
-                0x00000000004a0ac0      0x228 ohos\libs\libtemplate.a(libtemplate.uart2_task.o)
-                0x00000000004a0ac0                usart2_rx_process
+                0x00000000004a0acc      0x228 ohos\libs\libtemplate.a(libtemplate.uart2_task.o)
+                0x00000000004a0acc                usart2_rx_process
  .text.uart2_task
-                0x00000000004a0ce8       0x48 ohos\libs\libtemplate.a(libtemplate.uart2_task.o)
-                0x00000000004a0ce8                uart2_task
+                0x00000000004a0cf4       0x48 ohos\libs\libtemplate.a(libtemplate.uart2_task.o)
+                0x00000000004a0cf4                uart2_task
  .text.uart2_task_create
-                0x00000000004a0d30       0x6a ohos\libs\libtemplate.a(libtemplate.uart2_task.o)
-                0x00000000004a0d30                uart2_task_create
+                0x00000000004a0d3c       0x6a ohos\libs\libtemplate.a(libtemplate.uart2_task.o)
+                0x00000000004a0d3c                uart2_task_create
  .text.DispatchStaConnectEvent
-                0x00000000004a0d9a       0x88 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a0da6       0x88 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.StaConnect
-                0x00000000004a0e22      0x106 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a0e2e      0x106 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.RegisterHisiCallback
-                0x00000000004a0f28       0x56 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a0f34       0x56 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.StaSetLocaladdr
-                0x00000000004a0f7e       0x46 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a0f8a       0x46 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.StaSetDNSServer
-                0x00000000004a0fc4       0x8c ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a0fd0       0x8c ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.StaSetWifiNetConfig
-                0x00000000004a1050       0xd6 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a105c       0xd6 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.DispatchScanStateChangeEvent.isra.0
-                0x00000000004a1126       0x42 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a1132       0x42 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.DispatchApStartEvent.isra.1
-                0x00000000004a1168       0x2e ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a1174       0x2e ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.DispatchConnectEvent.isra.2
-                0x00000000004a1196       0xdc ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a11a2       0xdc ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.DispatchEvent
-                0x00000000004a1272       0x5c ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a127e       0x5c ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.HiWifiWpaEventCb
-                0x00000000004a12ce       0x4e ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a12da       0x4e ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.WriteNetworkConfig.constprop.4
-                0x00000000004a131c       0x66 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a1328       0x66 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
  .text.EnableWifi
-                0x00000000004a1382       0xa0 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
-                0x00000000004a1382                EnableWifi
+                0x00000000004a138e       0xa0 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a138e                EnableWifi
  .text.IsWifiActive
-                0x00000000004a1422       0x3c ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
-                0x00000000004a1422                IsWifiActive
+                0x00000000004a142e       0x3c ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a142e                IsWifiActive
  .text.AddDeviceConfig
-                0x00000000004a145e       0xb6 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
-                0x00000000004a145e                AddDeviceConfig
+                0x00000000004a146a       0xb6 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a146a                AddDeviceConfig
  .text.ConnectTo
-                0x00000000004a1514       0xec ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
-                0x00000000004a1514                ConnectTo
+                0x00000000004a1520       0xec ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a1520                ConnectTo
  .text.RegisterWifiEvent
-                0x00000000004a1600       0x76 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
-                0x00000000004a1600                RegisterWifiEvent
+                0x00000000004a160c       0x76 ohos\libs\libwifiservice.a(libwifiservice.wifi_device.o)
+                0x00000000004a160c                RegisterWifiEvent
  .text.InitWifiGlobalLock
-                0x00000000004a1676       0x6e ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
+                0x00000000004a1682       0x6e ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
  .text.HoSecToHiSec
-                0x00000000004a16e4       0x3e ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
-                0x00000000004a16e4                HoSecToHiSec
+                0x00000000004a16f0       0x3e ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
+                0x00000000004a16f0                HoSecToHiSec
  .text.LockWifiGlobalLock
-                0x00000000004a1722       0x50 ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
-                0x00000000004a1722                LockWifiGlobalLock
+                0x00000000004a172e       0x50 ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
+                0x00000000004a172e                LockWifiGlobalLock
  .text.UnlockWifiGlobalLock
-                0x00000000004a1772       0x4e ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
-                0x00000000004a1772                UnlockWifiGlobalLock
+                0x00000000004a177e       0x4e ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
+                0x00000000004a177e                UnlockWifiGlobalLock
  .text.LockWifiEventLock
-                0x00000000004a17c0       0x50 ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
-                0x00000000004a17c0                LockWifiEventLock
+                0x00000000004a17cc       0x50 ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
+                0x00000000004a17cc                LockWifiEventLock
  .text.UnlockWifiEventLock
-                0x00000000004a1810       0x4e ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
-                0x00000000004a1810                UnlockWifiEventLock
+                0x00000000004a181c       0x4e ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
+                0x00000000004a181c                UnlockWifiEventLock
  .text.FrequencyToChannel
-                0x00000000004a185e       0x4c ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
-                0x00000000004a185e                FrequencyToChannel
+                0x00000000004a186a       0x4c ohos\libs\libwifiservice.a(libwifiservice.wifi_device_util.o)
+                0x00000000004a186a                FrequencyToChannel
  SORT_BY_NAME(*)(EXCLUDE_FILE(*libasm_flash.o) .got*)
- *fill*         0x00000000004a18aa        0x2 
- .got           0x00000000004a18ac      0x118 build\libs\hi3861\release\no_mesh\libwifi_base.o
-                0x00000000004a18ac                _GLOBAL_OFFSET_TABLE_
- .got.plt       0x00000000004a19c4        0x8 build\libs\hi3861\release\no_mesh\libwifi_base.o
+ *fill*         0x00000000004a18b6        0x2 
+ .got           0x00000000004a18b8      0x118 build\libs\hi3861\release\no_mesh\libwifi_base.o
+                0x00000000004a18b8                _GLOBAL_OFFSET_TABLE_
+ .got.plt       0x00000000004a19d0        0x8 build\libs\hi3861\release\no_mesh\libwifi_base.o
                 0x00000000004a19e0                . = ALIGN (0x20)
- *fill*         0x00000000004a19cc       0x14 
+ *fill*         0x00000000004a19d8        0x8 
                 0x00000000004a19e0                __text_cache_end2_ = .
  SORT_BY_NAME(*)(.rodata*)
  .rodata.app_demo_upg_check_chip_product.str1.4

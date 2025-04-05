@@ -395,10 +395,9 @@ void mqtt_send_task(void)
         sensorData.comb = MQ5_get_value();
         sensorData.light = light_get_value();
         sensorData.beep_state = beep_get_state();
-        // sensorData.voltage = (int)(ina226_get_bus_voltage() * 100) / 100.0f;
-        // printf("电压:%f\n", sensorData.voltage);
-        // sensorData.current = (int)(ina226_get_current() * 100) / 100.0f;
-        // sensorData.power   = (int)((sensorData.current * sensorData.voltage / 1000.0f) * 100) / 100.0f;
+        // sensorData.voltage = ina226_get_bus_voltage() * 1000;
+        // sensorData.current = ina226_get_current() * 1000;
+        // sensorData.power   = sensorData.current * sensorData.voltage / 1000;
         sensorData.automation_mode_scene = get_mode_scene();
         // 同时也给asrpro发送心跳
         // send_http_post_to_server();
