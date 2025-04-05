@@ -35,21 +35,20 @@ int Packaged_json_data(void)
     properties = cJSON_CreateObject();
     cJSON_AddItemToObject(array, "properties", properties);
     // 确保所有数据正确填充
-    cJSON_AddNumberToObject(properties, "led_lightness_color", sensorData.led_lightness_color);
-    cJSON_AddNumberToObject(properties, "curtain_percent", sensorData.curtain_percent);
-    // cJSON_AddNumberToObject(properties, "curtain_openstate", sensorData.curtain_openstate);
-    cJSON_AddNumberToObject(properties, "door_state", sensorData.door_state);
-    cJSON_AddNumberToObject(properties, "temperature_indoor", sensorData.temperature_indoor);
-    cJSON_AddNumberToObject(properties, "humidity_indoor", sensorData.humidity_indoor);
-    cJSON_AddNumberToObject(properties, "smoke", sensorData.smoke);
-    cJSON_AddNumberToObject(properties, "comb", sensorData.comb);
-    cJSON_AddNumberToObject(properties, "light", sensorData.light);
-    // cJSON_AddNumberToObject(properties, "beep_state", sensorData.beep_state);
-    cJSON_AddNumberToObject(properties, "airConditioner_state", sensorData.airConditioner_state);  // ✅ 修正
+    // cJSON_AddNumberToObject(properties, "led_lightness_color", sensorData.led_lightness_color);
+    // cJSON_AddNumberToObject(properties, "curtain_percent", sensorData.curtain_percent);
+    // cJSON_AddNumberToObject(properties, "door_state", sensorData.door_state);
+    // cJSON_AddNumberToObject(properties, "temperature_indoor", sensorData.temperature_indoor);
+    // cJSON_AddNumberToObject(properties, "humidity_indoor", sensorData.humidity_indoor);
+    // cJSON_AddNumberToObject(properties, "smoke", sensorData.smoke);
+    // cJSON_AddNumberToObject(properties, "comb", sensorData.comb);
+    // // cJSON_AddNumberToObject(properties, "light", sensorData.light);
+    // // cJSON_AddNumberToObject(properties, "beep_state", sensorData.beep_state);
+    // cJSON_AddNumberToObject(properties, "airConditioner_state", sensorData.airConditioner_state);  // ✅ 修正
     cJSON_AddNumberToObject(properties, "current", sensorData.current);
-    // cJSON_AddNumberToObject(properties, "voltage", sensorData.voltage);
-    // cJSON_AddNumberToObject(properties, "power", sensorData.power);
-    cJSON_AddNumberToObject(properties, "automation_mode_scene", sensorData.automation_mode_scene);
+    cJSON_AddNumberToObject(properties, "voltage", sensorData.voltage);
+    cJSON_AddNumberToObject(properties, "power", sensorData.power);
+    // cJSON_AddNumberToObject(properties, "automation_mode_scene", sensorData.automation_mode_scene);
     cJSON_AddItemToArray(services, array);  // 将对象添加到数组中
 
     /* 格式化打印创建的带数组的JSON对象 */
@@ -395,9 +394,9 @@ void mqtt_send_task(void)
         sensorData.comb = MQ5_get_value();
         sensorData.light = light_get_value();
         sensorData.beep_state = beep_get_state();
-        // sensorData.voltage = ina226_get_bus_voltage() * 1000;
+        sensorData.voltage = ina226_get_bus_voltage() * 1000;
         sensorData.current = ina226_get_current() * 1000;
-        // sensorData.power   = sensorData.current * sensorData.voltage / 1000;
+        sensorData.power   = sensorData.current * sensorData.voltage / 1000;
         sensorData.automation_mode_scene = get_mode_scene();
         // 同时也给asrpro发送心跳
         // send_http_post_to_server();
