@@ -44,9 +44,9 @@ int Packaged_json_data(void)
     cJSON_AddNumberToObject(properties, "smoke", sensorData.smoke);
     cJSON_AddNumberToObject(properties, "comb", sensorData.comb);
     cJSON_AddNumberToObject(properties, "light", sensorData.light);
-    cJSON_AddNumberToObject(properties, "beep_state", sensorData.beep_state);
+    // cJSON_AddNumberToObject(properties, "beep_state", sensorData.beep_state);
     cJSON_AddNumberToObject(properties, "airConditioner_state", sensorData.airConditioner_state);  // ✅ 修正
-    // cJSON_AddNumberToObject(properties, "current", sensorData.current);
+    cJSON_AddNumberToObject(properties, "current", sensorData.current);
     // cJSON_AddNumberToObject(properties, "voltage", sensorData.voltage);
     // cJSON_AddNumberToObject(properties, "power", sensorData.power);
     cJSON_AddNumberToObject(properties, "automation_mode_scene", sensorData.automation_mode_scene);
@@ -396,7 +396,7 @@ void mqtt_send_task(void)
         sensorData.light = light_get_value();
         sensorData.beep_state = beep_get_state();
         // sensorData.voltage = ina226_get_bus_voltage() * 1000;
-        // sensorData.current = ina226_get_current() * 1000;
+        sensorData.current = ina226_get_current() * 1000;
         // sensorData.power   = sensorData.current * sensorData.voltage / 1000;
         sensorData.automation_mode_scene = get_mode_scene();
         // 同时也给asrpro发送心跳
@@ -414,7 +414,7 @@ void mqtt_send_task(void)
             // 发布消息
             MQTTClient_pub(publish_topic, mqtt_data, strlen((char *)mqtt_data));
         }
-        osDelay(TASK_DELAY_1000MS);
+        osDelay(TASK_DELAY_2000MS);
     }
     
 }

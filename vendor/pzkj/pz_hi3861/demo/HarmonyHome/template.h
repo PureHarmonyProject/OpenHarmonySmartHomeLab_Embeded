@@ -45,6 +45,6 @@
 #define TASK_DELAY_3000MS 300
 #define TASK_DELAY_5000MS 500    //500 = 5000ms 1tick = 10ms
 #define TASK_DELAY_1000MS  100    //100 = 1000ms 1tick = 10ms
-
+#define TASK_DELAY_2000MS  200    //100 = 1000ms 1tick = 10ms
 
 #endif // __TEST_TASK_H__
