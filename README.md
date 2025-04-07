@@ -1,7 +1,7 @@
-OpenHarmonySmartHomeLab
+**OpenHarmonySmartHomeLab**
 OpenHarmony-based smart home system
 
-ALL
-The project is newly opened and simplified
-The code is eventually normalized
-Remaining features
+**TODO**
+4. The project is newly opened and simplified
+5. The code is eventually normalized
+6. Remaining features
