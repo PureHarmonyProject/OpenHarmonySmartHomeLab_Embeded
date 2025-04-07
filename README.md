@@ -1,7 +1,7 @@
-# OpenHarmonySmartHomeLab
-基于openharmony的智能家居系统
+OpenHarmonySmartHomeLab
+OpenHarmony-based smart home system
 
-# TODO
-4. 工程新开、简化
-7. 代码最终规范化
-8. 剩余功能
+ALL
+The project is newly opened and simplified
+The code is eventually normalized
+Remaining features
